@@ -39,12 +39,6 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QListView" name="fieldsListView"/>
-        </item>
-        <item row="1" column="1">
-         <widget class="QListView" name="cabinetsListView"/>
-        </item>
         <item row="2" column="0">
          <widget class="QLabel" name="groupsLabel">
           <property name="text">
@@ -59,13 +53,27 @@
           </property>
          </widget>
         </item>
+        <item row="1" column="0">
+         <widget class="QTableView" name="fieldsTableView"/>
+        </item>
+        <item row="1" column="1">
+         <widget class="QTableView" name="cabinetsTableView"/>
+        </item>
         <item row="3" column="0">
-         <widget class="QListView" name="groupsListView"/>
+         <widget class="QTableView" name="groupsTableView"/>
         </item>
         <item row="3" column="1">
-         <widget class="QListView" name="timeListView"/>
+         <widget class="QTableView" name="timeTableView"/>
         </item>
        </layout>
+       <zorder>fieldsTableView</zorder>
+       <zorder>fieldsLabel</zorder>
+       <zorder>cabinetsLabel</zorder>
+       <zorder>cabinetsTableView</zorder>
+       <zorder>groupsLabel</zorder>
+       <zorder>timeLabel</zorder>
+       <zorder>groupsTableView</zorder>
+       <zorder>timeTableView</zorder>
       </widget>
       <widget class="QWidget" name="scheduleTab">
        <attribute name="title">
