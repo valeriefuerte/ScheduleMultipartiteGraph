@@ -7,13 +7,15 @@
 class Node;
 
 
-class GraphWidget:QGraphicsView
+class GraphWidget: public QGraphicsView
 {
     Q_OBJECT
 public:
     GraphWidget(QWidget *parent = nullptr);
+
 protected:
     void keyPressEvent(QKeyEvent *event) override;
+    void drawBackground(QPainter *painter, const QRectF &rect) override;
 private:
 
 signals:

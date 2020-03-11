@@ -25,13 +25,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    gui/edge.cpp \
+    gui/graphwidget.cpp \
+    gui/node.cpp \
         main.cpp \
         gui/mainwindow.cpp \
     models/repository/repository.cpp \
     models/router.cpp
 
 HEADERS += \
+    gui/edge.h \
+    gui/graphwidget.h \
         gui/mainwindow.h \
+    gui/node.h \
     models/repository/repository.h \
     models/router.h
 
