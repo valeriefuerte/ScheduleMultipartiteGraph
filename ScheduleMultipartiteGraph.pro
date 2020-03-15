@@ -38,6 +38,7 @@ SOURCES += \
     models/router.cpp \
     models/subject.cpp
 
+
 HEADERS += \
         gui/mainwindow.h \
     models/cabinet.h \
@@ -50,6 +51,7 @@ HEADERS += \
     models/repository/repositorysubjects.h \
     models/router.h \
     models/subject.h
+
 
 FORMS += \
         gui/mainwindow.ui
