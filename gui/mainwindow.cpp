@@ -15,7 +15,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     Router& router = Router::getInstance();
     QStringList list_s, list_tech, list_gr, list_cab, list_times;
     list_s <<"Ин.яз"<<"АКЗ"<<"РСОС"<<"СК в ПС"<<"ООТРП";
@@ -40,9 +39,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
-
-            //setText(router.getRepository()->setHelloString());
-
     // установка оформления statusBar
 //    ui->statusBar->setStyleSheet("background-color: #333; color: #33bb33");
 //    ui->statusBar->setFont(QFont("Consolas", 14));
@@ -53,6 +49,4 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
-
 

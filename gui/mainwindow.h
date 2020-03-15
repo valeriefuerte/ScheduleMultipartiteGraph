@@ -17,6 +17,9 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_fieldsTableView_doubleClicked(const QModelIndex &index);
+
 private:
     Ui::MainWindow *ui;
 };
