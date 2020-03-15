@@ -2,15 +2,13 @@
 #define SUBJECT_H
 
 #include <QString>
+#include "abstractnoderepository.h"
 
-class Subject
+class Subject : public abstractNodeRepository
 {
 public:
-    Subject(QString name);
-    Subject();
-//    ~Subject();
+    Subject(QString name = "");
 
-    int id;
     QString name;
 };
 

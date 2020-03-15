@@ -1,11 +1,15 @@
 #ifndef GROUPSTUDENTS_H
 #define GROUPSTUDENTS_H
 
+#include <QString>
+#include "abstractnoderepository.h"
 
-class groupStudents
+class GroupStudents : public abstractNodeRepository
 {
 public:
-    groupStudents();
+    GroupStudents(QString name = "");
+
+    QString name;
 };
 
 #endif // GROUPSTUDENTS_H
