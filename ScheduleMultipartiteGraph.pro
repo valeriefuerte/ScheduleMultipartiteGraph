@@ -27,6 +27,7 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         gui/mainwindow.cpp \
+    models/table_model.cpp \
     models/cabinet.cpp \
     models/groupstudents.cpp \
     models/lessontime.cpp \
@@ -42,6 +43,7 @@ SOURCES += \
 HEADERS += \
         gui/mainwindow.h \
     models/cabinet.h \
+    models/table_model.h
     models/groupstudents.h \
     models/lessontime.h \
     models/repository/repository.h \
@@ -51,6 +53,7 @@ HEADERS += \
     models/repository/repositorysubjects.h \
     models/router.h \
     models/subject.h
+
 
 
 FORMS += \
