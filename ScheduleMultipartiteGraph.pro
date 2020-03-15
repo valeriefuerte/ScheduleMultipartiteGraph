@@ -33,7 +33,6 @@ SOURCES += \
     models/lessontime.cpp \
     models/repository/repository.cpp \
     models/router.cpp \
-    models/table_model.cpp \
     models/repository/repositorycabinets.cpp \
     models/repository/repositorygroupsstudents.cpp \
     models/repository/repositorylessonstimes.cpp \
@@ -44,12 +43,11 @@ SOURCES += \
 HEADERS += \
         gui/mainwindow.h \
     models/cabinet.h \
-    models/table_model.h
+    models/table_model.h \
     models/groupstudents.h \
     models/lessontime.h \
     models/repository/repository.h \
     models/router.h \
-    models/table_model.h \
     models/repository/repositorycabinets.h \
     models/repository/repositorygroupsstudents.h \
     models/repository/repositorylessonstimes.h \
