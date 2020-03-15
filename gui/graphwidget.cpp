@@ -5,29 +5,27 @@
 #include <QKeyEvent>
 #include <QRandomGenerator>
 #include <QDebug>
-GraphWidget::GraphWidget(QWidget *parent): QGraphicsView(parent)
+GraphWidget::GraphWidget(QWidget *parent): QGraphicsView(parent),scene(new QGraphicsScene(this))
 {
 
-    QGraphicsScene *scene = new QGraphicsScene(this);
+
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
     scene->setSceneRect(-200, -200, 400, 400);
 
     setScene(scene);
     setCacheMode(CacheBackground);
-    setViewportUpdateMode(BoundingRectViewportUpdate);
+    setViewportUpdateMode(BoundingRectViewportUpdate); //reconsider
     setRenderHint(QPainter::Antialiasing);
     setTransformationAnchor(AnchorUnderMouse);
     scale(qreal(1), qreal(1));
     //setMinimumSize(400, 400);
 
-
-    Node *node1 = new Node (this);
-    Node *node2 = new Node (this);
-
-    Node *node3 = new Node (this,20,Qt::red);
-    Node *node4 = new Node (this,20,Qt::blue);
-
-    Node *node5 = new Node (this,20,Qt::green);
+    //@brief
+    Node *node1 = new Node (this,15,Qt::cyan);
+    Node *node2 = new Node (this,15,Qt::gray);
+    Node *node3 = new Node (this,15,Qt::red);
+    Node *node4 = new Node (this,15,Qt::blue);
+    Node *node5 = new Node (this,15,Qt::green);
 
 
     scene->addItem(node1);
@@ -43,12 +41,31 @@ GraphWidget::GraphWidget(QWidget *parent): QGraphicsView(parent)
     scene->addItem(new Edge(node5, node4));
 
     node1->setPos(0,0);
-    node2->setPos(0,50);
+    node2->setPos(0,60);
     node3->setPos(20,10);
     node4->setPos(40,25);
-    node5->setPos(0,-30);
+    node5->setPos(10,-30);
 
 
+    readGraph(QPointF(-30,-20));
+
+
+}
+
+void GraphWidget::readGraph(QPointF center)
+{
+
+
+    QVector<QPointF> test = createClusterPoints(center,105,7);
+    foreach (QPointF p, test) {
+
+        QVector<QPointF> test2 = createClusterPoints(p,20,5);
+        foreach (QPointF p2, test2) {
+            Node *node = new Node(this);
+            scene->addItem(node);
+            node->setPos(p2.x(),p2.y());
+        }
+    }
 }
 void  GraphWidget::drawBackground(QPainter *painter, const QRectF &rect) {
     Q_UNUSED(rect);
@@ -77,6 +94,20 @@ void  GraphWidget::drawBackground(QPainter *painter, const QRectF &rect) {
     painter->setFont(font);
     painter->setPen(Qt::lightGray);
 
+}
+
+QVector<QPointF> GraphWidget::createClusterPoints(QPointF &center, int radius, int size) const
+{
+    QVector <QPointF> points;
+    for (int i = 0; i < size; ++i) {
+        double angle_deg = 360/size * i;
+
+        double angle_rad = M_PI / 180 * angle_deg;
+
+        points.append(QPointF (center.x()+radius*cos(angle_rad),center.y()+radius*sin(angle_rad)));
+
+    }
+    return points;
 }
 void GraphWidget::zoomIn() {
 

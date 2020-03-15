@@ -80,7 +80,6 @@ public:
 
     qreal getSize() const {return size;}
 
-    // или просто id , в зависимости , как будет сощздан граф
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
@@ -94,6 +93,7 @@ private:
     GraphWidget *graph;
     double size;
     QColor color;
+    void changeEdgeVisibility(Edge *edge);
 
 
 };

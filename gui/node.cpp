@@ -31,14 +31,14 @@ QRectF Node::boundingRect() const
     //Прямоугольникая граница , окрушающая фигуру
 
     qreal adjust = 2;
-    return QRectF( -10 - adjust, -10 - adjust, 23 + adjust, 23 + adjust); //to do сделать масштабируемость
+    return QRectF( -size/2 - adjust, -size/2 - adjust, size+ 3 + adjust, size + 3 + adjust); //to do сделать масштабируемость
 }
 
 QPainterPath Node::shape() const
 {
     //хитбокс, если не переписывать эту функцию ,то она даст boundingRect
     QPainterPath path;
-    path.addEllipse(-10, -10, 20, 20);
+    path.addEllipse(-size/2, -size/2, size, size);
     return path;
 }
 
@@ -49,25 +49,38 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     // Эллипс
     painter->setPen(QPen(Qt::black, 0));
     painter->setBrush(QBrush(color));
-    painter->drawEllipse(-10, -10, 20, 20);
+    painter->drawEllipse(-size/2, -size/2, size, size);
 
 }
 
 QVariant  Node::itemChange(GraphicsItemChange change, const QVariant &value){
-
     switch (change) {
     case ItemPositionHasChanged: //если изменилась позиция , то все ребра перемещаются
-        foreach (Edge *edge, edgeList)
+        foreach (Edge *edge, edgeList) {
+
             edge->adjust();
+        }
+        break;
+    case ItemVisibleChange:
+
+        foreach (Edge *edge, edgeList) {
+            changeEdgeVisibility(edge);
+        }
+
         break;
     default:
         break;
-    };
+    }
 
     return QGraphicsItem::itemChange(change, value);
 }
 void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    // Для демонстрации. При нажатии мышкой на вершину она "прячется" вместе с ребрами
+    this->hide();
+    foreach (Edge *edge, edgeList) {
+        changeEdgeVisibility(edge);
+    }
     update();
     qDebug()<<this->pos();
     QGraphicsItem::mousePressEvent(event);
@@ -77,5 +90,14 @@ void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     update();
     QGraphicsItem::mouseReleaseEvent(event);
+}
+// Если хотя бы 1 вершина стпрятана , то  необходимо спрятать ребро
+void Node::changeEdgeVisibility(Edge *edge)
+{
+    if ((!edge->destNode()->isVisible()) || (!edge->sourceNode()->isVisible())) {
+        edge->hide();
+    } else {
+        edge->show();
+    }
 }
 
