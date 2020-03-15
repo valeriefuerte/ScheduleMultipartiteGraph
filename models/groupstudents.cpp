@@ -1,6 +1,6 @@
 #include "groupstudents.h"
 
-groupStudents::groupStudents()
+GroupStudents::GroupStudents(QString name)
 {
-
+    this->name = name;
 }

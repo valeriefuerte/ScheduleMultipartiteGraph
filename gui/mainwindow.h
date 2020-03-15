@@ -4,6 +4,10 @@
 #include <QMainWindow>
 
 #include "models/router.h"
+#include "models/cabinet.h"
+#include "models/groupstudents.h"
+#include "models/lessontime.h"
+#include "models/subject.h"
 
 namespace Ui {
 class MainWindow;
@@ -25,7 +29,10 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    repositorySubjects repoSubjects;
+    RepositoryGeneral<Cabinet> repoCabinets;
+    RepositoryGeneral<GroupStudents> repoGroupStudents;
+    RepositoryGeneral<LessonTime> repoLessonsTimes;
+    RepositoryGeneral<Subject> repoSubjects;
 };
 
 #endif // MAINWINDOW_H

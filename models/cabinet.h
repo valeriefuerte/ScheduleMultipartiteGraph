@@ -1,19 +1,18 @@
 #ifndef CABINET_H
 #define CABINET_H
 
+#include "abstractnoderepository.h"
 
-class Cabinet
+class Cabinet : public abstractNodeRepository
 {
 private:
     static bool validation(int id, int number, int floor, int building);
 public:
-    int id;
     int number;
     int floor;
     int building;
 
-    Cabinet(int id, int number, int floor, int building);
-    ~Cabinet();
+    Cabinet(int number=0, int floor=0, int building=0);
 };
 
 #endif // CABINET_H
