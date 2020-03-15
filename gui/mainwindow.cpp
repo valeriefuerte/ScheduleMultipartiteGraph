@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    Router& router = Router::getInstance();
+//    Router& router = Router::getInstance();
 //    ui->label->setText(router.getRepository()->helloString());
 
     // установка оформления statusBar
@@ -19,4 +19,9 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::on_fieldsTableView_doubleClicked(const QModelIndex &index)
+{
+
 }
