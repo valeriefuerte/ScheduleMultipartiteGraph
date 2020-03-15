@@ -3,13 +3,15 @@
 
 #include <QString>
 
-class subject
+class Subject
 {
 public:
-    subject();
-    ~subject();
+    Subject(int id, QString name);
+    Subject();
+//    ~Subject();
 
-
+    int id;
+    QString name;
 };
 
 #endif // SUBJECT_H

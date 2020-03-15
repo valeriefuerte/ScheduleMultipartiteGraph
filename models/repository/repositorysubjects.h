@@ -2,20 +2,32 @@
 #define REPOSITORYSUBJECTS_H
 
 #include <QList>
-#include "../cabinet.h"
+#include "../subject.h"
 
 class repositorySubjects
 {
 private:
-    QList<Cabinet> cabinets;
+    QList<Subject> subjects;
+
+    QList<Subject>::iterator getIteratorById(int id);
 public:
     repositorySubjects();
     ~repositorySubjects();
-    bool add();
-    bool remove();
-    bool update();
-    Cabinet getById(int id);
-    QList<Cabinet> getAll();
+
+    // Добавить предмет
+    void add(Subject data);
+
+    // Удалить предмет
+    bool remove(int id);
+
+    // Обновить предмет
+    bool update(int id, Subject data);
+
+    // Получить премет
+    Subject getById(int id);
+
+    // Получить все редметы
+    QList<Subject> getAll();
 };
 
 #endif // REPOSITORYSUBJECTS_H

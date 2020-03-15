@@ -1,6 +1,6 @@
 #include "cabinet.h"
 
-Cabinet::Cabinet()
+Cabinet::Cabinet(int id, int number, int floor, int building)
 {
 
 }
