@@ -18,14 +18,13 @@
     <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="dataTab">
        <attribute name="title">
         <string>Данные</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2">
-
         <item row="2" column="0">
          <widget class="QTableView" name="subject_table"/>
         </item>
@@ -43,54 +42,6 @@
         </item>
         <item row="0" column="0">
          <widget class="QLabel" name="fieldsLabel">
-
-        <item row="2" column="3">
-         <widget class="QTableView" name="time_table"/>
-        </item>
-        <item row="0" column="3">
-         <widget class="QLabel" name="timeLabel">
-
-          <property name="text">
-           <string>Время</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-
-        <item row="0" column="1">
-         <widget class="QLabel" name="label">
-
-        <item row="2" column="2">
-         <widget class="QTableView" name="cabinets_table"/>
-        </item>
-        <item row="0" column="2">
-         <widget class="QLabel" name="cabinetsLabel">
-
-          <property name="text">
-           <string>Преподаватели</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="4">
-         <widget class="QLabel" name="timeLabel">
-
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QTableView" name="subject_table"/>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="fieldsLabel">
           <property name="text">
            <string>Предметы</string>
           </property>
@@ -99,24 +50,26 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QTableView" name="group_table"/>
-        </item>
         <item row="0" column="1">
-         <widget class="QLabel" name="groupsLabel">
-
+         <widget class="QLabel" name="label">
           <property name="text">
-           <string>Группы</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <string>Преподаватели</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
-
+        <item row="0" column="4">
+         <widget class="QLabel" name="timeLabel">
+          <property name="text">
+           <string>Время</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="3">
          <widget class="QLabel" name="cabinetsLabel">
           <property name="text">
@@ -137,7 +90,6 @@
           </property>
          </widget>
         </item>
-
        </layout>
       </widget>
       <widget class="QWidget" name="scheduleTab">
@@ -160,7 +112,7 @@
      <x>0</x>
      <y>0</y>
      <width>852</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
