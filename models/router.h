@@ -4,6 +4,10 @@
 #include <QObject>
 
 #include "models/repository/repository.h"
+#include "models/repository/repositorycabinets.h"
+#include "models/repository/repositorygroupsstudents.h"
+#include "models/repository/repositorylessonstimes.h"
+#include "models/repository/repositorysubjects.h"
 
 // Router& router = Router::getInstance();
 

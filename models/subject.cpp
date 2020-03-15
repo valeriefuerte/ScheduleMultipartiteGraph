@@ -1,6 +1,13 @@
 #include "subject.h"
 
-subject::subject()
+Subject::Subject(QString name)
 {
+    this->id = 0;
+    this->name = name;
+}
 
+Subject::Subject()
+{
+    this->id = 0;
+    this->name = "";
 }

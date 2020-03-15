@@ -20,8 +20,12 @@ public:
 private slots:
     void on_fieldsTableView_doubleClicked(const QModelIndex &index);
 
+    void on_tabWidget_currentChanged(int index);
+
 private:
     Ui::MainWindow *ui;
+
+    repositorySubjects repoSubjects;
 };
 
 #endif // MAINWINDOW_H
