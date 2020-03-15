@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     // Создаем репозиторий
-    this->repoSubjects = repositorySubjects();
+    this->repoSubjects = RepositoryGeneral<Subject>();
 //    Router& router = Router::getInstance();
 //    QStringList list_s, list_tech, list_gr, list_cab, list_times;
 //    list_s <<"Ин.яз"<<"АКЗ"<<"РСОС"<<"СК в ПС"<<"ООТРП";

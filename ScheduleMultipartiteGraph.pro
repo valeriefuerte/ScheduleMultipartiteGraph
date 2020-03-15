@@ -27,30 +27,26 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         gui/mainwindow.cpp \
+    models/abstractnoderepository.cpp \
     models/cabinet.cpp \
     models/groupstudents.cpp \
     models/lessontime.cpp \
     models/repository/repository.cpp \
+    models/repository/repositorygeneral.cpp \
     models/router.cpp \
     models/table_model.cpp \
-    models/repository/repositorycabinets.cpp \
-    models/repository/repositorygroupsstudents.cpp \
-    models/repository/repositorylessonstimes.cpp \
-    models/repository/repositorysubjects.cpp \
     models/subject.cpp
 
 HEADERS += \
         gui/mainwindow.h \
+    models/abstractnoderepository.h \
     models/cabinet.h \
     models/groupstudents.h \
     models/lessontime.h \
     models/repository/repository.h \
+    models/repository/repositorygeneral.h \
     models/router.h \
     models/table_model.h \
-    models/repository/repositorycabinets.h \
-    models/repository/repositorygroupsstudents.h \
-    models/repository/repositorylessonstimes.h \
-    models/repository/repositorysubjects.h \
     models/router.h \
     models/subject.h
 
