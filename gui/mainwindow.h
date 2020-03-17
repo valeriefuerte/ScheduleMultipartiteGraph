@@ -22,13 +22,19 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_fieldsTableView_doubleClicked(const QModelIndex &index);
 
-    void on_tabWidget_currentChanged(int index);
+    //void on_tabWidget_currentChanged(int index);
+
+
+    void on_addSubjectButton_clicked();
+
+    void on_removeSubjectButton_clicked();
+
+    void on_confirmSubjectButton_clicked();
 
 private:
+    QStringList *list_s;
     Ui::MainWindow *ui;
-
     RepositoryGeneral<Cabinet> repoCabinets;
     RepositoryGeneral<GroupStudents> repoGroupStudents;
     RepositoryGeneral<LessonTime> repoLessonsTimes;

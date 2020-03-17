@@ -9,15 +9,20 @@
 #include <QSplitter>
 #include <QHeaderView>
 #include <QDebug>
+#include <QAbstractTableModel>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-
       ui->setupUi(this);
-    // Создаем репозиторий
-    this->repoSubjects = RepositoryGeneral<Subject>();
+      /*connect(ui->addButton,SIGNAL(pressed()),this,SLOT(on_addButton_pressed()));
+      connect(ui->confirmButton,SIGNAL(clicked()),this,SLOT(on_confirmButton_clicked()));
+      connect(ui->deleteButton,SIGNAL(clicked()),this,SLOT(on_deleteButton_clicked()));
+      connect(ui->subject_table,SIGNAL(DoubleClicked(index)),this,SLOT(on_subject_table_doubleClicked(index)));*/
+
+
+
 //    Router& router = Router::getInstance();
 //    QStringList list_s, list_tech, list_gr, list_cab, list_times;
 //    list_s <<"Ин.яз"<<"АКЗ"<<"РСОС"<<"СК в ПС"<<"ООТРП";
@@ -47,9 +52,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // установка оформления statusBar
 //    ui->statusBar->setStyleSheet("background-color: #333; color: #33bb33");
-//    ui->statusBar->setFont(QFont("Consolas", 14));
+      //    ui->statusBar->setFont(QFont("Consolas", 14));
 //    ui->statusBar->showMessage(tr("State: ready 0123456789"));
-}
+}//
 
 MainWindow::~MainWindow()
 {
@@ -57,13 +62,35 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::on_fieldsTableView_doubleClicked(const QModelIndex &index)
-{
+/*void MainWindow::on_button_listener(){
+
+    QPushButton *button = (QPushButton *)sender();
+    if (QString(button->objectName())=="addButton"){
+        list_s->append("");
+        StringListModel *model = new StringListModel(*list_s);
+        ui->subject_table->setModel(model);
+        ui->subject_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    }
+    if ((QString)button->objectName()=="confirmButton"){
+        //QModelIndex f = model->index(0,0);
+        //QVariant value = f.sibling(f.row(),f.column()).data();
+        //int r =ui->subject_table->selectionModel()->currentIndex().row();
+        //model->setData(f,value);
+        int index = ui->subject_table->selectionModel()->currentIndex().row();
+        QVariant value = ui->subject_table->selectionModel()->currentIndex().data();
+        qDebug()<<ui->subject_table->selectionModel()->currentIndex().row();
+        QString str = value.toString();
+        list_s->replace(index,str);
+       //qDebug()<<model->data(f,Qt::UserRole);
+       //list_s->append(str);
+
+    }
+
+}*/
 
 
-}
 
-void MainWindow::on_tabWidget_currentChanged(int index)
+/*void MainWindow::on_tabWidget_currentChanged(int index)
 {
     // Переменные куда будем записывать значения (нужны для отладки)
     QList<Subject> subjects;
@@ -87,7 +114,7 @@ void MainWindow::on_tabWidget_currentChanged(int index)
 
     StringListModel *model = new StringListModel(list_s);
     ui->subject_table->setModel(model);
-    ui->subject_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->subject_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);*/
 
 //    // Получить конкретный предмет
 //    subject = repoSubjects.getById(1);
@@ -97,5 +124,36 @@ void MainWindow::on_tabWidget_currentChanged(int index)
 
 //    // Изменить конкретный предмет
 //    repoSubjects.update(3, Subject("СКвПС"));
+//}
+
+
+void MainWindow::on_addSubjectButton_clicked()
+{
+    list_s->append("");
+    StringListModel *model = new StringListModel(*list_s);
+    ui->subject_table->setModel(model);
+    ui->subject_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
+void MainWindow::on_removeSubjectButton_clicked()
+{
+    //qDebug()<<"Размер перед list удаление:"<<list_s->length();
+    //qDebug()<<"Число строк перед удалением"<<ui->subject_table->model()->rowCount();
+    int r =ui->subject_table->selectionModel()->currentIndex().row();
+    //int c = ui->subject_table->selectionModel()->currentIndex().column();
+    list_s->removeAt(r);
+    ui->subject_table->model()->removeRow(r);
+    //qDebug()<<"размер list после удаления:"<<list_s->length();
+    //qDebug()<<"Число строк после удаления"<<ui->subject_table->model()->rowCount();
+
+
+}
+
+void MainWindow::on_confirmSubjectButton_clicked()
+{
+    int index = ui->subject_table->selectionModel()->currentIndex().row();
+    QVariant value = ui->subject_table->selectionModel()->currentIndex().data();
+    qDebug()<<ui->subject_table->selectionModel()->currentIndex().row();
+    QString str = value.toString();
+    list_s->replace(index,str);
+}
