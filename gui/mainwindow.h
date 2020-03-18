@@ -50,6 +50,10 @@ private slots:
 
     void on_confirmTimeButton_clicked();
 
+    void on_subject_table_clicked(const QModelIndex &index);
+
+    void on_group_table_clicked(const QModelIndex &index);
+
 private:
     Ui::MainWindow *ui;
     RepositoryGeneral<Cabinet> repoCabinets;

@@ -11,7 +11,7 @@ private:
 
     class QList<T>::iterator getIteratorById(int id);
 public:
-    int currentCount = 0;
+    int currentCount = -1;
 
     RepositoryGeneral();
     ~RepositoryGeneral();
@@ -50,7 +50,7 @@ class QList<T>::iterator RepositoryGeneral<T>::getIteratorById(int id) {
 
 template <class T>
 void RepositoryGeneral<T>::add(T data) {
-    ++this->currentCount;
+    this->currentCount++;
     data.id = this->currentCount;
     this->elements.append(data);
 }

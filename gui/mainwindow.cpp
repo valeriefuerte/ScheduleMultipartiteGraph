@@ -105,6 +105,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_addSubjectButton_clicked()
 {
     list_s->append("");
+    this->repoSubjects.add(Subject(""));
     StringListModel *model = new StringListModel(*list_s);
     ui->subject_table->setModel(model);
     ui->subject_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -113,10 +114,10 @@ void MainWindow::on_addSubjectButton_clicked()
 
 void MainWindow::on_removeSubjectButton_clicked()
 {
-
-    int r =ui->subject_table->selectionModel()->currentIndex().row();
-    list_s->removeAt(r);
-    ui->subject_table->model()->removeRow(r);
+    int index =ui->subject_table->selectionModel()->currentIndex().row();
+    this->repoSubjects.remove(index);
+    list_s->removeAt(index);
+    ui->subject_table->model()->removeRow(index);
 
 }
 
@@ -125,12 +126,14 @@ void MainWindow::on_confirmSubjectButton_clicked()
     int index = ui->subject_table->selectionModel()->currentIndex().row();
     QVariant value = ui->subject_table->selectionModel()->currentIndex().data();
     QString str = value.toString();
+    this->repoSubjects.update(index,str);
     list_s->replace(index,str);
 }
 
 void MainWindow::on_addGroupButton_clicked()
 {
     list_gr->append("");
+    this->repoGroupStudents.add(GroupStudents(""));
     StringListModel *model = new StringListModel(*list_gr);
     ui->group_table->setModel(model);
     ui->group_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -138,9 +141,10 @@ void MainWindow::on_addGroupButton_clicked()
 
 void MainWindow::on_removeGroupButton_clicked()
 {
-    int r =ui->group_table->selectionModel()->currentIndex().row();
-    list_gr->removeAt(r);
-    ui->group_table->model()->removeRow(r);
+    int index =ui->group_table->selectionModel()->currentIndex().row();
+    this->repoGroupStudents.remove(index);
+    list_gr->removeAt(index);
+    ui->group_table->model()->removeRow(index);
 }
 
 void MainWindow::on_confirmGroupButton_clicked()
@@ -148,6 +152,7 @@ void MainWindow::on_confirmGroupButton_clicked()
     int index = ui->group_table->selectionModel()->currentIndex().row();
     QVariant value = ui->group_table->selectionModel()->currentIndex().data();
     QString str = value.toString();
+    this->repoGroupStudents.update(index,str);
     list_gr->replace(index,str);
 }
 
@@ -195,4 +200,61 @@ void MainWindow::on_confirmTimeButton_clicked()
     QVariant value = ui->time_table->selectionModel()->currentIndex().data();
     QString str = value.toString();
     list_tm->replace(index,str);
+}
+
+void MainWindow::on_subject_table_clicked(const QModelIndex &index)
+{
+    //int in = ui->group_table->selectionModel()->currentIndex().row();
+
+    // Переменные куда будем записывать значения (нужны для отладки)
+    QList<Subject> subjects;
+    Subject subject = Subject();
+
+    // Добавляем различные преметы
+    /*this->repoSubjects.add(Subject("АКЗ"));
+    this->repoSubjects.add(Subject("РЯП"));
+    this->repoSubjects.add(Subject("ООТРвПО"));
+    this->repoSubjects.add(Subject("ВиАПО"));
+    Subject sub = Subject();
+    sub =this->repoSubjects.getById(1);
+    QString t = sub.name;
+    qDebug()<<"Получить по id"<<t;
+    // Получить все предметы*/
+    subjects = this->repoSubjects.getAll();
+
+    QStringList list_s;
+    qDebug()<<"Вывод всех";
+    for (auto it = subjects.begin(); it != subjects.end(); ++it) {
+        subject = *it;
+        qDebug() << subject.name;
+    }
+
+
+    /*QList<Subject> subjects;
+    Subject subject = Subject();
+
+    // Получить все предметы
+    subjects = this->repoSubjects.getAll();
+
+    QStringList list_s;
+
+    for (auto it = subjects.begin(); it != subjects.end(); ++it) {
+        subject = *it;
+        qDebug() << subject.name;*/
+    //}
+
+}
+
+void MainWindow::on_group_table_clicked(const QModelIndex &index)
+{
+    QList<GroupStudents> group;
+    GroupStudents groups = GroupStudents();
+    group = this->repoGroupStudents.getAll();
+
+        qDebug()<<"Вывод всех";
+        for (auto it = group.begin(); it != group.end(); ++it) {
+            groups = *it;
+            qDebug() << groups.name;
+        }
+
 }
