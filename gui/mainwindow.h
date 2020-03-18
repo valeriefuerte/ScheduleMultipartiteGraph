@@ -32,8 +32,25 @@ private slots:
 
     void on_confirmSubjectButton_clicked();
 
+    void on_addGroupButton_clicked();
+
+    void on_removeGroupButton_clicked();
+
+    void on_confirmGroupButton_clicked();
+
+    void on_addCabinetsButton_clicked();
+
+    void on_removeCabinetsButton_clicked();
+
+    void on_confirmCabinetsButton_clicked();
+
+    void on_addTimeButton_clicked();
+
+    void on_removeTimeButton_clicked();
+
+    void on_confirmTimeButton_clicked();
+
 private:
-    QStringList *list_s;
     Ui::MainWindow *ui;
     RepositoryGeneral<Cabinet> repoCabinets;
     RepositoryGeneral<GroupStudents> repoGroupStudents;

@@ -10,15 +10,19 @@
 #include <QHeaderView>
 #include <QDebug>
 #include <QAbstractTableModel>
+QStringList *list_s = new QStringList();
+QStringList *list_gr = new QStringList();
+QStringList *list_cb=new QStringList();
+QStringList *list_tm = new QStringList();
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
       ui->setupUi(this);
-      /*connect(ui->addButton,SIGNAL(pressed()),this,SLOT(on_addButton_pressed()));
-      connect(ui->confirmButton,SIGNAL(clicked()),this,SLOT(on_confirmButton_clicked()));
-      connect(ui->deleteButton,SIGNAL(clicked()),this,SLOT(on_deleteButton_clicked()));
+      /*connect(ui->addSubjectButton,SIGNAL(clicked()),this,SLOT(on_addSubjectButton_clicked()));
+      connect(ui->confirmSubjectButton,SIGNAL(clicked()),this,SLOT(on_confirmSubjectButton_clicked()));
+      connect(ui->removeSubjectButton,SIGNAL(clicked()),this,SLOT(on_removeSubjectButton_clicked()));
       connect(ui->subject_table,SIGNAL(DoubleClicked(index)),this,SLOT(on_subject_table_doubleClicked(index)));*/
 
 
@@ -60,35 +64,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
-
-/*void MainWindow::on_button_listener(){
-
-    QPushButton *button = (QPushButton *)sender();
-    if (QString(button->objectName())=="addButton"){
-        list_s->append("");
-        StringListModel *model = new StringListModel(*list_s);
-        ui->subject_table->setModel(model);
-        ui->subject_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    }
-    if ((QString)button->objectName()=="confirmButton"){
-        //QModelIndex f = model->index(0,0);
-        //QVariant value = f.sibling(f.row(),f.column()).data();
-        //int r =ui->subject_table->selectionModel()->currentIndex().row();
-        //model->setData(f,value);
-        int index = ui->subject_table->selectionModel()->currentIndex().row();
-        QVariant value = ui->subject_table->selectionModel()->currentIndex().data();
-        qDebug()<<ui->subject_table->selectionModel()->currentIndex().row();
-        QString str = value.toString();
-        list_s->replace(index,str);
-       //qDebug()<<model->data(f,Qt::UserRole);
-       //list_s->append(str);
-
-    }
-
-}*/
-
-
 
 /*void MainWindow::on_tabWidget_currentChanged(int index)
 {
@@ -133,19 +108,15 @@ void MainWindow::on_addSubjectButton_clicked()
     StringListModel *model = new StringListModel(*list_s);
     ui->subject_table->setModel(model);
     ui->subject_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
 }
 
 void MainWindow::on_removeSubjectButton_clicked()
 {
-    //qDebug()<<"Размер перед list удаление:"<<list_s->length();
-    //qDebug()<<"Число строк перед удалением"<<ui->subject_table->model()->rowCount();
+
     int r =ui->subject_table->selectionModel()->currentIndex().row();
-    //int c = ui->subject_table->selectionModel()->currentIndex().column();
     list_s->removeAt(r);
     ui->subject_table->model()->removeRow(r);
-    //qDebug()<<"размер list после удаления:"<<list_s->length();
-    //qDebug()<<"Число строк после удаления"<<ui->subject_table->model()->rowCount();
-
 
 }
 
@@ -153,7 +124,75 @@ void MainWindow::on_confirmSubjectButton_clicked()
 {
     int index = ui->subject_table->selectionModel()->currentIndex().row();
     QVariant value = ui->subject_table->selectionModel()->currentIndex().data();
-    qDebug()<<ui->subject_table->selectionModel()->currentIndex().row();
     QString str = value.toString();
     list_s->replace(index,str);
+}
+
+void MainWindow::on_addGroupButton_clicked()
+{
+    list_gr->append("");
+    StringListModel *model = new StringListModel(*list_gr);
+    ui->group_table->setModel(model);
+    ui->group_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+}
+
+void MainWindow::on_removeGroupButton_clicked()
+{
+    int r =ui->group_table->selectionModel()->currentIndex().row();
+    list_gr->removeAt(r);
+    ui->group_table->model()->removeRow(r);
+}
+
+void MainWindow::on_confirmGroupButton_clicked()
+{
+    int index = ui->group_table->selectionModel()->currentIndex().row();
+    QVariant value = ui->group_table->selectionModel()->currentIndex().data();
+    QString str = value.toString();
+    list_gr->replace(index,str);
+}
+
+void MainWindow::on_addCabinetsButton_clicked()
+{
+    list_cb->append("");
+    StringListModel *model = new StringListModel(*list_cb);
+    ui->cabinets_table->setModel(model);
+    ui->cabinets_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+}
+
+void MainWindow::on_removeCabinetsButton_clicked()
+{
+    int r =ui->cabinets_table->selectionModel()->currentIndex().row();
+    list_cb->removeAt(r);
+    ui->cabinets_table->model()->removeRow(r);
+}
+
+void MainWindow::on_confirmCabinetsButton_clicked()
+{
+    int index = ui->cabinets_table->selectionModel()->currentIndex().row();
+    QVariant value = ui->cabinets_table->selectionModel()->currentIndex().data();
+    QString str = value.toString();
+    list_cb->replace(index,str);
+}
+
+void MainWindow::on_addTimeButton_clicked()
+{
+    list_tm->append("");
+    StringListModel *model = new StringListModel(*list_tm);
+    ui->time_table->setModel(model);
+    ui->time_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+}
+
+void MainWindow::on_removeTimeButton_clicked()
+{
+    int r =ui->time_table->selectionModel()->currentIndex().row();
+    list_tm->removeAt(r);
+    ui->time_table->model()->removeRow(r);
+}
+
+void MainWindow::on_confirmTimeButton_clicked()
+{
+    int index = ui->time_table->selectionModel()->currentIndex().row();
+    QVariant value = ui->time_table->selectionModel()->currentIndex().data();
+    QString str = value.toString();
+    list_tm->replace(index,str);
 }
