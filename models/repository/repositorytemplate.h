@@ -132,7 +132,6 @@ void RepositoryGeneral<T>::load() {
         for (auto element : jsonArray) {
             T t;
             t.fromJson(element.toObject());
-            qDebug() << element.toObject().value("name");
             this->add(t);
         }
     } else {
