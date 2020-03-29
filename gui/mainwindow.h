@@ -54,6 +54,8 @@ private slots:
 
     void on_group_table_clicked(const QModelIndex &index);
 
+    void on_saveFile_triggered();
+
 private:
     Ui::MainWindow *ui;
     RepositoryGeneral<Cabinet> repoCabinets;

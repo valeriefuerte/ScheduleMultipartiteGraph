@@ -258,3 +258,11 @@ void MainWindow::on_group_table_clicked(const QModelIndex &index)
         }
 
 }
+
+void MainWindow::on_saveFile_triggered()
+{
+    this->repoCabinets.save();
+    this->repoSubjects.save();
+    this->repoLessonsTimes.save();
+    this->repoGroupStudents.save();
+}

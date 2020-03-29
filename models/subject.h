@@ -7,9 +7,12 @@
 class Subject : public abstractNodeRepository
 {
 public:
-    Subject(QString name = "");
-
     QString name;
+
+    Subject(QString name = "");
+    virtual QString getClassName();
+    virtual void fromJson(QJsonObject);
+    virtual QJsonObject toJson();
 };
 
 #endif // SUBJECT_H

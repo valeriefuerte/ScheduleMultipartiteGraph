@@ -7,9 +7,12 @@
 class GroupStudents : public abstractNodeRepository
 {
 public:
-    GroupStudents(QString name = "");
-
     QString name;
+
+    GroupStudents(QString name = "");
+    virtual QString getClassName();
+    virtual void fromJson(QJsonObject);
+    virtual QJsonObject toJson();
 };
 
 #endif // GROUPSTUDENTS_H

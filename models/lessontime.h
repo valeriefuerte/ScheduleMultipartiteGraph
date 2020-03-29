@@ -9,11 +9,18 @@
 class LessonTime : public abstractNodeRepository
 {
 public:
-    LessonTime(QTime time, QDate date);
+    int parity;
+    int dayOfWeek;
+    QTime time;
+
+    LessonTime(int parity, int dayOfWeek, QTime time);
+    LessonTime(int dayOfWeek, QTime time);
     LessonTime(QTime time);
     LessonTime();
 
-    QDateTime datetime;
+    virtual QString getClassName();
+    virtual void fromJson(QJsonObject);
+    virtual QJsonObject toJson();
 };
 
 #endif // LESSONTIME_H

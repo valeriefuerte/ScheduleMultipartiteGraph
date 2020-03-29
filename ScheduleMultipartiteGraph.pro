@@ -32,7 +32,7 @@ SOURCES += \
     models/groupstudents.cpp \
     models/lessontime.cpp \
     models/repository/repository.cpp \
-    models/repository/repositorygeneral.cpp \
+    models/repository/repositorytemplate.cpp \
     models/router.cpp \
     models/table_model.cpp \
     models/subject.cpp
@@ -42,11 +42,11 @@ HEADERS += \
         gui/mainwindow.h \
     models/abstractnoderepository.h \
     models/cabinet.h \
+    models/repository/repositorytemplate.h \
     models/table_model.h \
     models/groupstudents.h \
     models/lessontime.h \
     models/repository/repository.h \
-    models/repository/repositorygeneral.h \
     models/router.h \
     models/table_model.h \
     models/router.h \
@@ -58,6 +58,4 @@ FORMS += \
         gui/mainwindow.ui
 
 # Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+ INSTALLS += target

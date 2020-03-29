@@ -5,7 +5,7 @@
 
 #include "models/repository/repository.h"
 
-#include "models/repository/repositorygeneral.h"
+#include "models/repository/repositorytemplate.h"
 
 // Router& router = Router::getInstance();
 
