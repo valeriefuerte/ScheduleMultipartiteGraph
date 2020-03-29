@@ -18,5 +18,9 @@ QJsonObject Subject::toJson() {
 
 void Subject::fromJson(QJsonObject items) {
     this->id = items.value("id").toInt();
-    this->name = items.value("name").toInt();
+    this->name = items.value("name").toString();
+}
+
+QString Subject::toString() {
+    return this->name;
 }

@@ -13,6 +13,7 @@ public:
     virtual QString getClassName();
     virtual void fromJson(QJsonObject);
     virtual QJsonObject toJson();
+    QString toString();
 };
 
 #endif // GROUPSTUDENTS_H

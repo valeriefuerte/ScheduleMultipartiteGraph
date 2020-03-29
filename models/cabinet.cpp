@@ -22,9 +22,12 @@ QJsonObject Cabinet::toJson() {
 }
 
 void Cabinet::fromJson(QJsonObject items) {
-
     this->id = items.value("id").toInt();
     this->number = items.value("number").toInt();
     this->floor = items.value("floor").toInt();
     this->building = items.value("building").toInt();
+}
+
+QString Cabinet::toString() {
+    return QString("");
 }

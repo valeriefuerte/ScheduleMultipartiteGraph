@@ -49,3 +49,7 @@ void LessonTime::fromJson(QJsonObject items) {
     this->dayOfWeek = items.value("dayOfWeek").toInt();
     this->time = QTime(items.value("hour").toInt(), items.value("minute").toInt(), 0, 0);
 }
+
+QString LessonTime::toString() {
+    return QString("");
+}

@@ -20,6 +20,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
       ui->setupUi(this);
+
+      QList<Su/*bject> subjects;
+      Subject subject = Subject();
+      subjects = this->repoSubjects.getAll();
+
+      qDebug()<<"Вывод всех";
+      for (auto it = subjects.begin(); it != subjects.end(); ++it) {
+          subject = *it;
+          qDebug() << subject.name;
+      }*/
+
       /*connect(ui->addSubjectButton,SIGNAL(clicked()),this,SLOT(on_addSubjectButton_clicked()));
       connect(ui->confirmSubjectButton,SIGNAL(clicked()),this,SLOT(on_confirmSubjectButton_clicked()));
       connect(ui->removeSubjectButton,SIGNAL(clicked()),this,SLOT(on_removeSubjectButton_clicked()));
@@ -247,15 +258,15 @@ void MainWindow::on_subject_table_clicked(const QModelIndex &index)
 
 void MainWindow::on_group_table_clicked(const QModelIndex &index)
 {
-    QList<GroupStudents> group;
-    GroupStudents groups = GroupStudents();
-    group = this->repoGroupStudents.getAll();
+    QList<Subject> group;
+    Subject groups = Subject();
+    group = this->repoSubjects.getAll();
 
-        qDebug()<<"Вывод всех";
-        for (auto it = group.begin(); it != group.end(); ++it) {
-            groups = *it;
-            qDebug() << groups.name;
-        }
+    qDebug()<<"Вывод всех";
+    for (auto it = group.begin(); it != group.end(); ++it) {
+        groups = *it;
+        qDebug() << groups.name;
+    }
 
 }
 

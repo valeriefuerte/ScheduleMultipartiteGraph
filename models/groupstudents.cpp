@@ -22,3 +22,7 @@ void GroupStudents::fromJson(QJsonObject items) {
     this->id = items.value("id").toInt();
     this->name = items.value("name").toString();
 }
+
+QString GroupStudents::toString() {
+    return QString("");
+}

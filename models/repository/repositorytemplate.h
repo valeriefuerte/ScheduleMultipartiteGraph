@@ -22,6 +22,7 @@ private:
 public:
     int currentCount = -1;
     QString tname;
+    QString dirStorager = "storage";
     QString dir;
 
     RepositoryGeneral();
@@ -57,7 +58,7 @@ RepositoryGeneral<T>::RepositoryGeneral() {
         throw std::runtime_error("The type of template does not satisfy the required. The type must be a descendant of the abstractNodeRepository class.");
     }
     this->tname = T().getClassName();
-    this->dir = QString("storage/%1").arg(this->tname);
+    this->dir = QString("%1/%2").arg(this->dirStorager).arg(this->tname);
     this->load();
 }
 
@@ -116,15 +117,24 @@ QList<T> RepositoryGeneral<T>::getAll() {
 
 template <class T>
 void RepositoryGeneral<T>::load() {
+    QDir dirStorage(this->dirStorager);
     QDir dir(this->dir);
-    bool ok = dir.exists();
-    if (ok) {
-        dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
-        dir.setSorting(QDir::Name);
-        QFileInfoList list = dir.entryInfoList();
+
+    bool ok = dirStorage.exists();
+    if (!ok) {
+        QDir().mkdir(this->dirStorager);
+    }
+    ok = dir.exists();
+    if (!ok) {
+        QDir().mkdir(this->dir);
+    }
+
+    dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+    dir.setSorting(QDir::Name);
+    QFileInfoList list = dir.entryInfoList();
+    if (!list.empty()){
         QString jsonName = QString("%1/%2").arg(this->dir).arg(list.at(list.size()-1).fileName());
 
-        qDebug() << jsonName;
         QFile jsonFile(jsonName);
         jsonFile.open(QFile::ReadOnly);
         QJsonDocument json = QJsonDocument().fromJson(jsonFile.readAll());
@@ -134,8 +144,6 @@ void RepositoryGeneral<T>::load() {
             t.fromJson(element.toObject());
             this->add(t);
         }
-    } else {
-
     }
 }
 
