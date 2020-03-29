@@ -1,5 +1,6 @@
 #include "table_model.h"
 #include <QTableView>
+#include <QDebug>
 
 
 
@@ -32,8 +33,7 @@ QVariant StringListModel::headerData(int section, Qt::Orientation orientation,
      if (orientation == Qt::Horizontal)
          return QString().arg(section);
      else
-
-         return QString("-").arg(section);
+         return QString("*_*").arg(section);
  }
 Qt::ItemFlags StringListModel::flags(const QModelIndex &index) const
  {
