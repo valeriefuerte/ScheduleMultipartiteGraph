@@ -32,12 +32,11 @@
    formLayout->addRow("Этаж",floorLineEdit);
    formLayout->addRow("Номер",numberLineEdit);
 
-
    formLayout->addWidget(applyButton);
    setLayout(formLayout);
    connect(applyButton,SIGNAL(clicked()),this,SLOT(apply_clicked()));
-   //connect(ui,SIGNAL(sendSelectionCabinet(Cabinet cabinet)),this,SLOT(receiveSelectionCabinet(RepositoryGeneral*)));
-
+   Cabinet *c=new Cabinet();
+   repoCabinets->add(*c);
 }
 
 DialogCabinetWindow::~DialogCabinetWindow(){
@@ -45,23 +44,57 @@ DialogCabinetWindow::~DialogCabinetWindow(){
 }
 
 void DialogCabinetWindow::apply_clicked(){
+    if (!flag){
+        qDebug()<<"false";
     int number = numberLineEdit->text().toInt();
     int floor = floorLineEdit->text().toInt();
     int building=buildingLineEdit->text().toInt();
     Cabinet *cabinet = new Cabinet(number,floor,building);
-    repoCabinets->add(*cabinet);
+    repoCabinets->update(0,*cabinet);
     emit sendDataCabinet(repoCabinets);
+}else{
+        qDebug()<<"Размер транзита до редактирования"<<repoCabinets->currentCount;
+        //Получение изменных значений
+        int buildingCh=buildingLineEdit->text().toInt();
+        int floorCh = floorLineEdit->text().toInt();
+        int numberCh = numberLineEdit->text().toInt();
+        Cabinet *changCabinet =new Cabinet(numberCh,floorCh,buildingCh);
 
+        repoCabinets->update(0,*changCabinet);
+
+        QList<Cabinet> cab;
+        cab = repoCabinets->getAll();
+        qDebug()<<"Output Dialog";
+        foreach (Cabinet c, cab) {
+            qDebug()<<c.building<<c.floor<<c.number;
+        }
+        cab.clear();
+        emit sendEditDataCabinet(repoCabinets);
+    }
     numberLineEdit->clear();
     floorLineEdit->clear();
     buildingLineEdit->clear();
-    repoCabinets->remove(0);
+    //repoCabinets->remove(0);
+    qDebug()<<"Размер транзита"<<repoCabinets->currentCount;
+    QList<Cabinet> cab;
+    /*cab = repoCabinets->getAll();
+    qDebug()<<"after remove Dialog";
+    foreach (Cabinet c, cab) {
+        qDebug()<<c.building<<c.floor<<c.number;
+    }*/
+    qDebug()<<repoCabinets->getById(0).building<<repoCabinets->getById(0).floor<<repoCabinets->getById(0).number;
+    flag = false;
     this->close();
-
-
 }
-void DialogCabinetWindow::receiveSelectionCabinet(RepositoryGeneral<Cabinet> *repoCabinet){
- qDebug()<<"hello";
+void DialogCabinetWindow::receiveSelectionCabinet(Cabinet cabinet){
+    flag = true;
+    //Вывод значений из главной формы
+    QString building = QString::number(cabinet.building);
+    QString number = QString::number(cabinet.number);
+    QString floor = QString::number(cabinet.floor);
+    buildingLineEdit->setText(building);
+    numberLineEdit->setText(number);
+    floorLineEdit->setText(floor);
 }
 
 

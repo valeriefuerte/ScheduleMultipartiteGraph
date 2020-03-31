@@ -26,12 +26,15 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     void  visualRows(QTableView *table,StringListModel *model);
     ~MainWindow();
+private:
+    int selectIndex;
 signals:
-    //void sendSelectionCabinet(Cabinet cabinet);
+    void sendSelectionCabinet(Cabinet cabinet);
 private slots:
 
     //void on_tabWidget_currentChanged(int index);
 
+    void receiveEditDataCabinet(RepositoryGeneral<Cabinet> *repCabinet);
     void receiveDataCabinet(RepositoryGeneral<Cabinet> *repcabinet);
 
     void on_addSubjectButton_clicked();
@@ -50,6 +53,7 @@ private slots:
 
     void on_removeCabinetsButton_clicked();
 
+    void on_editCabinetsButton_clicked();
 
     void on_addTimeButton_clicked();
 
@@ -68,7 +72,6 @@ private slots:
     void on_cabinets_table_doubleClicked(const QModelIndex &index);
 
 
-    void on_editCabinetsButton_clicked();
 
 private:
     Ui::MainWindow *ui;

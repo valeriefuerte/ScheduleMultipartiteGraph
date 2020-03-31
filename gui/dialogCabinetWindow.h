@@ -20,10 +20,12 @@ public:
 
 signals:
     void sendDataCabinet(RepositoryGeneral<Cabinet> *repCabinet);
+    void sendEditDataCabinet(RepositoryGeneral<Cabinet> *repCabinet);
 private slots:
     void apply_clicked();
-    void receiveSelectionCabinet(RepositoryGeneral<Cabinet> *repoCabinet);
-private:
+public slots:
+    void receiveSelectionCabinet(Cabinet cabinet);
+    private:
     QFormLayout *formLayout;
     QVBoxLayout *btnLayout;
 

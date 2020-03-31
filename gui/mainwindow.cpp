@@ -36,7 +36,11 @@ MainWindow::MainWindow(QWidget *parent) :
       this->repoGroupStudents.add(GroupStudents(""));
       groupModel=new StringListModel(*list_gr);
       visualRows(ui->group_table,groupModel);
-
+       //Таблица Кабинеты
+      //list_cb->append("000");
+      //repoCabinets.add(Cabinet());
+      cabinetModel=new StringListModel(*list_cb);
+      //visualRows(ui->cabinets_table,cabinetModel);
 
       //Инициализация диалоговых окон
       dialogEmptyRow = new DialogWindowEmptyRow();
@@ -48,11 +52,11 @@ MainWindow::MainWindow(QWidget *parent) :
       dialogConfirmCabinet = new DialogCabinetWindow();
 
 
-
-
-
       connect(dialogConfirmCabinet, SIGNAL(sendDataCabinet(RepositoryGeneral<Cabinet>*)), this,SLOT(receiveDataCabinet(RepositoryGeneral<Cabinet>*)));
 
+      connect(dialogConfirmCabinet, SIGNAL(sendEditDataCabinet(RepositoryGeneral<Cabinet>*)), this,SLOT(receiveEditDataCabinet(RepositoryGeneral<Cabinet>*)));
+
+      connect(this,SIGNAL(sendSelectionCabinet(Cabinet)),dialogConfirmCabinet,SLOT(receiveSelectionCabinet(Cabinet)));
 
 
 //    Router& router = Router::getInstance();
@@ -261,18 +265,44 @@ void MainWindow::on_addCabinetsButton_clicked()
  }
 
 void MainWindow::receiveDataCabinet(RepositoryGeneral<Cabinet> *receivedCab){
-
-
-
      QList<Cabinet> cab_l;
      cab_l=receivedCab->getAll();
-     repoCabinets.add(cab_l.back());
-
      QString s = QString::number(cab_l.back().building)+QString::number(cab_l.back().floor)+QString::number(cab_l.back().number);
+     repoCabinets.add(receivedCab->getById(0));
      list_cb->append(s);
-
-     cabinetModel=new StringListModel(*list_cb);
+     int index =ui->cabinets_table->currentIndex().row()+1;
+     cabinetModel->insertRow(index);
+     const QModelIndex indexNext=subjectModel->index(index,0);
+     ui->cabinets_table->setCurrentIndex(indexNext);
+     ui->cabinets_table->currentIndex().data().setValue(s);
      visualRows(ui->cabinets_table,cabinetModel);
+}
+void MainWindow::on_editCabinetsButton_clicked()
+{
+    int index=ui->cabinets_table->selectionModel()->currentIndex().row();
+    selectIndex=index;
+    emit sendSelectionCabinet(repoCabinets.getById(index));
+    qDebug()<<"edit called";
+    qDebug()<<repoCabinets.getById(index).building<<repoCabinets.getById(index).floor<<repoCabinets.getById(index).number;
+    dialogConfirmCabinet->show();
+}
+void MainWindow::receiveEditDataCabinet(RepositoryGeneral<Cabinet> *repCabinet){
+    //qDebug()<<"Работает";
+    QList<Cabinet> cab_l;
+    cab_l=repCabinet->getAll();
+
+    QString s = QString::number(cab_l.back().building)+QString::number(cab_l.back().floor)+QString::number(cab_l.back().number);
+    qDebug()<<"Вывод принятого репозитория";
+    QList<Cabinet> cabinets_l;
+        cabinets_l=repCabinet->getAll();
+         foreach (Cabinet cabinet, cabinets_l) {
+            qDebug()<<cabinet.floor<<"\t"<<cabinet.number<<"\t"<<cabinet.building<<"\n";
+        }
+     repoCabinets.update(selectIndex,repCabinet->getById(0));
+     list_cb->replace(selectIndex,s);
+    //qDebug()<<repCabinet->getById(0).building<<repCabinet->getById(0).floor<<repCabinet->getById(0).number;
+    //repoCabinets.update(selectIndex,repCabinet->getById(0));
+
 }
 
 void MainWindow::on_removeCabinetsButton_clicked()
@@ -283,14 +313,6 @@ void MainWindow::on_removeCabinetsButton_clicked()
     ui->cabinets_table->model()->removeRow(r);
 }
 
-/*void MainWindow::on_editCabinetsButton_clicked()
-{
-    int index=ui->cabinets_table->selectionModel()->currentIndex().row();
-     emit sendSelectionCabinet(repoCabinets.getById(index));
-     qDebug()<<repoCabinets.getById(index).floor;
-     dialogConfirmCabinet->show();
-
-}*/
 
 
 void MainWindow::on_cabinets_table_doubleClicked(const QModelIndex &index)
@@ -339,12 +361,8 @@ void MainWindow::on_subject_table_clicked(const QModelIndex &index)
         subject = *it;
         qDebug() << subject.name;
     }
-
-
-
-
-
 }
+
 
 void MainWindow::on_group_table_clicked(const QModelIndex &index)
 {
@@ -370,23 +388,25 @@ void MainWindow::on_group_table_clicked(const QModelIndex &index)
 
 
 
-
-
 void MainWindow::on_cabinets_table_clicked(const QModelIndex &index)
 {
     QList<Cabinet> cabinets_l;
     cabinets_l=this->repoCabinets.getAll();
+    qDebug()<<"Репозиторий";
     foreach (Cabinet cabinet, cabinets_l) {
-        qDebug()<<cabinet.floor<<"\t"<<cabinet.number<<"\t"<<cabinet.building<<"\n";
+        qDebug()<<cabinet.building<<"\t"<<cabinet.floor<<"\t"<<cabinet.number<<"\n";
+    }
+     for (int i = 0;i<list_cb->size();i++) {
+        qDebug()<<list_cb->at(i);
     }
 
-}
+    }
 
 
 
 
 
-void MainWindow::on_editCabinetsButton_clicked()
-{
 
-}
+
+
+
