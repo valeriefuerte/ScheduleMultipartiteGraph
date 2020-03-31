@@ -270,12 +270,15 @@ void MainWindow::receiveDataCabinet(RepositoryGeneral<Cabinet> *receivedCab){
      QString s = QString::number(cab_l.back().building)+QString::number(cab_l.back().floor)+QString::number(cab_l.back().number);
      repoCabinets.add(receivedCab->getById(0));
      list_cb->append(s);
+
      int index =ui->cabinets_table->currentIndex().row()+1;
+     qDebug()<<"Индекс"<<index;
      cabinetModel->insertRow(index);
-     const QModelIndex indexNext=subjectModel->index(index,0);
-     ui->cabinets_table->setCurrentIndex(indexNext);
-     ui->cabinets_table->currentIndex().data().setValue(s);
+     const QModelIndex indexNext=cabinetModel->index(index,0);
+     cabinetModel->setData(indexNext,QVariant(s));
      visualRows(ui->cabinets_table,cabinetModel);
+     ui->cabinets_table->setCurrentIndex(indexNext);
+     qDebug()<<"Индекс после добавления"<<ui->cabinets_table->currentIndex().row();
 }
 void MainWindow::on_editCabinetsButton_clicked()
 {
@@ -300,6 +303,8 @@ void MainWindow::receiveEditDataCabinet(RepositoryGeneral<Cabinet> *repCabinet){
         }
      repoCabinets.update(selectIndex,repCabinet->getById(0));
      list_cb->replace(selectIndex,s);
+     const QModelIndex indexNext=cabinetModel->index(selectIndex,0);
+     cabinetModel->setData(indexNext,QVariant(s));
     //qDebug()<<repCabinet->getById(0).building<<repCabinet->getById(0).floor<<repCabinet->getById(0).number;
     //repoCabinets.update(selectIndex,repCabinet->getById(0));
 
@@ -399,7 +404,7 @@ void MainWindow::on_cabinets_table_clicked(const QModelIndex &index)
      for (int i = 0;i<list_cb->size();i++) {
         qDebug()<<list_cb->at(i);
     }
-
+        qDebug()<<"Индекс по нажатию"<<index.row();
     }
 
 
