@@ -5,10 +5,11 @@
 #include <QDate>
 #include <QTime>
 #include <QDebug>
+#include <QDialog>
 #include "dialogLessonTimeWindow.h"
 
 
-dialogLessonTimeWindow::dialogLessonTimeWindow()
+DialogLessonTimeWindow::DialogLessonTimeWindow(QWidget* parent): QDialog(parent)
 {
     this->setWindowTitle("Данные");
     applyButton = new QPushButton("OK");
@@ -28,9 +29,19 @@ dialogLessonTimeWindow::dialogLessonTimeWindow()
     formLayout->addWidget(applyButton);
     setLayout(formLayout);
 
-    qDebug()<<dateTimeEdit->dateTime();
+    repoTime = new RepositoryGeneral<LessonTime>;
+
+    connect(applyButton,SIGNAL(clicked()),this,SLOT(apply_clicked()));
 
 
+}
 
+DialogLessonTimeWindow::~DialogLessonTimeWindow(){
 
+}
+
+void DialogLessonTimeWindow::apply_clicked(){
+    LessonTime *lt = new LessonTime(timeEdit->time(),dateTimeEdit->date());
+    repoTime->add(*lt);
+    qDebug()<<repoTime->getById(0).datetime;
 }

@@ -62,6 +62,7 @@ template <class T>
 bool RepositoryGeneral<T>::remove(int id) {
     class QList<T>::iterator it = this->getIteratorById(id);
     if (it != this->elements.end()){
+
         elements.erase(it);
        return true;
     }

@@ -6,11 +6,15 @@
 #include<QLineEdit>
 #include <QDateTimeEdit>
 #include<QFormLayout>
+#include <models/repository/repositorygeneral.h>
+#include <models/lessontime.h>
 
-class dialogLessonTimeWindow: public QDialog
-{
+class DialogLessonTimeWindow: public QDialog{
+Q_OBJECT
+
 public:
-    dialogLessonTimeWindow();
+    DialogLessonTimeWindow(QWidget* parent=0);
+    ~DialogLessonTimeWindow();
 private:
     QPushButton *applyButton;
 
@@ -20,6 +24,12 @@ private:
 
     QDateTimeEdit *dateTimeEdit;
     QDateTimeEdit *timeEdit;
+
+    RepositoryGeneral<LessonTime> *repoTime;
+signals:
+
+private slots:
+    void apply_clicked();
 };
 
 #endif // DIALOGLESSONTIMEWINDOW_H

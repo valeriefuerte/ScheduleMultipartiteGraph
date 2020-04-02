@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
       dialogConfrimEdit->resize(300,100);
 
       dialogConfirmCabinet = new DialogCabinetWindow();
-      dialogLessonTime = new dialogLessonTimeWindow();
+      dialogLessonTime = new DialogLessonTimeWindow();
 
       connect(dialogConfirmCabinet, SIGNAL(sendDataCabinet(RepositoryGeneral<Cabinet>*)), this,SLOT(receiveDataCabinet(RepositoryGeneral<Cabinet>*)));
 

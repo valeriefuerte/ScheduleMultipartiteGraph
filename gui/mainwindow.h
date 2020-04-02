@@ -87,7 +87,7 @@ private:
     DialogWindowEmptyRow *dialogEmptyRow;
     DialogWindowConfirmEditRow *dialogConfrimEdit;
     DialogCabinetWindow *dialogConfirmCabinet;
-    dialogLessonTimeWindow *dialogLessonTime;
+    DialogLessonTimeWindow *dialogLessonTime;
 
     //Абстрактные модели QTableView
     StringListModel *subjectModel;

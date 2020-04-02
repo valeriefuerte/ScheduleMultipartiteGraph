@@ -31,8 +31,7 @@ DialogWindowConfirmEditRow::DialogWindowConfirmEditRow(QWidget* parent): QDialog
 DialogWindowConfirmEditRow::~DialogWindowConfirmEditRow(){
 
 }
-void DialogWindowConfirmEditRow
-::clicked_btn(){
+void DialogWindowConfirmEditRow::clicked_btn(){
         this->close();
 
 }
