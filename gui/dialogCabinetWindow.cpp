@@ -14,6 +14,8 @@
 {
    repoCabinets=new RepositoryGeneral<Cabinet>;
    flag = false;
+   addEmpty=false;
+
    this->setWindowTitle("Данные");
    applyButton = new QPushButton("OK");
    applyButton->setMaximumWidth(80);
@@ -28,6 +30,10 @@
    floorLineEdit = new QLineEdit();
    buildingLineEdit = new QLineEdit();
 
+   buildingLineEdit->setValidator(new QIntValidator(0,100,this));
+   floorLineEdit->setValidator(new QIntValidator(0,10,this));
+   numberLineEdit->setValidator(new QIntValidator(0,100,this));
+
    formLayout->addRow("Корпус",buildingLineEdit);
    formLayout->addRow("Этаж",floorLineEdit);
    formLayout->addRow("Номер",numberLineEdit);
@@ -37,7 +43,14 @@
    connect(applyButton,SIGNAL(clicked()),this,SLOT(apply_clicked()));
    Cabinet *c=new Cabinet();
    repoCabinets->add(*c);
+
 }
+
+ void DialogCabinetWindow::clearLineEdit(){
+     numberLineEdit->clear();
+     floorLineEdit->clear();
+     buildingLineEdit->clear();
+ }
 
 DialogCabinetWindow::~DialogCabinetWindow(){
     delete this;
@@ -45,13 +58,18 @@ DialogCabinetWindow::~DialogCabinetWindow(){
 
 void DialogCabinetWindow::apply_clicked(){
     if (!flag){
-        qDebug()<<"false";
     int number = numberLineEdit->text().toInt();
     int floor = floorLineEdit->text().toInt();
     int building=buildingLineEdit->text().toInt();
-    Cabinet *cabinet = new Cabinet(number,floor,building);
-    repoCabinets->update(0,*cabinet);
-    emit sendDataCabinet(repoCabinets);
+        if (buildingLineEdit->text()==""||floorLineEdit->text()==""||numberLineEdit->text()==""){
+            addEmpty = true;
+            DialogWindowEmptyRow *cer = new DialogWindowEmptyRow();
+            cer->show();
+        }else{
+            Cabinet *cabinet = new Cabinet(number,floor,building);
+            repoCabinets->update(0,*cabinet);
+            emit sendDataCabinet(repoCabinets);
+       }
 }else{
         qDebug()<<"Размер транзита до редактирования"<<repoCabinets->currentCount;
         //Получение изменных значений
@@ -71,20 +89,25 @@ void DialogCabinetWindow::apply_clicked(){
         cab.clear();
         emit sendEditDataCabinet(repoCabinets);
     }
-    numberLineEdit->clear();
-    floorLineEdit->clear();
-    buildingLineEdit->clear();
-    //repoCabinets->remove(0);
-    qDebug()<<"Размер транзита"<<repoCabinets->currentCount;
-    QList<Cabinet> cab;
-    /*cab = repoCabinets->getAll();
-    qDebug()<<"after remove Dialog";
-    foreach (Cabinet c, cab) {
-        qDebug()<<c.building<<c.floor<<c.number;
-    }*/
-    qDebug()<<repoCabinets->getById(0).building<<repoCabinets->getById(0).floor<<repoCabinets->getById(0).number;
-    flag = false;
-    this->close();
+if (!addEmpty){
+        numberLineEdit->clear();
+        floorLineEdit->clear();
+        buildingLineEdit->clear();
+        //repoCabinets->remove(0);
+        qDebug()<<"Размер транзита"<<repoCabinets->currentCount;
+        QList<Cabinet> cab;
+        /*cab = repoCabinets->getAll();
+        qDebug()<<"after remove Dialog";
+        foreach (Cabinet c, cab) {
+            qDebug()<<c.building<<c.floor<<c.number;
+        }*/
+        qDebug()<<repoCabinets->getById(0).building<<repoCabinets->getById(0).floor<<repoCabinets->getById(0).number;
+        flag = false;
+        this->close();
+        }
+else {
+    addEmpty=false;
+}
 }
 void DialogCabinetWindow::receiveSelectionCabinet(Cabinet cabinet){
     flag = true;

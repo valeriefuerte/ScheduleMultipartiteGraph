@@ -26,6 +26,7 @@ CONFIG += c++11
 
 SOURCES += \
     gui/dialogCabinetWindow.cpp \
+    gui/dialogLessonTimeWindow.cpp \
     gui/dialogWindowConfrimEditRow.cpp \
     gui/dialogWindowEmptyRow.cpp \
         main.cpp \
@@ -43,6 +44,7 @@ SOURCES += \
 
 HEADERS += \
     gui/dialogCabinetWindow.h \
+    gui/dialogLessonTimeWindow.h \
     gui/dialogWindowConfrimEditRow.h \
     gui/dialogWindowEmptyRow.h \
         gui/mainwindow.h \

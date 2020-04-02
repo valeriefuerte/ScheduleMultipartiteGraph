@@ -16,6 +16,8 @@ public:
     ~DialogCabinetWindow();
     RepositoryGeneral<Cabinet> *repoCabinets;
     bool flag;
+    bool addEmpty;
+    void clearLineEdit();
 
 
 signals:

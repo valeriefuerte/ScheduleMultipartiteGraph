@@ -8,28 +8,31 @@ class RepositoryGeneral
 {
 private:
     QList<T> elements;
-
     class QList<T>::iterator getIteratorById(int id);
+
+
 public:
     int currentCount = -1;
 
     RepositoryGeneral();
     ~RepositoryGeneral();
 
-    // Добавить предмет
+    // Добавить <T>
     void add(T data);
 
-    // Удалить предмет
+    // Удалить <T>
     bool remove(int id);
 
-    // Обновить предмет
+    // Обновить <T>
     bool update(int id, T data);
 
-    // Получить премет
+    // Получить <T>
     T getById(int id);
 
-    // Получить все редметы
+    // Получить все <T>
     QList<T> getAll();
+
+
 };
 
 template <class T>
@@ -59,8 +62,8 @@ template <class T>
 bool RepositoryGeneral<T>::remove(int id) {
     class QList<T>::iterator it = this->getIteratorById(id);
     if (it != this->elements.end()){
-        this->elements.erase(it);
-        return true;
+        elements.erase(it);
+       return true;
     }
     return false;
 }

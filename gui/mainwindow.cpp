@@ -7,12 +7,14 @@
 #include <QHeaderView>
 #include <QDebug>
 #include <QAbstractTableModel>
+#include <QTime>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "models/table_model.h"
 #include "dialogWindowEmptyRow.h"
 #include "dialogCabinetWindow.h"
 #include "models/repository/repositorygeneral.h"
+#include "gui/dialogLessonTimeWindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -27,20 +29,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
       //Начальная визуализация QTableView
       //Таблица "Предметы"
-      list_s->append("");
-      this->repoSubjects.add(Subject(""));
       subjectModel = new StringListModel(*list_s);
-      visualRows(ui->subject_table,subjectModel);
+
       //Таблица "Группы"
-      list_gr->append("");
-      this->repoGroupStudents.add(GroupStudents(""));
       groupModel=new StringListModel(*list_gr);
-      visualRows(ui->group_table,groupModel);
+
        //Таблица Кабинеты
-      //list_cb->append("000");
-      //repoCabinets.add(Cabinet());
       cabinetModel=new StringListModel(*list_cb);
-      //visualRows(ui->cabinets_table,cabinetModel);
 
       //Инициализация диалоговых окон
       dialogEmptyRow = new DialogWindowEmptyRow();
@@ -50,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
       dialogConfrimEdit->resize(300,100);
 
       dialogConfirmCabinet = new DialogCabinetWindow();
-
+      dialogLessonTime = new dialogLessonTimeWindow();
 
       connect(dialogConfirmCabinet, SIGNAL(sendDataCabinet(RepositoryGeneral<Cabinet>*)), this,SLOT(receiveDataCabinet(RepositoryGeneral<Cabinet>*)));
 
@@ -166,22 +161,19 @@ void MainWindow::on_addSubjectButton_clicked()
     int index =ui->subject_table->currentIndex().row()+1;
     subjectModel->insertRow(index);
 
-    this->repoSubjects.add(Subject(""));
+    repoSubjects.add(Subject(""));
     const QModelIndex indexNext=subjectModel->index(index,0);
 
     ui->subject_table->setCurrentIndex(indexNext);
-    ui->subject_table->setModel(subjectModel);
-    ui->subject_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-
-
+    visualRows(ui->subject_table,subjectModel);
 }
 
 void MainWindow::on_removeSubjectButton_clicked()
 {
 
     int index =ui->subject_table->selectionModel()->currentIndex().row();
-    this->repoSubjects.remove(index);
+    qDebug()<<repoSubjects.getById(index).name;
+    repoSubjects.remove(index);
     list_s->removeAt(index);
     ui->subject_table->model()->removeRow(index);
 
@@ -197,7 +189,7 @@ void MainWindow::on_confirmSubjectButton_clicked()
         dialogEmptyRow->show();
     }
     else{
-        this->repoSubjects.update(index,str);
+        repoSubjects.update(index,str);
         list_s->replace(index,str);
      }
 
@@ -225,15 +217,16 @@ void MainWindow::on_addGroupButton_clicked()
             }
     }
        list_gr->append("");
-       int index =ui->group_table->selectionModel()->currentIndex().row()+1;
+       int index =ui->group_table->currentIndex().row()+1;
        groupModel->insertRow(index);
 
        this->repoGroupStudents.add(GroupStudents(""));
        const QModelIndex indexNext=groupModel->index(index,0);
 
        ui->group_table->setCurrentIndex(indexNext);
-       ui->group_table->setModel(groupModel);
-       ui->group_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+       visualRows(ui->group_table,groupModel);
+
+
 }
 
 void MainWindow::on_removeGroupButton_clicked()
@@ -262,6 +255,7 @@ void MainWindow::on_confirmGroupButton_clicked()
 void MainWindow::on_addCabinetsButton_clicked()
 {
     dialogConfirmCabinet->show();
+    dialogConfirmCabinet->clearLineEdit();
  }
 
 void MainWindow::receiveDataCabinet(RepositoryGeneral<Cabinet> *receivedCab){
@@ -286,6 +280,7 @@ void MainWindow::on_editCabinetsButton_clicked()
     selectIndex=index;
     emit sendSelectionCabinet(repoCabinets.getById(index));
     qDebug()<<"edit called";
+    qDebug()<<"Индекс"<<ui->cabinets_table->currentIndex().row();
     qDebug()<<repoCabinets.getById(index).building<<repoCabinets.getById(index).floor<<repoCabinets.getById(index).number;
     dialogConfirmCabinet->show();
 }
@@ -328,10 +323,7 @@ void MainWindow::on_cabinets_table_doubleClicked(const QModelIndex &index)
 
 void MainWindow::on_addTimeButton_clicked()
 {
-    list_tm->append("");
-    StringListModel *model = new StringListModel(*list_tm);
-    ui->time_table->setModel(model);
-    ui->time_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+   dialogLessonTime->show();
 }
 
 void MainWindow::on_removeTimeButton_clicked()
@@ -351,20 +343,21 @@ void MainWindow::on_confirmTimeButton_clicked()
 
 void MainWindow::on_subject_table_clicked(const QModelIndex &index)
 {
-    qDebug()<<ui->subject_table->cursor().pos();
-    QList<Subject> subjects;
-    Subject subject = Subject();
-    subjects = this->repoSubjects.getAll();
+    QList<Subject> repSubjects;
+
+    Subject reSubject = Subject();
+    Subject moSubject=Subject();
+    repSubjects = repoSubjects.getAll();
 
     qDebug()<<"Вывод репозитория";
-    for (auto it = subjects.begin(); it != subjects.end(); ++it) {
-        subject = *it;
-        qDebug() << subject.name;
+    for (auto it = repSubjects.begin(); it != repSubjects.end(); ++it) {
+        reSubject = *it;
+        qDebug() << reSubject.name;
     }
     qDebug()<<"Вывод модели";
     for (auto it = list_s->begin(); it != list_s->end(); ++it) {
-        subject = *it;
-        qDebug() << subject.name;
+        moSubject = *it;
+        qDebug() << moSubject.name;
     }
 }
 
@@ -389,6 +382,8 @@ void MainWindow::on_group_table_clicked(const QModelIndex &index)
         repoGrp = *it;
         qDebug() << repoGrp.name;
     }
+
+
 }
 
 
@@ -405,6 +400,8 @@ void MainWindow::on_cabinets_table_clicked(const QModelIndex &index)
         qDebug()<<list_cb->at(i);
     }
         qDebug()<<"Индекс по нажатию"<<index.row();
+
+
     }
 
 

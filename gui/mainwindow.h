@@ -12,6 +12,7 @@
 #include "gui/dialogCabinetWindow.h";
 #include "gui/dialogWindowConfrimEditRow.h"
 #include "models/table_model.h"
+#include "gui/dialogLessonTimeWindow.h"
 #include <QTableView>
 
 namespace Ui {
@@ -86,6 +87,7 @@ private:
     DialogWindowEmptyRow *dialogEmptyRow;
     DialogWindowConfirmEditRow *dialogConfrimEdit;
     DialogCabinetWindow *dialogConfirmCabinet;
+    dialogLessonTimeWindow *dialogLessonTime;
 
     //Абстрактные модели QTableView
     StringListModel *subjectModel;
