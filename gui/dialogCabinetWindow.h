@@ -4,7 +4,7 @@
 #include <QLabel>
 #include<QLineEdit>
 #include<QFormLayout>
-#include <models/repository/repositorygeneral.h>
+#include <models/repository/repositorytemplate.h>
 #include <models/cabinet.h>
 
 
@@ -14,15 +14,15 @@ class DialogCabinetWindow: public QDialog{
 public:
     DialogCabinetWindow(QWidget* parent=0);
     ~DialogCabinetWindow();
-    RepositoryGeneral<Cabinet> *repoCabinets;
+    RepositoryTemplate<Cabinet> *repoCabinets;
     bool flag;
     bool addEmpty;
     void clearLineEdit();
 
 
 signals:
-    void sendDataCabinet(RepositoryGeneral<Cabinet> *repCabinet);
-    void sendEditDataCabinet(RepositoryGeneral<Cabinet> *repCabinet);
+    void sendDataCabinet(Cabinet cabinet);
+    void sendEditDataCabinet(RepositoryTemplate<Cabinet> *repCabinet);
 private slots:
     void apply_clicked();
 public slots:

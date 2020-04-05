@@ -6,7 +6,7 @@
 #include<QLineEdit>
 #include <QDateTimeEdit>
 #include<QFormLayout>
-#include <models/repository/repositorygeneral.h>
+#include <models/repository/repositorytemplate.h>
 #include <models/lessontime.h>
 
 class DialogLessonTimeWindow: public QDialog{
@@ -25,7 +25,7 @@ private:
     QDateTimeEdit *dateTimeEdit;
     QDateTimeEdit *timeEdit;
 
-    RepositoryGeneral<LessonTime> *repoTime;
+    RepositoryTemplate<LessonTime> *repoTime;
 signals:
 
 private slots:

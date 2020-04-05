@@ -35,8 +35,8 @@ private slots:
 
     //void on_tabWidget_currentChanged(int index);
 
-    void receiveEditDataCabinet(RepositoryGeneral<Cabinet> *repCabinet);
-    void receiveDataCabinet(RepositoryGeneral<Cabinet> *repcabinet);
+    void receiveEditDataCabinet(RepositoryTemplate<Cabinet> *repCabinet);
+    void receiveDataCabinet(Cabinet cabinet);
 
     void on_addSubjectButton_clicked();
 
@@ -66,12 +66,13 @@ private slots:
 
     void on_group_table_clicked(const QModelIndex &index);
 
-
+    void on_saveFile_triggered();
 
     void on_cabinets_table_clicked(const QModelIndex &index);
 
     void on_cabinets_table_doubleClicked(const QModelIndex &index);
 
+<<<<<<< HEAD
 
 
     void on_subject_table_entered(const QModelIndex &index);
@@ -79,6 +80,8 @@ private slots:
 
     void on_subject_table_customContextMenuRequested(const QPoint &pos);
 
+=======
+>>>>>>> 0ff2c780bb8abae6a363d1bad10704d78028cc48
 private:
     Ui::MainWindow *ui;
 
@@ -100,10 +103,10 @@ private:
     StringListModel *cabinetModel;
 
     //Репозитории
-    RepositoryGeneral<Cabinet> repoCabinets;
-    RepositoryGeneral<GroupStudents> repoGroupStudents;
-    RepositoryGeneral<LessonTime> repoLessonsTimes;
-    RepositoryGeneral<Subject> repoSubjects;
+    RepositoryTemplate<Cabinet> repoCabinets;
+    RepositoryTemplate<GroupStudents> repoGroupStudents;
+    RepositoryTemplate<LessonTime> repoLessonsTimes;
+    RepositoryTemplate<Subject> repoSubjects;
 };
 
 #endif // MAINWINDOW_H
