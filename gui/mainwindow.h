@@ -74,6 +74,11 @@ private slots:
 
 
 
+    void on_subject_table_entered(const QModelIndex &index);
+
+
+    void on_subject_table_customContextMenuRequested(const QPoint &pos);
+
 private:
     Ui::MainWindow *ui;
 

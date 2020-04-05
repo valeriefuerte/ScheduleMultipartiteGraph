@@ -2,6 +2,7 @@
 #define REPOSITORYGENERAL_H
 
 #include <QList>
+#include <QDebug>
 
 template <class T>
 class RepositoryGeneral
@@ -62,7 +63,6 @@ template <class T>
 bool RepositoryGeneral<T>::remove(int id) {
     class QList<T>::iterator it = this->getIteratorById(id);
     if (it != this->elements.end()){
-
         elements.erase(it);
        return true;
     }
@@ -83,6 +83,7 @@ bool RepositoryGeneral<T>::update(int id, T data) {
 template <class T>
 T RepositoryGeneral<T>::getById(int id) {
     class QList<T>::iterator it = this->getIteratorById(id);
+
     if(it !=this->elements.end()) {
         return *it;
     }

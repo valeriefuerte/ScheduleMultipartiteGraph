@@ -404,11 +404,13 @@ void MainWindow::on_cabinets_table_clicked(const QModelIndex &index)
 
     }
 
+void MainWindow::on_subject_table_entered(const QModelIndex &index)
+{
+    qDebug()<<"Entered";
+}
 
 
+void MainWindow::on_subject_table_customContextMenuRequested(const QPoint &pos)
+{
 
-
-
-
-
-
+}
