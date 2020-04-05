@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
       dialogConfirmCabinet = new DialogCabinetWindow();
       dialogLessonTime = new DialogLessonTimeWindow();
 
-      connect(dialogConfirmCabinet, SIGNAL(sendDataCabinet(RepositoryTemplate<Cabinet>*)), this,SLOT(receiveDataCabinet(RepositoryTemplate<Cabinet>*)));
+      connect(dialogConfirmCabinet, SIGNAL(sendDataCabinet(Cabinet)), this, SLOT(receiveDataCabinet(Cabinet)));
 
       connect(dialogConfirmCabinet, SIGNAL(sendEditDataCabinet(RepositoryTemplate<Cabinet>*)), this,SLOT(receiveEditDataCabinet(RepositoryTemplate<Cabinet>*)));
 
@@ -146,7 +146,6 @@ void MainWindow::on_addSubjectButton_clicked()
     int index =ui->subject_table->currentIndex().row()+1;
     subjectModel->insertRow(index);
 
-    repoSubjects.add(Subject(""));
     const QModelIndex indexNext=subjectModel->index(index,0);
 
     ui->subject_table->setCurrentIndex(indexNext);
@@ -169,12 +168,12 @@ void MainWindow::on_confirmSubjectButton_clicked()
     int index = ui->subject_table->selectionModel()->currentIndex().row();
     QVariant value = ui->subject_table->selectionModel()->currentIndex().data();
     QString str = value.toString();
-    if ((index==-1)||(str=="")){
+    if (str==""){
         qDebug()<<"Confirm";
         dialogEmptyRow->show();
     }
     else{
-        repoSubjects.update(index,str);
+        repoSubjects.add(str);
         list_s->replace(index,str);
      }
 
@@ -205,7 +204,6 @@ void MainWindow::on_addGroupButton_clicked()
        int index =ui->group_table->currentIndex().row()+1;
        groupModel->insertRow(index);
 
-       this->repoGroupStudents.add(GroupStudents(""));
        const QModelIndex indexNext=groupModel->index(index,0);
 
        ui->group_table->setCurrentIndex(indexNext);
@@ -228,11 +226,11 @@ void MainWindow::on_confirmGroupButton_clicked()
     QVariant value = ui->group_table->selectionModel()->currentIndex().data();
     QString str = value.toString();
 
-    if ((index==-1)||(str=="")){
+    if (str==""){
         dialogEmptyRow->show();
     }
     else{
-        this->repoGroupStudents.update(index,str);
+        this->repoGroupStudents.add(str);
         list_gr->replace(index,str);
      }
 }
@@ -243,11 +241,10 @@ void MainWindow::on_addCabinetsButton_clicked()
     dialogConfirmCabinet->clearLineEdit();
  }
 
-void MainWindow::receiveDataCabinet(RepositoryTemplate<Cabinet> *receivedCab){
-     QList<Cabinet> cab_l;
-     cab_l=receivedCab->getAll();
-     QString s = QString::number(cab_l.back().building)+QString::number(cab_l.back().floor)+QString::number(cab_l.back().number);
-     repoCabinets.add(receivedCab->getById(0));
+void MainWindow::receiveDataCabinet(Cabinet cabinet){
+
+     QString s = QString("%1%2%3").arg(cabinet.building).arg(cabinet.floor).arg(cabinet.number);
+     repoCabinets.add(cabinet);
      list_cb->append(s);
 
      int index =ui->cabinets_table->currentIndex().row()+1;

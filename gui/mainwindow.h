@@ -36,7 +36,7 @@ private slots:
     //void on_tabWidget_currentChanged(int index);
 
     void receiveEditDataCabinet(RepositoryTemplate<Cabinet> *repCabinet);
-    void receiveDataCabinet(RepositoryTemplate<Cabinet> *repcabinet);
+    void receiveDataCabinet(Cabinet cabinet);
 
     void on_addSubjectButton_clicked();
 

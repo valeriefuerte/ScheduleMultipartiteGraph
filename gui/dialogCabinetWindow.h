@@ -21,7 +21,7 @@ public:
 
 
 signals:
-    void sendDataCabinet(RepositoryTemplate<Cabinet> *repCabinet);
+    void sendDataCabinet(Cabinet cabinet);
     void sendEditDataCabinet(RepositoryTemplate<Cabinet> *repCabinet);
 private slots:
     void apply_clicked();
