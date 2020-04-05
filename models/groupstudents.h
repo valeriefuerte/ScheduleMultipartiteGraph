@@ -14,6 +14,8 @@ public:
     virtual void fromJson(QJsonObject);
     virtual QJsonObject toJson();
     QString toString();
+
+    bool operator== (const GroupStudents &object);
 };
 
 #endif // GROUPSTUDENTS_H

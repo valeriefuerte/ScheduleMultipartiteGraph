@@ -29,5 +29,10 @@ void Cabinet::fromJson(QJsonObject items) {
 }
 
 QString Cabinet::toString() {
-    return QString("");
+    return QString("id: %1, number: %2, floor: %3, building: %4").arg(this->id).arg(this->number).arg(this->floor).arg(this->building);
+}
+
+bool Cabinet::operator== (const Cabinet &object)
+{
+    return ((this->building == object.building || object.building != 0) && (this->floor == object.floor || object.floor == 0) && (this->number == object.number ||  object.number == 0));
 }

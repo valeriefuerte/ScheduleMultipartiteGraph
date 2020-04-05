@@ -51,5 +51,10 @@ void LessonTime::fromJson(QJsonObject items) {
 }
 
 QString LessonTime::toString() {
-    return QString("");
+    return QString("id: %1, parity: %2, dayOfWeek: %3, time: %4").arg(this->id).arg(this->parity).arg(this->dayOfWeek).arg(this->time.toString());
+}
+
+bool LessonTime::operator== (const LessonTime &object)
+{
+    return ((this->parity == object.parity || object.parity != 0) && (this->dayOfWeek == object.dayOfWeek || object.dayOfWeek == 0) && (this->time == object.time ||  object.time == QTime(0,0,0,0)));
 }

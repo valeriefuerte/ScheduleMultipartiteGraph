@@ -17,6 +17,8 @@ public:
     virtual void fromJson(QJsonObject);
     virtual QJsonObject toJson();
     QString toString();
+
+    bool operator== (const Cabinet &object);
 };
 
 #endif // CABINET_H

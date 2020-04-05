@@ -22,6 +22,8 @@ public:
     virtual void fromJson(QJsonObject);
     virtual QJsonObject toJson();
     QString toString();
+
+    bool operator== (const LessonTime &object);
 };
 
 #endif // LESSONTIME_H

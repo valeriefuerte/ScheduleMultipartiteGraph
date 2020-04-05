@@ -17,10 +17,15 @@ QJsonObject Subject::toJson() {
 }
 
 void Subject::fromJson(QJsonObject items) {
-    this->id = items.value("id").toInt();
+    this->id = items.value("id").toString().toInt();
     this->name = items.value("name").toString();
 }
 
 QString Subject::toString() {
-    return this->name;
+    return QString("id: %1, name: %2").arg(this->id).arg(this->name);
+}
+
+bool Subject::operator== (const Subject &object)
+{
+    return (this->name == object.name || object.name != "");
 }
