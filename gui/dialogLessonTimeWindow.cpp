@@ -29,7 +29,7 @@ DialogLessonTimeWindow::DialogLessonTimeWindow(QWidget* parent): QDialog(parent)
     formLayout->addWidget(applyButton);
     setLayout(formLayout);
 
-    repoTime = new RepositoryGeneral<LessonTime>;
+    repoTime = new RepositoryTemplate<LessonTime>;
 
     connect(applyButton,SIGNAL(clicked()),this,SLOT(apply_clicked()));
 
@@ -41,7 +41,7 @@ DialogLessonTimeWindow::~DialogLessonTimeWindow(){
 }
 
 void DialogLessonTimeWindow::apply_clicked(){
-    LessonTime *lt = new LessonTime(timeEdit->time(),dateTimeEdit->date());
+    LessonTime *lt = new LessonTime(dateTimeEdit->date().weekNumber()%2, dateTimeEdit->date().dayOfWeek(), timeEdit->time());
     repoTime->add(*lt);
-    qDebug()<<repoTime->getById(0).datetime;
+    qDebug()<<repoTime->getById(0).toString();
 }

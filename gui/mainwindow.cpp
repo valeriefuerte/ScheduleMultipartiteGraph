@@ -13,7 +13,7 @@
 #include "models/table_model.h"
 #include "dialogWindowEmptyRow.h"
 #include "dialogCabinetWindow.h"
-#include "models/repository/repositorygeneral.h"
+#include "models/repository/repositorytemplate.h"
 #include "gui/dialogLessonTimeWindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -47,86 +47,71 @@ MainWindow::MainWindow(QWidget *parent) :
       dialogConfirmCabinet = new DialogCabinetWindow();
       dialogLessonTime = new DialogLessonTimeWindow();
 
-      connect(dialogConfirmCabinet, SIGNAL(sendDataCabinet(RepositoryGeneral<Cabinet>*)), this,SLOT(receiveDataCabinet(RepositoryGeneral<Cabinet>*)));
+      connect(dialogConfirmCabinet, SIGNAL(sendDataCabinet(Cabinet)), this, SLOT(receiveDataCabinet(Cabinet)));
 
-      connect(dialogConfirmCabinet, SIGNAL(sendEditDataCabinet(RepositoryGeneral<Cabinet>*)), this,SLOT(receiveEditDataCabinet(RepositoryGeneral<Cabinet>*)));
+      connect(dialogConfirmCabinet, SIGNAL(sendEditDataCabinet(RepositoryTemplate<Cabinet>*)), this,SLOT(receiveEditDataCabinet(RepositoryTemplate<Cabinet>*)));
 
       connect(this,SIGNAL(sendSelectionCabinet(Cabinet)),dialogConfirmCabinet,SLOT(receiveSelectionCabinet(Cabinet)));
 
+      //    qDebug() << "Кабинеты: " << endl;
+      //    for (auto it = this->repoCabinets.begin(), end = this->repoCabinets.end(); it < end; ++it) {
+      //        auto element = *it;
+      //        qDebug() << element.toString() << endl;
+      //    }
 
-//    Router& router = Router::getInstance();
-//    QStringList list_s, list_tech, list_gr, list_cab, list_times;
-//    list_s <<"Ин.яз"<<"АКЗ"<<"РСОС"<<"СК в ПС"<<"ООТРП";
-//    list_tech <<"Комисарова"<<"Черниченко"<<"Самойленко"<<"Колянов"<<"Спицын"<<"Борисенко";
-//    list_gr<<"5303"<<"5304"<<"5373"<<"5374"<<"5381";
-//    list_cab<<"2122"<<"3313"<<"3404"<<"3410"<<"3413"<<"5322";
+      //    qDebug() << endl << "Время: " << endl;
+      //    for (auto it = this->repoLessonsTimes.begin(), end = this->repoLessonsTimes.end(); it < end; ++it) {
+      //        auto element = *it;
+      //        qDebug() << element.toString() << endl;
+      //    }
 
-//    StringListModel *model = new StringListModel(list_s);
-//    StringListModel *model1 = new StringListModel(list_tech);
-//    StringListModel *model2 = new StringListModel(list_gr);
-//    StringListModel *model3 = new StringListModel(list_cab);
-//    ui->subject_table->setModel(model);
-//    ui->teacher_table->setModel(model1);
-//    ui->group_table->setModel(model2);
-//    ui->cabinets_table->setModel(model3);
+      //    qDebug() << endl << "Группы: " << endl;
+      //    for (auto it = this->repoGroupStudents.begin(), end = this->repoGroupStudents.end(); it < end; ++it) {
+      //        auto element = *it;
+      //        qDebug() << element.toString() << endl;
+      //    }
 
-//    ui->subject_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-//    ui->teacher_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-//    ui->group_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-//    ui->cabinets_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+      //    qDebug() << endl << "Дисциплины: " << endl;
+      //    for (auto it = this->repoSubjects.begin(), end = this->repoSubjects.end(); it < end; ++it) {
+      //        auto element = *it;
+      //        qDebug() << element.toString() << endl;
+      //    }
 
+      //    auto s = this->repoSubjects.getById(2);
+      //    qDebug() << "Получение по id" << endl;
+      //    qDebug() << s.toString() << endl;
 
+      //    qDebug() << "Получение по параметрам" << endl;
+      //    for (auto e : this->repoSubjects.getByParameters(Subject("йцуйцу"))) {
+      //        qDebug() << e.toString() << endl;
+      //    }
 
+      //    qDebug() << "Добавление элемента 'Новый элемент'" << endl;
+      //    this->repoSubjects.add(Subject("Новый элемент"));
+      //    qDebug() << endl << "Дисциплины: " << endl;
+      //    for (auto e : this->repoSubjects.getAll()) {
+      //        qDebug() << e.toString() << endl;
+      //    }
 
+      //    qDebug() << "Изменение элемента 'Новый элемент' на 'Измененный элемент'" << endl;
+      //    this->repoSubjects.update(4, Subject("Измененный элемент"));
+      //    qDebug() << endl << "Дисциплины: " << endl;
+      //    for (auto e : this->repoSubjects.getAll()) {
+      //        qDebug() << e.toString() << endl;
+      //    }
 
-            //setText(router.getRepository()->setHelloString());
-
-    // установка оформления statusBar
-//    ui->statusBar->setStyleSheet("background-color: #333; color: #33bb33");
-      //    ui->statusBar->setFont(QFont("Consolas", 14));
-//    ui->statusBar->showMessage(tr("State: ready 0123456789"));
-}//
+      //    qDebug() << "Удаление элемента 'Измененный элемент'" << endl;
+      //    this->repoSubjects.remove(4);
+      //    qDebug() << endl << "Дисциплины: " << endl;
+      //    for (auto e : this->repoSubjects.getAll()) {
+      //        qDebug() << e.toString() << endl;
+      //    }
+}
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-
-/*void MainWindow::on_tabWidget_currentChanged(int index)
-{
-    // Переменные куда будем записывать значения (нужны для отладки)
-    QList<Subject> subjects;
-    Subject subject = Subject();
-
-    // Добавляем различные преметы
-    this->repoSubjects.add(Subject("АКЗ"));
-    this->repoSubjects.add(Subject("РЯП"));
-    this->repoSubjects.add(Subject("ООТРвПО"));
-    this->repoSubjects.add(Subject("ВиАПО"));
-
-    // Получить все предметы
-    subjects = this->repoSubjects.getAll();
-
-    QStringList list_s;
-
-    for (auto it = subjects.begin(); it != subjects.end(); ++it) {
-        subject = *it;
-        list_s << subject.name;
-    }
-
-    StringListModel *model = new StringListModel(list_s);
-    ui->subject_table->setModel(model);
-    ui->subject_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);*/
-
-//    // Получить конкретный предмет
-//    subject = repoSubjects.getById(1);
-
-//    // Удалить конкретный предмет
-//    repoSubjects.remove(2);
-
-//    // Изменить конкретный предмет
-//    repoSubjects.update(3, Subject("СКвПС"));
-//}
 
 void MainWindow::visualRows(QTableView *table, StringListModel *model){
     table->setModel(model);
@@ -161,7 +146,6 @@ void MainWindow::on_addSubjectButton_clicked()
     int index =ui->subject_table->currentIndex().row()+1;
     subjectModel->insertRow(index);
 
-    repoSubjects.add(Subject(""));
     const QModelIndex indexNext=subjectModel->index(index,0);
 
     ui->subject_table->setCurrentIndex(indexNext);
@@ -184,12 +168,12 @@ void MainWindow::on_confirmSubjectButton_clicked()
     int index = ui->subject_table->selectionModel()->currentIndex().row();
     QVariant value = ui->subject_table->selectionModel()->currentIndex().data();
     QString str = value.toString();
-    if ((index==-1)||(str=="")){
+    if (str==""){
         qDebug()<<"Confirm";
         dialogEmptyRow->show();
     }
     else{
-        repoSubjects.update(index,str);
+        repoSubjects.add(str);
         list_s->replace(index,str);
      }
 
@@ -220,7 +204,6 @@ void MainWindow::on_addGroupButton_clicked()
        int index =ui->group_table->currentIndex().row()+1;
        groupModel->insertRow(index);
 
-       this->repoGroupStudents.add(GroupStudents(""));
        const QModelIndex indexNext=groupModel->index(index,0);
 
        ui->group_table->setCurrentIndex(indexNext);
@@ -243,11 +226,11 @@ void MainWindow::on_confirmGroupButton_clicked()
     QVariant value = ui->group_table->selectionModel()->currentIndex().data();
     QString str = value.toString();
 
-    if ((index==-1)||(str=="")){
+    if (str==""){
         dialogEmptyRow->show();
     }
     else{
-        this->repoGroupStudents.update(index,str);
+        this->repoGroupStudents.add(str);
         list_gr->replace(index,str);
      }
 }
@@ -258,11 +241,10 @@ void MainWindow::on_addCabinetsButton_clicked()
     dialogConfirmCabinet->clearLineEdit();
  }
 
-void MainWindow::receiveDataCabinet(RepositoryGeneral<Cabinet> *receivedCab){
-     QList<Cabinet> cab_l;
-     cab_l=receivedCab->getAll();
-     QString s = QString::number(cab_l.back().building)+QString::number(cab_l.back().floor)+QString::number(cab_l.back().number);
-     repoCabinets.add(receivedCab->getById(0));
+void MainWindow::receiveDataCabinet(Cabinet cabinet){
+
+     QString s = QString("%1%2%3").arg(cabinet.building).arg(cabinet.floor).arg(cabinet.number);
+     repoCabinets.add(cabinet);
      list_cb->append(s);
 
      int index =ui->cabinets_table->currentIndex().row()+1;
@@ -284,7 +266,7 @@ void MainWindow::on_editCabinetsButton_clicked()
     qDebug()<<repoCabinets.getById(index).building<<repoCabinets.getById(index).floor<<repoCabinets.getById(index).number;
     dialogConfirmCabinet->show();
 }
-void MainWindow::receiveEditDataCabinet(RepositoryGeneral<Cabinet> *repCabinet){
+void MainWindow::receiveEditDataCabinet(RepositoryTemplate<Cabinet> *repCabinet){
     //qDebug()<<"Работает";
     QList<Cabinet> cab_l;
     cab_l=repCabinet->getAll();
@@ -388,6 +370,14 @@ void MainWindow::on_group_table_clicked(const QModelIndex &index)
 
 
 
+void MainWindow::on_saveFile_triggered()
+{
+    this->repoCabinets.save();
+    this->repoSubjects.save();
+    this->repoLessonsTimes.save();
+    this->repoGroupStudents.save();
+}
+
 void MainWindow::on_cabinets_table_clicked(const QModelIndex &index)
 {
     QList<Cabinet> cabinets_l;
@@ -402,13 +392,4 @@ void MainWindow::on_cabinets_table_clicked(const QModelIndex &index)
         qDebug()<<"Индекс по нажатию"<<index.row();
 
 
-    }
-
-
-
-
-
-
-
-
-
+}
