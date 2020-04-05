@@ -1,5 +1,5 @@
-#ifndef REPOSITORYGENERAL_H
-#define REPOSITORYGENERAL_H
+#ifndef REPOSITORYTEMPLATE_H
+#define REPOSITORYTEMPLATE_H
 
 #include <QDebug>
 #include <QList>
@@ -13,7 +13,7 @@
 #include <ctime>
 
 template <class T>
-class RepositoryGeneral
+class RepositoryTemplate
 {
 private:
     // Список всех нод.
@@ -48,8 +48,8 @@ private:
     class QList<T>::iterator getIteratorById(int id);
 
 public:
-    RepositoryGeneral();
-    ~RepositoryGeneral();
+    RepositoryTemplate();
+    ~RepositoryTemplate();
 
     // Добавить объект.
     int add(T data);
@@ -75,6 +75,8 @@ public:
     // Конец итератора
     class QList<T>::iterator end();
 
+    int getIncrement();
+
     // Сохранить все объекты на диск.
     void save();
 
@@ -85,12 +87,12 @@ public:
 // Начало инициализации
 
 template <class T>
-RepositoryGeneral<T>::RepositoryGeneral() {
+RepositoryTemplate<T>::RepositoryTemplate() {
     this->init();
 }
 
 template <class T>
-void RepositoryGeneral<T>::init() {
+void RepositoryTemplate<T>::init() {
     this->checkNode();
     this->initEnvironment();
     this->initStorage();
@@ -98,7 +100,7 @@ void RepositoryGeneral<T>::init() {
 }
 
 template <class T>
-void RepositoryGeneral<T>::checkNode() {
+void RepositoryTemplate<T>::checkNode() {
     // Проверка на наследование ноды от abstractNodeRepository
     abstractNodeRepository* test = dynamic_cast<abstractNodeRepository*> (new T);
     if (!test) {
@@ -107,13 +109,13 @@ void RepositoryGeneral<T>::checkNode() {
 }
 
 template <class T>
-void RepositoryGeneral<T>::initEnvironment() {
+void RepositoryTemplate<T>::initEnvironment() {
     this->tname = T().getClassName();
     this->dir = QString("%1/%2").arg(this->dirStorager).arg(this->tname);
 }
 
 template <class T>
-void RepositoryGeneral<T>::initStorage() {
+void RepositoryTemplate<T>::initStorage() {
     QDir dirStorage(this->dirStorager);
     QDir dir(this->dir);
 
@@ -128,7 +130,7 @@ void RepositoryGeneral<T>::initStorage() {
 }
 
 template <class T>
-void RepositoryGeneral<T>::load() {
+void RepositoryTemplate<T>::load() {
     // Достаем список файлов для сущности, с которой работает репозиторий
     QDir dir(this->dir);
     dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
@@ -163,21 +165,21 @@ void RepositoryGeneral<T>::load() {
 // Конец инициализации
 
 template <class T>
-class QList<T>::iterator RepositoryGeneral<T>::getIteratorById(int id) {
+class QList<T>::iterator RepositoryTemplate<T>::getIteratorById(int id) {
     class QList<T>::iterator it = std::find_if(this->elements.begin(), this->elements.end(), [id](T element){ return element.id == id; });
     return it;
 }
 
 template <class T>
-int RepositoryGeneral<T>::add(T data) {
+int RepositoryTemplate<T>::add(T data) {
     this->increment++;
     data.id = this->increment;
     this->elements.append(data);
-    return this->increment;
+    return data.id;
 }
 
 template <class T>
-bool RepositoryGeneral<T>::remove(int id) {
+bool RepositoryTemplate<T>::remove(int id) {
     class QList<T>::iterator it = this->getIteratorById(id);
     if (it != this->elements.end()){
         this->elements.erase(it);
@@ -187,7 +189,7 @@ bool RepositoryGeneral<T>::remove(int id) {
 }
 
 template <class T>
-bool RepositoryGeneral<T>::update(int id, T data) {
+bool RepositoryTemplate<T>::update(int id, T data) {
     class QList<T>::iterator it = this->getIteratorById(id);
     if (it != this->elements.end()){
         data.id = id;
@@ -198,7 +200,7 @@ bool RepositoryGeneral<T>::update(int id, T data) {
 }
 
 template <class T>
-T RepositoryGeneral<T>::getById(int id) {
+T RepositoryTemplate<T>::getById(int id) {
     class QList<T>::iterator it = this->getIteratorById(id);
     if(it !=this->elements.end()) {
         return *it;
@@ -207,7 +209,7 @@ T RepositoryGeneral<T>::getById(int id) {
 }
 
 template <class T>
-QList<T> RepositoryGeneral<T>::getByParameters(T searchObject) {
+QList<T> RepositoryTemplate<T>::getByParameters(T searchObject) {
     QList<T> elements;
     for (T element : this->elements) {
         if (element == searchObject) {
@@ -218,24 +220,30 @@ QList<T> RepositoryGeneral<T>::getByParameters(T searchObject) {
 }
 
 template <class T>
-QList<T> RepositoryGeneral<T>::getAll() {
+QList<T> RepositoryTemplate<T>::getAll() {
     return this->elements;
 }
 
 template <class T>
-class QList<T>::iterator RepositoryGeneral<T>::begin()
+int RepositoryTemplate<T>::getIncrement()
+{
+    return this->increment;
+}
+
+template <class T>
+class QList<T>::iterator RepositoryTemplate<T>::begin()
 {
     return this->elements.begin();
 }
 
 template <class T>
-class QList<T>::iterator RepositoryGeneral<T>::end()
+class QList<T>::iterator RepositoryTemplate<T>::end()
 {
     return this->elements.end();
 }
 
 template <class T>
-void RepositoryGeneral<T>::save() {
+void RepositoryTemplate<T>::save() {
     QJsonDocument json;
 
     QJsonArray data;
@@ -260,7 +268,7 @@ void RepositoryGeneral<T>::save() {
 }
 
 template <class T>
-RepositoryGeneral<T>::~RepositoryGeneral() {
+RepositoryTemplate<T>::~RepositoryTemplate() {
 //    this->save();
 }
-#endif // REPOSITORYGENERAL_H
+#endif // REPOSITORYTEMPLATE_H

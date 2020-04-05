@@ -6,13 +6,13 @@
 #include <qcheckbox.h>
 #include <QDebug>
 #include<QFormLayout>
-#include<models/repository/repositorygeneral.h>
+#include<models/repository/repositorytemplate.h>
 #include<models/cabinet.h>
 #include <gui/mainwindow.h>
 
  DialogCabinetWindow::DialogCabinetWindow(QWidget* parent): QDialog(parent)
 {
-   repoCabinets=new RepositoryGeneral<Cabinet>;
+   repoCabinets=new RepositoryTemplate<Cabinet>;
    flag = false;
    addEmpty=false;
 
@@ -71,7 +71,7 @@ void DialogCabinetWindow::apply_clicked(){
             emit sendDataCabinet(repoCabinets);
        }
 }else{
-        qDebug()<<"Размер транзита до редактирования"<<repoCabinets->currentCount;
+        qDebug()<<"Размер транзита до редактирования"<<repoCabinets->getIncrement();
         //Получение изменных значений
         int buildingCh=buildingLineEdit->text().toInt();
         int floorCh = floorLineEdit->text().toInt();
@@ -94,7 +94,7 @@ if (!addEmpty){
         floorLineEdit->clear();
         buildingLineEdit->clear();
         //repoCabinets->remove(0);
-        qDebug()<<"Размер транзита"<<repoCabinets->currentCount;
+        qDebug()<<"Размер транзита"<<repoCabinets->getIncrement();
         QList<Cabinet> cab;
         /*cab = repoCabinets->getAll();
         qDebug()<<"after remove Dialog";

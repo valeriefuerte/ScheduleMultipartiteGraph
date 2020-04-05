@@ -13,7 +13,7 @@
 #include "models/table_model.h"
 #include "dialogWindowEmptyRow.h"
 #include "dialogCabinetWindow.h"
-#include "models/repository/repositorygeneral.h"
+#include "models/repository/repositorytemplate.h"
 #include "gui/dialogLessonTimeWindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -47,9 +47,9 @@ MainWindow::MainWindow(QWidget *parent) :
       dialogConfirmCabinet = new DialogCabinetWindow();
       dialogLessonTime = new DialogLessonTimeWindow();
 
-      connect(dialogConfirmCabinet, SIGNAL(sendDataCabinet(RepositoryGeneral<Cabinet>*)), this,SLOT(receiveDataCabinet(RepositoryGeneral<Cabinet>*)));
+      connect(dialogConfirmCabinet, SIGNAL(sendDataCabinet(RepositoryTemplate<Cabinet>*)), this,SLOT(receiveDataCabinet(RepositoryTemplate<Cabinet>*)));
 
-      connect(dialogConfirmCabinet, SIGNAL(sendEditDataCabinet(RepositoryGeneral<Cabinet>*)), this,SLOT(receiveEditDataCabinet(RepositoryGeneral<Cabinet>*)));
+      connect(dialogConfirmCabinet, SIGNAL(sendEditDataCabinet(RepositoryTemplate<Cabinet>*)), this,SLOT(receiveEditDataCabinet(RepositoryTemplate<Cabinet>*)));
 
       connect(this,SIGNAL(sendSelectionCabinet(Cabinet)),dialogConfirmCabinet,SLOT(receiveSelectionCabinet(Cabinet)));
 
@@ -243,7 +243,7 @@ void MainWindow::on_addCabinetsButton_clicked()
     dialogConfirmCabinet->clearLineEdit();
  }
 
-void MainWindow::receiveDataCabinet(RepositoryGeneral<Cabinet> *receivedCab){
+void MainWindow::receiveDataCabinet(RepositoryTemplate<Cabinet> *receivedCab){
      QList<Cabinet> cab_l;
      cab_l=receivedCab->getAll();
      QString s = QString::number(cab_l.back().building)+QString::number(cab_l.back().floor)+QString::number(cab_l.back().number);
@@ -269,7 +269,7 @@ void MainWindow::on_editCabinetsButton_clicked()
     qDebug()<<repoCabinets.getById(index).building<<repoCabinets.getById(index).floor<<repoCabinets.getById(index).number;
     dialogConfirmCabinet->show();
 }
-void MainWindow::receiveEditDataCabinet(RepositoryGeneral<Cabinet> *repCabinet){
+void MainWindow::receiveEditDataCabinet(RepositoryTemplate<Cabinet> *repCabinet){
     //qDebug()<<"Работает";
     QList<Cabinet> cab_l;
     cab_l=repCabinet->getAll();
