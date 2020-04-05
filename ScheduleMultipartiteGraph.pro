@@ -25,6 +25,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    gui/dialogCabinetWindow.cpp \
+    gui/dialogLessonTimeWindow.cpp \
+    gui/dialogWindowConfrimEditRow.cpp \
+    gui/dialogWindowEmptyRow.cpp \
         main.cpp \
         gui/mainwindow.cpp \
     models/abstractnoderepository.cpp \
@@ -39,6 +43,10 @@ SOURCES += \
 
 
 HEADERS += \
+    gui/dialogCabinetWindow.h \
+    gui/dialogLessonTimeWindow.h \
+    gui/dialogWindowConfrimEditRow.h \
+    gui/dialogWindowEmptyRow.h \
         gui/mainwindow.h \
     models/abstractnoderepository.h \
     models/cabinet.h \
