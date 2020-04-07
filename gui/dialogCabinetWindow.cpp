@@ -12,11 +12,10 @@
 
  DialogCabinetWindow::DialogCabinetWindow(QWidget* parent): QDialog(parent)
 {
-   repoCabinets=new RepositoryTemplate<Cabinet>;
    flag = false;
    addEmpty=false;
 
-   this->setWindowTitle("Данные");
+   //this->setWindowTitle("Данные");
    applyButton = new QPushButton("OK");
    applyButton->setMaximumWidth(80);
 
@@ -41,7 +40,7 @@
    formLayout->addWidget(applyButton);
    setLayout(formLayout);
    connect(applyButton,SIGNAL(clicked()),this,SLOT(apply_clicked()));
-}
+ }
 
  void DialogCabinetWindow::clearLineEdit(){
      numberLineEdit->clear();
@@ -54,15 +53,37 @@ DialogCabinetWindow::~DialogCabinetWindow(){
 }
 
 void DialogCabinetWindow::apply_clicked(){
+
     int number = numberLineEdit->text().toInt();
     int floor = floorLineEdit->text().toInt();
-    int building=buildingLineEdit->text().toInt();
+    int building = buildingLineEdit->text().toInt();
+
+if (!flag){
     Cabinet cabinet(number,floor,building);
     emit sendDataCabinet(cabinet);
     this->close();
+ } else if (flag){
+     emit sendEditDataCabinet(Cabinet(numberLineEdit->text().toInt(),floorLineEdit->text().toInt(),buildingLineEdit->text().toInt()));
+    this->close();
+ }
+    flag = false;
 }
-void DialogCabinetWindow::receiveSelectionCabinet(Cabinet cabinet){
+
+void DialogCabinetWindow::editTitle(){
+    this->setWindowTitle("Редактирование");
+}
+void DialogCabinetWindow::addTitle(){
+    this->setWindowTitle("Добавление");
+}
+
+void DialogCabinetWindow::outputEditData(Cabinet cabinetEdit){
+    flag = true;
+
+    buildingLineEdit->setText(QString("%1").arg(cabinetEdit.building));
+    floorLineEdit->setText(QString("%1").arg(cabinetEdit.floor));
+    numberLineEdit->setText(QString("%1").arg(cabinetEdit.number));
 
 }
+
 
 

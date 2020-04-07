@@ -183,6 +183,7 @@ bool RepositoryTemplate<T>::remove(int id) {
     class QList<T>::iterator it = this->getIteratorById(id);
     if (it != this->elements.end()){
         this->elements.erase(it);
+        this->increment--;
         return true;
     }
     return false;

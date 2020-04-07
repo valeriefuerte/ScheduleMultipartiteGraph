@@ -8,11 +8,17 @@
 #include "models/groupstudents.h"
 #include "models/lessontime.h"
 #include "models/subject.h"
-#include "dialogWindowEmptyRow.h"
-#include "gui/dialogCabinetWindow.h";
-#include "gui/dialogWindowConfrimEditRow.h"
 #include "models/table_model.h"
-#include "gui/dialogLessonTimeWindow.h"
+
+#include "dialogSubjectWindow.h"
+#include "dialogGroupWindow.h"
+#include "dialogWindowEmptyRow.h"
+#include "dialogCabinetWindow.h"
+#include "dialogWindowConfrimEditRow.h"
+#include "dialogLessonTimeWindow.h"
+
+
+
 #include <QTableView>
 
 namespace Ui {
@@ -28,33 +34,42 @@ public:
     void  visualRows(QTableView *table,StringListModel *model);
     ~MainWindow();
 private:
-    int selectIndex;
+
 signals:
     void sendSelectionCabinet(Cabinet cabinet);
 private slots:
 
     //void on_tabWidget_currentChanged(int index);
 
-    void receiveEditDataCabinet(RepositoryTemplate<Cabinet> *repCabinet);
-    void receiveDataCabinet(Cabinet cabinet);
+    void receiveEditDataSubject(Subject);
 
-    void on_addSubjectButton_clicked();
+    void receiveDataSubject(Subject);
 
-    void on_removeSubjectButton_clicked();
+    void receiveEditDataGroup(GroupStudents);
 
-    void on_confirmSubjectButton_clicked();
+    void receiveDataGroup(GroupStudents);
 
-    void on_addGroupButton_clicked();
+    void receiveEditDataCabinet(Cabinet);
 
-    void on_removeGroupButton_clicked();
+    void receiveDataCabinet(Cabinet);
 
-    void on_confirmGroupButton_clicked();
+    void slotSubjectAddRecord();
 
-    void on_addCabinetsButton_clicked();
+    void slotSubjectRemoveRecord();
 
-    void on_removeCabinetsButton_clicked();
+    void slotSubjectEditRecord();
 
-    void on_editCabinetsButton_clicked();
+    void slotGroupAddRecord();
+
+    void slotGroupEditRecord();
+
+    void slotGroupRemoveRecord();
+
+    void slotCabinetAddRecord();
+
+    void slotCabinetEditRecord();
+
+    void slotCabinetRemoveRecord();
 
     void on_addTimeButton_clicked();
 
@@ -70,18 +85,16 @@ private slots:
 
     void on_cabinets_table_clicked(const QModelIndex &index);
 
-    void on_cabinets_table_doubleClicked(const QModelIndex &index);
+    //Контекстные меню
+    void customSubjectMenuRequested(const QPoint &pos);
 
-<<<<<<< HEAD
+    void customGroupMenuRequested(const QPoint &pos);
+
+    void customCabinetMenuRequested(const QPoint &pos);
+
+    //void customTimeMenuRequested(const QPoint &pos);
 
 
-    void on_subject_table_entered(const QModelIndex &index);
-
-
-    void on_subject_table_customContextMenuRequested(const QPoint &pos);
-
-=======
->>>>>>> 0ff2c780bb8abae6a363d1bad10704d78028cc48
 private:
     Ui::MainWindow *ui;
 
@@ -92,9 +105,11 @@ private:
     QStringList *list_tm;
 
     //Диалоговые окна
+    DialogSubjectWindow *dialogSubject;
+    DialogGroupWindow *dialogGroup;
     DialogWindowEmptyRow *dialogEmptyRow;
     DialogWindowConfirmEditRow *dialogConfrimEdit;
-    DialogCabinetWindow *dialogConfirmCabinet;
+    DialogCabinetWindow *dialogCabinet;
     DialogLessonTimeWindow *dialogLessonTime;
 
     //Абстрактные модели QTableView

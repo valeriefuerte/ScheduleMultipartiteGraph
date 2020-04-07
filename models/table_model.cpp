@@ -26,14 +26,13 @@ QVariant StringListModel::data(const QModelIndex &index, int role) const
 QVariant StringListModel::headerData(int section, Qt::Orientation orientation,
                                       int role) const
  {
-     qint8 i = 0;
      if (role != Qt::DisplayRole)
          return QVariant();
 
      if (orientation == Qt::Horizontal)
          return QString().arg(section);
      else
-         return QString("*_*").arg(section);
+         return QString("%1").arg(section);
  }
 Qt::ItemFlags StringListModel::flags(const QModelIndex &index) const
  {

@@ -6,27 +6,24 @@
 #include<QFormLayout>
 #include <models/repository/repositorytemplate.h>
 #include <models/cabinet.h>
-
-
-
 class DialogCabinetWindow: public QDialog{
     Q_OBJECT
 public:
     DialogCabinetWindow(QWidget* parent=0);
     ~DialogCabinetWindow();
-    RepositoryTemplate<Cabinet> *repoCabinets;
     bool flag;
     bool addEmpty;
     void clearLineEdit();
-
+    void editTitle();
+    void addTitle();
+    void outputEditData(Cabinet editCabinet);
 
 signals:
     void sendDataCabinet(Cabinet cabinet);
-    void sendEditDataCabinet(RepositoryTemplate<Cabinet> *repCabinet);
+    void sendEditDataCabinet(Cabinet cabinet);
 private slots:
     void apply_clicked();
 public slots:
-    void receiveSelectionCabinet(Cabinet cabinet);
     private:
     QFormLayout *formLayout;
     QVBoxLayout *btnLayout;

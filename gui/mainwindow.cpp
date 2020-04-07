@@ -30,12 +30,15 @@ MainWindow::MainWindow(QWidget *parent) :
       //Начальная визуализация QTableView
       //Таблица "Предметы"
       subjectModel = new StringListModel(*list_s);
+      ui->subject_table->setContextMenuPolicy(Qt::CustomContextMenu);
 
       //Таблица "Группы"
       groupModel=new StringListModel(*list_gr);
+      ui->group_table->setContextMenuPolicy(Qt::CustomContextMenu);
 
        //Таблица Кабинеты
       cabinetModel=new StringListModel(*list_cb);
+      ui->cabinets_table->setContextMenuPolicy(Qt::CustomContextMenu);
 
       //Инициализация диалоговых окон
       dialogEmptyRow = new DialogWindowEmptyRow();
@@ -44,14 +47,31 @@ MainWindow::MainWindow(QWidget *parent) :
       dialogConfrimEdit = new DialogWindowConfirmEditRow();
       dialogConfrimEdit->resize(300,100);
 
-      dialogConfirmCabinet = new DialogCabinetWindow();
+      dialogSubject = new DialogSubjectWindow();
+      dialogGroup = new DialogGroupWindow();
+      dialogCabinet = new DialogCabinetWindow();
       dialogLessonTime = new DialogLessonTimeWindow();
 
-      connect(dialogConfirmCabinet, SIGNAL(sendDataCabinet(Cabinet)), this, SLOT(receiveDataCabinet(Cabinet)));
+      //Таблица Предметы
+      connect(dialogSubject, SIGNAL(sendDataSubject(Subject)), this, SLOT(receiveDataSubject(Subject)));
 
-      connect(dialogConfirmCabinet, SIGNAL(sendEditDataCabinet(RepositoryTemplate<Cabinet>*)), this,SLOT(receiveEditDataCabinet(RepositoryTemplate<Cabinet>*)));
+      connect(dialogSubject, SIGNAL(sendEditDataSubject(Subject)), this,SLOT(receiveEditDataSubject(Subject)));
 
-      connect(this,SIGNAL(sendSelectionCabinet(Cabinet)),dialogConfirmCabinet,SLOT(receiveSelectionCabinet(Cabinet)));
+      connect(ui->subject_table,SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(customSubjectMenuRequested(QPoint)));
+     //Таблица Группы
+      connect(dialogGroup, SIGNAL(sendDataGroup(GroupStudents)), this, SLOT(receiveDataGroup(GroupStudents)));
+
+      connect(dialogGroup, SIGNAL(sendEditDataGroup(GroupStudents)), this,SLOT(receiveEditDataGroup(GroupStudents)));
+
+      connect(ui->group_table,SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(customGroupMenuRequested(QPoint)));
+     //Таблица Кабинеты
+      connect(dialogCabinet, SIGNAL(sendDataCabinet(Cabinet)), this, SLOT(receiveDataCabinet(Cabinet)));
+
+      connect(dialogCabinet, SIGNAL(sendEditDataCabinet(Cabinet)), this,SLOT(receiveEditDataCabinet(Cabinet)));
+
+      connect(ui->cabinets_table,SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(customCabinetMenuRequested(QPoint)));
+
+      //connect(this,SIGNAL(sendSelectionCabinet(Cabinet)),dialogConfirmCabinet,SLOT(receiveSelectionCabinet(Cabinet)));
 
       //    qDebug() << "Кабинеты: " << endl;
       //    for (auto it = this->repoCabinets.begin(), end = this->repoCabinets.end(); it < end; ++it) {
@@ -118,101 +138,82 @@ void MainWindow::visualRows(QTableView *table, StringListModel *model){
     table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
-void MainWindow::on_addSubjectButton_clicked()
+void MainWindow::slotSubjectAddRecord()
 {
-    qDebug()<<"Индекс"<<ui->subject_table->currentIndex().row();
-    if (!(list_s->isEmpty())){
-            if ((list_s->last()=="")&&(ui->subject_table->currentIndex().row()==-1)){
-                dialogEmptyRow->show();
-                qDebug()<<"addConfirm1";
-                return;
-           }
-    }
-    if (!(list_s->isEmpty())){
-            if ((list_s->last()!=ui->subject_table->currentIndex().data())){
-                qDebug()<<"addConfirm2";
-                dialogConfrimEdit->show();
-                return;
-            }
-    }
-    if (!(list_s->isEmpty())){
-            if ((list_s->last()=="")&&(ui->subject_table->currentIndex().data()=="")){
-                qDebug()<<"addConfirm3";
-                dialogEmptyRow->show();
-                return;
-            }
-    }
-    list_s->append("");
-    int index =ui->subject_table->currentIndex().row()+1;
-    subjectModel->insertRow(index);
-
-    const QModelIndex indexNext=subjectModel->index(index,0);
-
-    ui->subject_table->setCurrentIndex(indexNext);
-    visualRows(ui->subject_table,subjectModel);
+    dialogSubject->addTitle();
+    dialogSubject->clearLineEdit();
+    dialogSubject->show();
 }
-
-void MainWindow::on_removeSubjectButton_clicked()
+void MainWindow::slotSubjectEditRecord()
 {
-
+    dialogSubject->show();
+    dialogSubject->editTitle();
+    dialogSubject->outputEditData(repoSubjects.getById(ui->subject_table->selectionModel()->currentIndex().row()));
+}
+void MainWindow::slotSubjectRemoveRecord()
+{
     int index =ui->subject_table->selectionModel()->currentIndex().row();
-    qDebug()<<repoSubjects.getById(index).name;
     repoSubjects.remove(index);
     list_s->removeAt(index);
     ui->subject_table->model()->removeRow(index);
-
 }
 
-void MainWindow::on_confirmSubjectButton_clicked()
+void MainWindow::receiveDataSubject(Subject subject){
+     repoSubjects.add(subject);
+     list_s->append(subject.name);
+
+     int index =ui->subject_table->currentIndex().row()+1;
+     subjectModel->insertRow(index);
+
+     const QModelIndex indexNext=subjectModel->index(index,0);
+     subjectModel->setData(indexNext,QVariant(subject.name));
+     visualRows(ui->subject_table,subjectModel);
+     ui->subject_table->setCurrentIndex(indexNext);
+ }
+void MainWindow::receiveEditDataSubject(Subject subject){
+
+    int index =ui->subject_table->selectionModel()->currentIndex().row();
+
+    list_s->replace(index,subject.name);
+    repoSubjects.update(index,subject.name);
+
+    const QModelIndex curSelectIndex=subjectModel->index(index,0);
+    subjectModel->setData(curSelectIndex,QVariant(subject.name));
+}
+void MainWindow::customSubjectMenuRequested(const QPoint &pos)
 {
-    int index = ui->subject_table->selectionModel()->currentIndex().row();
-    QVariant value = ui->subject_table->selectionModel()->currentIndex().data();
-    QString str = value.toString();
-    if (str==""){
-        qDebug()<<"Confirm";
-        dialogEmptyRow->show();
-    }
-    else{
-        repoSubjects.add(str);
-        list_s->replace(index,str);
-     }
+    QMenu *menu = new QMenu(this);
 
+    QAction *addSubject = new QAction(("Добавить"),this);
+    QAction *editSubject = new QAction(("Редактировать"),this);
+    QAction *deleteSubject = new QAction(("Удалить"),this);
 
+    connect(addSubject, SIGNAL(triggered()),this,SLOT(slotSubjectAddRecord()));
+    connect(editSubject, SIGNAL(triggered()),this,SLOT(slotSubjectEditRecord()));
+    connect(deleteSubject, SIGNAL(triggered()),this,SLOT(slotSubjectRemoveRecord()));
+
+    menu->addAction(addSubject);
+    menu->addAction(editSubject);
+    menu->addAction(deleteSubject);
+
+    menu->popup(ui->subject_table->viewport()->mapToGlobal(pos));
 }
 
-void MainWindow::on_addGroupButton_clicked()
+void MainWindow::slotGroupAddRecord()
 {
-    if (!(list_gr->isEmpty())){
-            if ((list_gr->last()=="")&&(ui->group_table->currentIndex().row()==-1)){
-                dialogEmptyRow->show();
-                return;
-           }
-    }
-    if (!(list_gr->isEmpty())){
-            if ((list_gr->last()!=ui->group_table->currentIndex().data())){
-                dialogConfrimEdit->show();
-                return;
-            }
-    }
-    if (!(list_gr->isEmpty())){
-            if ((list_gr->last()=="")&&(ui->group_table->currentIndex().data()=="")){
-                dialogEmptyRow->show();
-                return;
-            }
-    }
-       list_gr->append("");
-       int index =ui->group_table->currentIndex().row()+1;
-       groupModel->insertRow(index);
-
-       const QModelIndex indexNext=groupModel->index(index,0);
-
-       ui->group_table->setCurrentIndex(indexNext);
-       visualRows(ui->group_table,groupModel);
-
-
+    dialogGroup->addTitle();
+    dialogGroup->clearLineEdit();
+    dialogGroup->show();
 }
 
-void MainWindow::on_removeGroupButton_clicked()
+void MainWindow::slotGroupEditRecord()
+{
+    dialogGroup->show();
+    dialogGroup->editTitle();
+    dialogGroup->outputEditData(repoGroupStudents.getById(ui->group_table->selectionModel()->currentIndex().row()));
+}
+
+void MainWindow::slotGroupRemoveRecord()
 {
     int index =ui->group_table->selectionModel()->currentIndex().row();
     this->repoGroupStudents.remove(index);
@@ -220,55 +221,94 @@ void MainWindow::on_removeGroupButton_clicked()
     ui->group_table->model()->removeRow(index);
 }
 
-void MainWindow::on_confirmGroupButton_clicked()
-{
-    int index = ui->group_table->selectionModel()->currentIndex().row();
-    QVariant value = ui->group_table->selectionModel()->currentIndex().data();
-    QString str = value.toString();
 
-    if (str==""){
-        dialogEmptyRow->show();
-    }
-    else{
-        this->repoGroupStudents.add(str);
-        list_gr->replace(index,str);
-     }
+void MainWindow::receiveDataGroup(GroupStudents group){
+     repoGroupStudents.add(group);
+     list_gr->append(group.name);
+
+     int index =ui->group_table->currentIndex().row()+1;
+     groupModel->insertRow(index);
+
+     const QModelIndex indexNext=groupModel->index(index,0);
+     groupModel->setData(indexNext,QVariant(group.name));
+     visualRows(ui->group_table,groupModel);
+     ui->group_table->setCurrentIndex(indexNext);
+ }
+void MainWindow::receiveEditDataGroup(GroupStudents group){
+
+    int index =ui->group_table->selectionModel()->currentIndex().row();
+
+    list_gr->replace(index,group.name);
+    repoGroupStudents.update(index,group.name);
+
+    const QModelIndex curSelectIndex=groupModel->index(index,0);
+    groupModel->setData(curSelectIndex,QVariant(group.name));
 }
 
-void MainWindow::on_addCabinetsButton_clicked()
-{
-    dialogConfirmCabinet->show();
-    dialogConfirmCabinet->clearLineEdit();
- }
+void MainWindow::customGroupMenuRequested(const QPoint &pos){
 
+   QMenu *menu = new QMenu(this);
+
+   QAction *addGroup = new QAction(("Добавить"),this);
+   QAction *editGroup = new QAction(("Редактировать"),this);
+   QAction *deleteGroup = new QAction(("Удалить"),this);
+
+   connect(addGroup, SIGNAL(triggered()),this,SLOT(slotGroupAddRecord()));
+   connect(editGroup, SIGNAL(triggered()),this,SLOT(slotGroupEditRecord()));
+   connect(deleteGroup, SIGNAL(triggered()),this,SLOT(slotGroupRemoveRecord()));
+
+   menu->addAction(addGroup);
+   menu->addAction(editGroup);
+   menu->addAction(deleteGroup);
+
+   menu->popup(ui->group_table->viewport()->mapToGlobal(pos));
+
+
+}
+
+void MainWindow::slotCabinetAddRecord()
+{
+    dialogCabinet->addTitle();
+    dialogCabinet->clearLineEdit();
+    dialogCabinet->show();
+ }
+void MainWindow::slotCabinetEditRecord()
+{
+    dialogCabinet->show();
+    dialogCabinet->editTitle();
+    dialogCabinet->outputEditData(repoCabinets.getById(ui->cabinets_table->selectionModel()->currentIndex().row()));
+}
+void MainWindow::slotCabinetRemoveRecord()
+{
+    int r =ui->cabinets_table->selectionModel()->currentIndex().row();
+    list_cb->removeAt(r);
+    repoCabinets.remove(r);
+    ui->cabinets_table->model()->removeRow(r);
+}
 void MainWindow::receiveDataCabinet(Cabinet cabinet){
 
      QString s = QString("%1%2%3").arg(cabinet.building).arg(cabinet.floor).arg(cabinet.number);
      repoCabinets.add(cabinet);
      list_cb->append(s);
-
      int index =ui->cabinets_table->currentIndex().row()+1;
-     qDebug()<<"Индекс"<<index;
+
      cabinetModel->insertRow(index);
      const QModelIndex indexNext=cabinetModel->index(index,0);
      cabinetModel->setData(indexNext,QVariant(s));
      visualRows(ui->cabinets_table,cabinetModel);
      ui->cabinets_table->setCurrentIndex(indexNext);
-     qDebug()<<"Индекс после добавления"<<ui->cabinets_table->currentIndex().row();
 }
-void MainWindow::on_editCabinetsButton_clicked()
-{
-    int index=ui->cabinets_table->selectionModel()->currentIndex().row();
-    selectIndex=index;
-    emit sendSelectionCabinet(repoCabinets.getById(index));
-    qDebug()<<"edit called";
-    qDebug()<<"Индекс"<<ui->cabinets_table->currentIndex().row();
-    qDebug()<<repoCabinets.getById(index).building<<repoCabinets.getById(index).floor<<repoCabinets.getById(index).number;
-    dialogConfirmCabinet->show();
-}
-void MainWindow::receiveEditDataCabinet(RepositoryTemplate<Cabinet> *repCabinet){
-    //qDebug()<<"Работает";
-    QList<Cabinet> cab_l;
+void MainWindow::receiveEditDataCabinet(Cabinet cabinet){
+
+    int index =ui->subject_table->selectionModel()->currentIndex().row();
+
+    QString s = QString("%1%2%3").arg(cabinet.building).arg(cabinet.floor).arg(cabinet.number);
+    list_cb->replace(index,s);
+    repoCabinets.update(index,cabinet);
+
+    const QModelIndex curSelectIndex=cabinetModel->index(ui->cabinets_table->selectionModel()->currentIndex().row(),0);
+    cabinetModel->setData(curSelectIndex,QVariant(s));
+     /*QList<Cabinet> cab_l;
     cab_l=repCabinet->getAll();
 
     QString s = QString::number(cab_l.back().building)+QString::number(cab_l.back().floor)+QString::number(cab_l.back().number);
@@ -279,29 +319,36 @@ void MainWindow::receiveEditDataCabinet(RepositoryTemplate<Cabinet> *repCabinet)
             qDebug()<<cabinet.floor<<"\t"<<cabinet.number<<"\t"<<cabinet.building<<"\n";
         }
      repoCabinets.update(selectIndex,repCabinet->getById(0));
-     list_cb->replace(selectIndex,s);
-     const QModelIndex indexNext=cabinetModel->index(selectIndex,0);
-     cabinetModel->setData(indexNext,QVariant(s));
+     list_cb->replace(selectIndex,s);*/
+     //const QModelIndex indexNext=cabinetModel->index(selectIndex,0);
+     //cabinetModel->setData(indexNext,QVariant(s));
     //qDebug()<<repCabinet->getById(0).building<<repCabinet->getById(0).floor<<repCabinet->getById(0).number;
     //repoCabinets.update(selectIndex,repCabinet->getById(0));
 
 }
 
-void MainWindow::on_removeCabinetsButton_clicked()
-{
-    int r =ui->cabinets_table->selectionModel()->currentIndex().row();
-    list_cb->removeAt(r);
-    repoCabinets.remove(r);
-    ui->cabinets_table->model()->removeRow(r);
+
+
+void MainWindow::customCabinetMenuRequested(const QPoint &pos){
+
+   QMenu *menu = new QMenu(this);
+
+   QAction *addCabinet = new QAction(("Добавить"),this);
+   QAction *editCabinet = new QAction(("Редактировать"),this);
+   QAction *deleteCabinet = new QAction(("Удалить"),this);
+
+   connect(addCabinet, SIGNAL(triggered()),this,SLOT(slotCabinetAddRecord()));
+   connect(editCabinet, SIGNAL(triggered()),this,SLOT(slotCabinetEditRecord()));
+   connect(deleteCabinet, SIGNAL(triggered()),this,SLOT(slotCabinetRemoveRecord()));
+
+   menu->addAction(addCabinet);
+   menu->addAction(editCabinet);
+   menu->addAction(deleteCabinet);
+
+   menu->popup(ui->cabinets_table->viewport()->mapToGlobal(pos));
+
+
 }
-
-
-
-void MainWindow::on_cabinets_table_doubleClicked(const QModelIndex &index)
-{
-     qDebug()<<index.data();
-}
-
 
 void MainWindow::on_addTimeButton_clicked()
 {
@@ -392,18 +439,10 @@ void MainWindow::on_cabinets_table_clicked(const QModelIndex &index)
         qDebug()<<"Индекс по нажатию"<<index.row();
 
 
-<<<<<<< HEAD
+
     }
 
-void MainWindow::on_subject_table_entered(const QModelIndex &index)
-{
-    qDebug()<<"Entered";
-}
 
 
-void MainWindow::on_subject_table_customContextMenuRequested(const QPoint &pos)
-{
 
-=======
->>>>>>> 0ff2c780bb8abae6a363d1bad10704d78028cc48
-}
+
