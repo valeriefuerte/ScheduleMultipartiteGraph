@@ -5,6 +5,8 @@
 
 #include "models/repository/repository.h"
 
+#include "models/repository/repositorytemplate.h"
+
 // Router& router = Router::getInstance();
 
 class Router : public QObject

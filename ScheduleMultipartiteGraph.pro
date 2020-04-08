@@ -25,20 +25,49 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    gui/dialogCabinetWindow.cpp \
+    gui/dialogGroupWindow.cpp \
+    gui/dialogLessonTimeWindow.cpp \
+    gui/dialogSubjectWindow.cpp \
+    gui/dialogWindowConfrimEditRow.cpp \
+    gui/dialogWindowEmptyRow.cpp \
         main.cpp \
         gui/mainwindow.cpp \
+    models/abstractnoderepository.cpp \
+    models/cabinet.cpp \
+    models/groupstudents.cpp \
+    models/lessontime.cpp \
     models/repository/repository.cpp \
-    models/router.cpp
+    models/repository/repositorytemplate.cpp \
+    models/router.cpp \
+    models/table_model.cpp \
+    models/subject.cpp
+
 
 HEADERS += \
+    gui/dialogCabinetWindow.h \
+    gui/dialogGroupWindow.h \
+    gui/dialogLessonTimeWindow.h \
+    gui/dialogSubjectWindow.h \
+    gui/dialogWindowConfrimEditRow.h \
+    gui/dialogWindowEmptyRow.h \
         gui/mainwindow.h \
+    models/abstractnoderepository.h \
+    models/cabinet.h \
+    models/repository/repositorytemplate.h \
+    models/table_model.h \
+    models/groupstudents.h \
+    models/lessontime.h \
     models/repository/repository.h \
-    models/router.h
+    models/router.h \
+    models/table_model.h \
+    models/router.h \
+    models/subject.h
+
+
 
 FORMS += \
         gui/mainwindow.ui
 
 # Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+ INSTALLS += target
