@@ -31,8 +31,11 @@ SOURCES += \
     gui/dialogSubjectWindow.cpp \
     gui/dialogWindowConfrimEditRow.cpp \
     gui/dialogWindowEmptyRow.cpp \
-        main.cpp \
-        gui/mainwindow.cpp \
+    gui/edge.cpp \
+    gui/graphwidget.cpp \
+    gui/node.cpp \
+    gui/mainwindow.cpp \
+    main.cpp \
     models/abstractnoderepository.cpp \
     models/cabinet.cpp \
     models/groupstudents.cpp \
@@ -51,7 +54,10 @@ HEADERS += \
     gui/dialogSubjectWindow.h \
     gui/dialogWindowConfrimEditRow.h \
     gui/dialogWindowEmptyRow.h \
-        gui/mainwindow.h \
+    gui/edge.h \
+    gui/graphwidget.h \
+    gui/node.h \
+    gui/mainwindow.h \
     models/abstractnoderepository.h \
     models/cabinet.h \
     models/repository/repositorytemplate.h \
