@@ -21,6 +21,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
       ui->setupUi(this);
+
+      receiveDay[1]="Понедельник";
+      receiveDay[2]="Вторник";
+      receiveDay[3]="Среда";
+      receiveDay[4]="Четверг";
+      receiveDay[5]="Пятница";
+      receiveDay[6]="Суббота";
+
       //Инициализация моделей QTableView
       list_s = new QStringList();
       list_gr = new QStringList();
@@ -36,9 +44,13 @@ MainWindow::MainWindow(QWidget *parent) :
       groupModel=new StringListModel(*list_gr);
       ui->group_table->setContextMenuPolicy(Qt::CustomContextMenu);
 
-       //Таблица Кабинеты
+      //Таблица Кабинеты
       cabinetModel=new StringListModel(*list_cb);
       ui->cabinets_table->setContextMenuPolicy(Qt::CustomContextMenu);
+
+      //Таблица время
+      timeModel = new StringListModel(*list_tm);
+      ui->time_table->setContextMenuPolicy(Qt::CustomContextMenu);
 
       //Инициализация диалоговых окон
       dialogEmptyRow = new DialogWindowEmptyRow();
@@ -70,6 +82,12 @@ MainWindow::MainWindow(QWidget *parent) :
       connect(dialogCabinet, SIGNAL(sendEditDataCabinet(Cabinet)), this,SLOT(receiveEditDataCabinet(Cabinet)));
 
       connect(ui->cabinets_table,SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(customCabinetMenuRequested(QPoint)));
+      //Таблица Время
+      connect(dialogLessonTime, SIGNAL(sendDataLessonTime(LessonTime)), this, SLOT(receiveDataLessonTime(LessonTime)));
+
+      connect(dialogLessonTime, SIGNAL(sendEditDataLessonTime(LessonTime)), this,SLOT(receiveEditDataLessonTime(LessonTime)));
+
+      connect(ui->time_table,SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(customTimeMenuRequested(QPoint)));
 
       //connect(this,SIGNAL(sendSelectionCabinet(Cabinet)),dialogConfirmCabinet,SLOT(receiveSelectionCabinet(Cabinet)));
 
@@ -328,7 +346,6 @@ void MainWindow::receiveEditDataCabinet(Cabinet cabinet){
 }
 
 
-
 void MainWindow::customCabinetMenuRequested(const QPoint &pos){
 
    QMenu *menu = new QMenu(this);
@@ -346,9 +363,76 @@ void MainWindow::customCabinetMenuRequested(const QPoint &pos){
    menu->addAction(deleteCabinet);
 
    menu->popup(ui->cabinets_table->viewport()->mapToGlobal(pos));
+}
 
+void MainWindow::slotTimeAddRecord()
+{
+    dialogLessonTime->show();
+    dialogLessonTime->addTitle();
+    dialogLessonTime->clearLineEdit();
+ }
+void MainWindow::slotTimeEditRecord()
+{
+    dialogLessonTime->show();
+    dialogLessonTime->editTitle();
+    dialogLessonTime->outputEditData(repoLessonTime.getById(ui->time_table->selectionModel()->currentIndex().row()));
+}
+void MainWindow::slotTimeRemoveRecord()
+{
+    int r =ui->cabinets_table->selectionModel()->currentIndex().row();
+    list_cb->removeAt(r);
+    repoCabinets.remove(r);
+    ui->cabinets_table->model()->removeRow(r);
+}
+
+void MainWindow::customTimeMenuRequested(const QPoint &pos){
+
+    QMenu *menu = new QMenu(this);
+
+    QAction *addCabinet = new QAction(("Добавить"),this);
+    QAction *editCabinet = new QAction(("Редактировать"),this);
+    QAction *deleteCabinet = new QAction(("Удалить"),this);
+
+    connect(addCabinet, SIGNAL(triggered()),this,SLOT(slotTimeAddRecord()));
+    connect(editCabinet, SIGNAL(triggered()),this,SLOT(slotTimeEditRecord()));
+    connect(deleteCabinet, SIGNAL(triggered()),this,SLOT(slotTimeRemoveRecord()));
+
+    menu->addAction(addCabinet);
+    menu->addAction(editCabinet);
+    menu->addAction(deleteCabinet);
+
+    menu->popup(ui->time_table->viewport()->mapToGlobal(pos));
+}
+
+void MainWindow::receiveDataLessonTime(LessonTime lessonTime){
+
+
+     QString s = QString("Четность:%1 %2 Время:%3").arg(lessonTime.parity).arg(receiveDay[lessonTime.dayOfWeek]).arg(lessonTime.time.toString());
+
+     repoLessonTime.add(lessonTime);
+     list_tm->append(s);
+     int index =ui->time_table->currentIndex().row()+1;
+
+     timeModel->insertRow(index);
+     const QModelIndex indexNext=timeModel->index(index,0);
+     timeModel->setData(indexNext,QVariant(s));
+     visualRows(ui->time_table,timeModel);
+     ui->time_table->setCurrentIndex(indexNext);
+     qDebug()<<repoLessonTime.getById(0).dayOfWeek<<repoLessonTime.getById(0).time<<repoLessonTime.getById(0).parity;
 
 }
+void MainWindow::receiveEditDataLessonTime(LessonTime lessonTime){
+
+    int index =ui->time_table->selectionModel()->currentIndex().row();
+
+    QString s = QString("Четность:%1 %2 Время:%3").arg(lessonTime.parity).arg(receiveDay[lessonTime.dayOfWeek]).arg(lessonTime.time.toString());
+    list_tm->replace(index,s);
+    repoLessonTime.update(index,lessonTime);
+
+    const QModelIndex curSelectIndex=timeModel->index(ui->time_table->selectionModel()->currentIndex().row(),0);
+    timeModel->setData(curSelectIndex,QVariant(s));
+}
+
 
 void MainWindow::on_addTimeButton_clicked()
 {
@@ -416,12 +500,11 @@ void MainWindow::on_group_table_clicked(const QModelIndex &index)
 }
 
 
-
 void MainWindow::on_saveFile_triggered()
 {
     this->repoCabinets.save();
     this->repoSubjects.save();
-    this->repoLessonsTimes.save();
+    this->repoLessonTime.save();
     this->repoGroupStudents.save();
 }
 
@@ -437,10 +520,7 @@ void MainWindow::on_cabinets_table_clicked(const QModelIndex &index)
         qDebug()<<list_cb->at(i);
     }
         qDebug()<<"Индекс по нажатию"<<index.row();
-
-
-
-    }
+}
 
 
 

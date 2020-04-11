@@ -25,14 +25,14 @@ private slots:
     void apply_clicked();
 public slots:
     private:
-    QFormLayout *formLayout;
-    QVBoxLayout *btnLayout;
+        QFormLayout *formLayout;
+        QVBoxLayout *btnLayout;
 
-    QPushButton *applyButton;
+        QPushButton *applyButton;
 
-    QLineEdit *numberLineEdit;
-    QLineEdit *floorLineEdit;
-    QLineEdit *buildingLineEdit;
+        QLineEdit *numberLineEdit;
+        QLineEdit *floorLineEdit;
+        QLineEdit *buildingLineEdit;
 };
 
 #endif // DIALOGCABINETWINDOW_H

@@ -183,7 +183,6 @@ bool RepositoryTemplate<T>::remove(int id) {
     class QList<T>::iterator it = this->getIteratorById(id);
     if (it != this->elements.end()){
         this->elements.erase(it);
-        this->increment--;
         return true;
     }
     return false;
@@ -222,7 +221,8 @@ QList<T> RepositoryTemplate<T>::getByParameters(T searchObject) {
 
 template <class T>
 QList<T> RepositoryTemplate<T>::getAll() {
-    return this->elements;
+     return this->elements;
+
 }
 
 template <class T>

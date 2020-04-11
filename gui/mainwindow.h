@@ -40,42 +40,60 @@ signals:
 private slots:
 
     //void on_tabWidget_currentChanged(int index);
-
-    void receiveEditDataSubject(Subject);
-
-    void receiveDataSubject(Subject);
-
-    void receiveEditDataGroup(GroupStudents);
-
-    void receiveDataGroup(GroupStudents);
-
-    void receiveEditDataCabinet(Cabinet);
-
-    void receiveDataCabinet(Cabinet);
-
+    //Предметы
     void slotSubjectAddRecord();
 
     void slotSubjectRemoveRecord();
 
     void slotSubjectEditRecord();
 
+    void receiveEditDataSubject(Subject);
+
+    void receiveDataSubject(Subject);
+    //Группы
     void slotGroupAddRecord();
 
     void slotGroupEditRecord();
 
     void slotGroupRemoveRecord();
 
+    void receiveEditDataGroup(GroupStudents);
+
+    void receiveDataGroup(GroupStudents);
+    //Кабинет
     void slotCabinetAddRecord();
 
     void slotCabinetEditRecord();
 
     void slotCabinetRemoveRecord();
 
+    void receiveEditDataCabinet(Cabinet);
+    //Время
+    void slotTimeAddRecord();
+
+    void slotTimeEditRecord();
+
+    void slotTimeRemoveRecord();
+
+    void receiveDataCabinet(Cabinet);
+
     void on_addTimeButton_clicked();
 
     void on_removeTimeButton_clicked();
 
     void on_confirmTimeButton_clicked();
+    //Контекстные меню
+    void customSubjectMenuRequested(const QPoint &pos);
+
+    void customGroupMenuRequested(const QPoint &pos);
+
+    void customCabinetMenuRequested(const QPoint &pos);
+
+    void customTimeMenuRequested(const QPoint &pos);
+
+    void receiveDataLessonTime(LessonTime);
+
+    void receiveEditDataLessonTime(LessonTime);
 
     void on_subject_table_clicked(const QModelIndex &index);
 
@@ -85,18 +103,11 @@ private slots:
 
     void on_cabinets_table_clicked(const QModelIndex &index);
 
-    //Контекстные меню
-    void customSubjectMenuRequested(const QPoint &pos);
-
-    void customGroupMenuRequested(const QPoint &pos);
-
-    void customCabinetMenuRequested(const QPoint &pos);
-
-    //void customTimeMenuRequested(const QPoint &pos);
-
 
 private:
     Ui::MainWindow *ui;
+
+    QHash<int,QString> receiveDay;
 
     //Модели QTableView
     QStringList *list_s;
@@ -116,11 +127,12 @@ private:
     StringListModel *subjectModel;
     StringListModel *groupModel;
     StringListModel *cabinetModel;
+    StringListModel *timeModel;
 
     //Репозитории
     RepositoryTemplate<Cabinet> repoCabinets;
     RepositoryTemplate<GroupStudents> repoGroupStudents;
-    RepositoryTemplate<LessonTime> repoLessonsTimes;
+    RepositoryTemplate<LessonTime> repoLessonTime;
     RepositoryTemplate<Subject> repoSubjects;
 };
 
