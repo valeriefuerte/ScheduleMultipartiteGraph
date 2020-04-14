@@ -17,18 +17,15 @@
    applyButton = new QPushButton("OK");
    applyButton->setMaximumWidth(80);
 
-
    formLayout = new QFormLayout();
    btnLayout=new QVBoxLayout();
    btnLayout->addWidget(applyButton);
 
    subjectLineEdit = new QLineEdit();
 
-
-
    formLayout->addRow("Предмет",subjectLineEdit);
-
    formLayout->addWidget(applyButton);
+
    setLayout(formLayout);
    connect(applyButton,SIGNAL(clicked()),this,SLOT(apply_clicked()));
  }
