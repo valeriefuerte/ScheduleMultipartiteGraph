@@ -379,10 +379,10 @@ void MainWindow::slotTimeEditRecord()
 }
 void MainWindow::slotTimeRemoveRecord()
 {
-    int r =ui->cabinets_table->selectionModel()->currentIndex().row();
-    list_cb->removeAt(r);
-    repoCabinets.remove(r);
-    ui->cabinets_table->model()->removeRow(r);
+    int r =ui->time_table->selectionModel()->currentIndex().row();
+    list_tm->removeAt(r);
+    repoLessonTime.remove(r);
+    ui->time_table->model()->removeRow(r);
 }
 
 void MainWindow::customTimeMenuRequested(const QPoint &pos){

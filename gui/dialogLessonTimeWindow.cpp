@@ -17,8 +17,6 @@ DialogLessonTimeWindow::DialogLessonTimeWindow(QWidget* parent): QDialog(parent)
     applyButton->setMaximumWidth(80);
     dayList = new QComboBox();
 
-
-
     hashAddDay["Понедельник"]=1;
     hashAddDay["Вторник"]=2;
     hashAddDay["Среда"]=3;
@@ -45,7 +43,7 @@ DialogLessonTimeWindow::DialogLessonTimeWindow(QWidget* parent): QDialog(parent)
 
     parityEdit = new QLineEdit();
     dayWeekEdit = new QLineEdit();
-    timeEdit = new QDateTimeEdit(QTime::currentTime());
+    timeEdit = new QDateTimeEdit(QTime(0,0));
 
     btnLayout->addWidget(applyButton);
     parityEdit->setValidator(new QIntValidator(0,2,this));
