@@ -41,6 +41,17 @@ void Edge::adjust() {
         sourcePoint = destPoint = line.p1();
     }
 }
+
+void Edge::changeEdgeVisibility()
+{
+    if ((!this->destNode()->isVisible()) || (!this->sourceNode()->isVisible())) {
+        //qDebug()<<"edgeHided";
+        this->hide();
+    } else {
+        //qDebug()<<"edgeShow";
+        this->show();
+    }
+}
 void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
 
     if (!source || !dest)

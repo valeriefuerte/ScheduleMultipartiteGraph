@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include "gui/visualizationwidget.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -8,6 +8,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     Router& router = Router::getInstance();
+    VisualizationWidget *w = new VisualizationWidget();
+    ui->tabWidget->addTab(w,"GraphWidgetDemo");
 //    ui->label->setText(router.getRepository()->helloString());
 
     // установка оформления statusBar

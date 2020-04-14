@@ -28,6 +28,7 @@ SOURCES += \
     gui/edge.cpp \
     gui/graphwidget.cpp \
     gui/node.cpp \
+    gui/visualizationwidget.cpp \
         main.cpp \
         gui/mainwindow.cpp \
     models/repository/repository.cpp \
@@ -38,6 +39,7 @@ HEADERS += \
     gui/graphwidget.h \
         gui/mainwindow.h \
     gui/node.h \
+    gui/visualizationwidget.h \
     models/repository/repository.h \
     models/router.h
 
