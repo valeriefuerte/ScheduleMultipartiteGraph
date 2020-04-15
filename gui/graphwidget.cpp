@@ -46,6 +46,11 @@ GraphWidget::GraphWidget(QWidget *parent): QGraphicsView(parent),scene(new QGrap
     node4->setPos(40,25);
     node5->setPos(10,-30);
 
+    nodes.push_back(node1);
+    nodes.push_back(node2);
+    nodes.push_back(node3);
+    nodes.push_back(node4);
+    nodes.push_back(node5);
 
     readGraph(QPointF(-30,-20));
 
@@ -64,6 +69,7 @@ void GraphWidget::readGraph(QPointF center)
             Node *node = new Node(this);
             scene->addItem(node);
             node->setPos(p2.x(),p2.y());
+            nodes.push_back(node);
         }
     }
 }
@@ -115,6 +121,13 @@ void GraphWidget::zoomIn() {
 
 void GraphWidget::zoomOut() {
 
+}
+
+void GraphWidget::resetFilter()
+{
+    foreach (Node * curNode, nodes) {
+        curNode->show();
+    }
 }
 void GraphWidget::keyPressEvent(QKeyEvent *event)
 {

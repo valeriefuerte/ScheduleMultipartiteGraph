@@ -54,6 +54,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 }
 
 QVariant  Node::itemChange(GraphicsItemChange change, const QVariant &value){
+   // qDebug()<<change;
     switch (change) {
     case ItemPositionHasChanged: //если изменилась позиция , то все ребра перемещаются
         foreach (Edge *edge, edgeList) {
@@ -61,27 +62,22 @@ QVariant  Node::itemChange(GraphicsItemChange change, const QVariant &value){
             edge->adjust();
         }
         break;
-    case ItemVisibleChange:
+    case ItemVisibleHasChanged:
 
         foreach (Edge *edge, edgeList) {
             changeEdgeVisibility(edge);
         }
-
         break;
     default:
         break;
     }
-
+    update();
     return QGraphicsItem::itemChange(change, value);
 }
 void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     // Для демонстрации. При нажатии мышкой на вершину она "прячется" вместе с ребрами
     this->hide();
-    foreach (Edge *edge, edgeList) {
-        changeEdgeVisibility(edge);
-    }
-    update();
     qDebug()<<this->pos();
     QGraphicsItem::mousePressEvent(event);
 }
@@ -94,10 +90,6 @@ void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 // Если хотя бы 1 вершина стпрятана , то  необходимо спрятать ребро
 void Node::changeEdgeVisibility(Edge *edge)
 {
-    if ((!edge->destNode()->isVisible()) || (!edge->sourceNode()->isVisible())) {
-        edge->hide();
-    } else {
-        edge->show();
-    }
+    edge->changeEdgeVisibility();
 }
 

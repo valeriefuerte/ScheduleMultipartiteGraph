@@ -5,11 +5,7 @@
 #include <QGraphicsView>
 
 class Node;
-//
-//@brief в конструкторе (mainwindow.cpp) добавить
-// GraphWidget *w = new GraphWidget();
-//ui->tabWidget->addTab(w,"GraphWidgetDemo");
-// (не забудьте об #include)
+
 class GraphWidget: public QGraphicsView
 {
     Q_OBJECT
@@ -22,11 +18,13 @@ protected:
 private:
     QGraphicsScene *scene;
     QVector<QPointF> createClusterPoints(QPointF &center,int radius,int size) const;
+    QVector<Node*> nodes;
 signals:
 
 public slots:
     void zoomIn();
     void zoomOut();
+    void resetFilter();
 
 };
 

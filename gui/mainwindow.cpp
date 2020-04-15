@@ -15,6 +15,7 @@
 #include "dialogCabinetWindow.h"
 #include "models/repository/repositorytemplate.h"
 #include "gui/dialogLessonTimeWindow.h"
+#include "gui/visualizationwidget.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -28,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent) :
       receiveDay[4]="Четверг";
       receiveDay[5]="Пятница";
       receiveDay[6]="Суббота";
+      VisualizationWidget *w = new VisualizationWidget();
+      ui->tabWidget->addTab(w,"GraphWidgetDemo");
 
       //Инициализация моделей QTableView
       list_s = new QStringList();

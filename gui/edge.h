@@ -19,6 +19,8 @@ public:
     enum { Type = UserType + 2 };
     int type() const override { return Type; }
 
+    void changeEdgeVisibility();
+
 protected:
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;

@@ -34,6 +34,7 @@ SOURCES += \
     gui/edge.cpp \
     gui/graphwidget.cpp \
     gui/node.cpp \
+    gui/visualizationwidget.cpp \
     gui/mainwindow.cpp \
     main.cpp \
     models/abstractnoderepository.cpp \
@@ -57,6 +58,7 @@ HEADERS += \
     gui/edge.h \
     gui/graphwidget.h \
     gui/node.h \
+    gui/visualizationwidget.h \
     gui/mainwindow.h \
     models/abstractnoderepository.h \
     models/cabinet.h \
