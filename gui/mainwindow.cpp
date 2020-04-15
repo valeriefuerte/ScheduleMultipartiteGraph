@@ -29,8 +29,6 @@ MainWindow::MainWindow(QWidget *parent) :
       receiveDay[4]="Четверг";
       receiveDay[5]="Пятница";
       receiveDay[6]="Суббота";
-      VisualizationWidget *w = new VisualizationWidget();
-      ui->tabWidget->addTab(w,"GraphWidgetDemo");
 
       //Инициализация моделей QTableView
       list_s = new QStringList();
@@ -147,6 +145,11 @@ MainWindow::MainWindow(QWidget *parent) :
       //    for (auto e : this->repoSubjects.getAll()) {
       //        qDebug() << e.toString() << endl;
       //    }
+
+
+      // Виджет визуализации графа
+      VisualizationWidget *w = new VisualizationWidget();
+      ui->tabWidget->addTab(w,"Визуализация графа");
 }
 
 MainWindow::~MainWindow()
