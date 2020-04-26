@@ -29,5 +29,7 @@ QString GroupStudents::toString() {
 
 bool GroupStudents::operator== (const GroupStudents &object)
 {
-    return ((this->name == object.name || object.name != ""));
+    return (
+                (this->name == object.name || object.name != "")
+    );
 }

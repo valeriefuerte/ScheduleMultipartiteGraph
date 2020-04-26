@@ -41,6 +41,7 @@ SOURCES += \
     models/cabinet.cpp \
     models/groupstudents.cpp \
     models/lessontime.cpp \
+    models/linkgroupsubject.cpp \
     models/repository/repository.cpp \
     models/repository/repositorytemplate.cpp \
     models/router.cpp \
@@ -62,6 +63,7 @@ HEADERS += \
     gui/mainwindow.h \
     models/abstractnoderepository.h \
     models/cabinet.h \
+    models/linkgroupsubject.h \
     models/repository/repositorytemplate.h \
     models/table_model.h \
     models/groupstudents.h \

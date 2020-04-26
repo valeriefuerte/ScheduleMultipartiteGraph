@@ -56,5 +56,9 @@ QString LessonTime::toString() {
 
 bool LessonTime::operator== (const LessonTime &object)
 {
-    return ((this->parity == object.parity || object.parity != 0) && (this->dayOfWeek == object.dayOfWeek || object.dayOfWeek == 0) && (this->time == object.time ||  object.time == QTime(0,0,0,0)));
+    return (
+                (this->parity == object.parity || object.parity != 0)
+             && (this->dayOfWeek == object.dayOfWeek || object.dayOfWeek == 0)
+             && (this->time == object.time ||  object.time == QTime(0,0,0,0))
+    );
 }
