@@ -19,7 +19,7 @@ QJsonObject GroupStudents::toJson() {
 
 void GroupStudents::fromJson(QJsonObject items) {
 
-    this->id = items.value("id").toInt();
+    this->id = items.value("id").toString().toInt();
     this->name = items.value("name").toString();
 }
 

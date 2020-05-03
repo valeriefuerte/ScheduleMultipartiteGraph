@@ -21,10 +21,10 @@ QJsonObject LinkGroupSubject::toJson() {
 
 void LinkGroupSubject::fromJson(QJsonObject items) {
 
-    this->id = items.value("id").toInt();
-    this->groupId = items.value("groupId").toInt();
-    this->subjectId = items.value("subjectId").toInt();
-    this->academicHours = items.value("academicHours").toInt();
+    this->id = items.value("id").toString().toInt();
+    this->groupId = items.value("groupId").toString().toInt();
+    this->subjectId = items.value("subjectId").toString().toInt();
+    this->academicHours = items.value("academicHours").toString().toInt();
 }
 
 QString LinkGroupSubject::toString() {
