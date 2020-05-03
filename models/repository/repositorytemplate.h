@@ -95,6 +95,9 @@ public:
     // Сохранить все объекты на диск.
     void save();
 
+    // Сохранить все объекты на диск.
+    void save(QString string);
+
     // Загрузить всё с диска.
     void load();
 };
@@ -301,6 +304,20 @@ void RepositoryTemplate<T>::save() {
     json.setObject(object);
 
     QString jsonName = QString("storage/%1/%2_%3.json").arg(this->tname).arg(this->tname).arg(time(NULL));
+    QFile jsonFine(jsonName);
+    jsonFine.open(QFile::WriteOnly);
+    jsonFine.write(json.toJson());
+}
+
+template <class T>
+void RepositoryTemplate<T>::save(QString  filename) {
+    QJsonDocument json;
+
+    QJsonObject object = this->toJson();
+
+    json.setObject(object);
+
+    QString jsonName = QString(filename);
     QFile jsonFine(jsonName);
     jsonFine.open(QFile::WriteOnly);
     jsonFine.write(json.toJson());
