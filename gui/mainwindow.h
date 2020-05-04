@@ -8,6 +8,7 @@
 #include "models/groupstudents.h"
 #include "models/lessontime.h"
 #include "models/subject.h"
+#include "models/linkgroupsubject.h"
 #include "models/table_model.h"
 
 #include "dialogSubjectWindow.h"
@@ -32,9 +33,13 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     void  visualRows(QTableView *table,StringListModel *model);
+    void loadReps();
+    void loadReps(QString jsonName);
+    // Инициализация хранилищ.
+    void initStorage();
     ~MainWindow();
 private:
-
+    QString dirStorage = "storage";
 signals:
     void sendSelectionCabinet(Cabinet cabinet);
 private slots:
@@ -134,6 +139,7 @@ private:
     RepositoryTemplate<GroupStudents> repoGroupStudents;
     RepositoryTemplate<LessonTime> repoLessonTime;
     RepositoryTemplate<Subject> repoSubjects;
+    RepositoryTemplate<LinkGroupSubject> repoLinkGroupSubject;
 };
 
 #endif // MAINWINDOW_H

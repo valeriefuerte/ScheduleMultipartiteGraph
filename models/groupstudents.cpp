@@ -19,7 +19,7 @@ QJsonObject GroupStudents::toJson() {
 
 void GroupStudents::fromJson(QJsonObject items) {
 
-    this->id = items.value("id").toInt();
+    this->id = items.value("id").toString().toInt();
     this->name = items.value("name").toString();
 }
 
@@ -29,5 +29,7 @@ QString GroupStudents::toString() {
 
 bool GroupStudents::operator== (const GroupStudents &object)
 {
-    return ((this->name == object.name || object.name != ""));
+    return (
+                (this->name == object.name || object.name != "")
+    );
 }

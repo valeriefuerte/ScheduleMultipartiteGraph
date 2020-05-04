@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
       ui->setupUi(this);
+      this->initStorage();
+      this->loadReps();
 
       receiveDay[1]="Понедельник";
       receiveDay[2]="Вторник";
@@ -89,7 +91,6 @@ MainWindow::MainWindow(QWidget *parent) :
       connect(dialogLessonTime, SIGNAL(sendEditDataLessonTime(LessonTime)), this,SLOT(receiveEditDataLessonTime(LessonTime)));
 
       connect(ui->time_table,SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(customTimeMenuRequested(QPoint)));
-
       //connect(this,SIGNAL(sendSelectionCabinet(Cabinet)),dialogConfirmCabinet,SLOT(receiveSelectionCabinet(Cabinet)));
 
       //    qDebug() << "Кабинеты: " << endl;
@@ -508,10 +509,21 @@ void MainWindow::on_group_table_clicked(const QModelIndex &index)
 
 void MainWindow::on_saveFile_triggered()
 {
-    this->repoCabinets.save();
-    this->repoSubjects.save();
-    this->repoLessonTime.save();
-    this->repoGroupStudents.save();
+    QJsonDocument json;
+    QJsonObject object = json.object();
+
+    object[this->repoCabinets.getTname()] = this->repoCabinets.toJson();
+    object[this->repoSubjects.getTname()] = this->repoSubjects.toJson();
+    object[this->repoLessonTime.getTname()] = this->repoLessonTime.toJson();
+    object[this->repoGroupStudents.getTname()] = this->repoGroupStudents.toJson();
+    object[this->repoLinkGroupSubject.getTname()] = this->repoLinkGroupSubject.toJson();
+
+    json.setObject(object);
+
+    QString jsonName = QString("storage/%1.json").arg(time(NULL));
+    QFile jsonFine(jsonName);
+    jsonFine.open(QFile::WriteOnly);
+    jsonFine.write(json.toJson());
 }
 
 void MainWindow::on_cabinets_table_clicked(const QModelIndex &index)
@@ -528,7 +540,52 @@ void MainWindow::on_cabinets_table_clicked(const QModelIndex &index)
         qDebug()<<"Индекс по нажатию"<<index.row();
 }
 
+void MainWindow::loadReps()
+{
+    // Достаем список файлов для сущности, с которой работает репозиторий
+    QDir dir(this->dirStorage);
+    dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+    dir.setSorting(QDir::Name);
+    QFileInfoList list = dir.entryInfoList();
 
+    // Если файлы существуют, то считываем их
+    if (!list.empty()){
+        // Берем файл последний файл
+        QString jsonName = QString("%1/%2").arg(this->dirStorage).arg(list.at(list.size()-1).fileName());
+        this->loadReps(jsonName);
+    }
+}
+
+void MainWindow::loadReps(QString jsonName)
+{
+    // Десериализуем
+    QFile jsonFile(jsonName);
+    jsonFile.open(QFile::ReadOnly);
+    QJsonDocument json = QJsonDocument().fromJson(jsonFile.readAll());
+    QJsonObject object = json.object();
+
+    QJsonObject objectCabinets = object[this->repoCabinets.getTname()].toObject();
+    QJsonObject objectSubjects = object[this->repoSubjects.getTname()].toObject();
+    QJsonObject objectLessonTime = object[this->repoLessonTime.getTname()].toObject();
+    QJsonObject objectGroupStudents = object[this->repoGroupStudents.getTname()].toObject();
+    QJsonObject objectLinkGroupSubject = object[this->repoLinkGroupSubject.getTname()].toObject();
+
+    this->repoCabinets.fromJson(objectCabinets);
+    this->repoSubjects.fromJson(objectSubjects);
+    this->repoLessonTime.fromJson(objectLessonTime);
+    this->repoGroupStudents.fromJson(objectGroupStudents);
+    this->repoLinkGroupSubject.fromJson(objectLinkGroupSubject);
+
+    qDebug() << "work" << endl;
+}
+
+void MainWindow::initStorage() {
+    QDir dirStorage(this->dirStorage);
+
+    if (!dirStorage.exists()) {
+        QDir().mkdir(this->dirStorage);
+    }
+}
 
 
 

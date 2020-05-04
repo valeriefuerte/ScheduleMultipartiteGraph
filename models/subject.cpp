@@ -27,5 +27,7 @@ QString Subject::toString() {
 
 bool Subject::operator== (const Subject &object)
 {
-    return (this->name == object.name || object.name != "");
+    return (
+                this->name == object.name || object.name != ""
+    );
 }

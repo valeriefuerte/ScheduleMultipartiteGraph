@@ -60,25 +60,43 @@ public:
     // Обновить объект.
     bool update(int id, T data);
 
-    // Получить объект.
+    // Получить объект по идентификатору.
     T getById(int id);
 
-    // Получить объекты по параметрам.
+    // Получить объект по индексу.
+    T getByIndex(int index);
+
+    // Получить объекты по свойствам объекта.
     QList<T> getByParameters(T searchObject);
 
     // Получить все объекты.
     QList<T> getAll();
 
-    // Начало итератора
+    // Начало итератора.
     class QList<T>::iterator begin();
 
-    // Конец итератора
+    // Конец итератора.
     class QList<T>::iterator end();
 
+    // Получить текущий инкремент.
     int getIncrement();
+
+    // Получить количество элементов.
+    int getAmount();
+
+    QString getTname();
+
+    // Преобразование в json.
+    QJsonObject toJson();
+
+    // Преобразование в json.
+    void fromJson(QJsonObject);
 
     // Сохранить все объекты на диск.
     void save();
+
+    // Сохранить все объекты на диск.
+    void save(QString string);
 
     // Загрузить всё с диска.
     void load();
@@ -95,8 +113,8 @@ template <class T>
 void RepositoryTemplate<T>::init() {
     this->checkNode();
     this->initEnvironment();
-    this->initStorage();
-    this->load();
+//    this->initStorage();
+//    this->load();
 }
 
 template <class T>
@@ -130,6 +148,22 @@ void RepositoryTemplate<T>::initStorage() {
 }
 
 template <class T>
+void RepositoryTemplate<T>::fromJson(QJsonObject object) {
+    QJsonArray data = object["data"].toArray();
+    QJsonObject metadata = object["metadata"].toObject();
+
+    // Считываемпредыдущее положение счетчика
+    this->increment = metadata["increment"].toInt();
+
+    // Добавлем в репозиторий данные
+    for (auto element : data) {
+        T t;
+        t.fromJson(element.toObject());
+        this->elements.append(t);
+    }
+}
+
+template <class T>
 void RepositoryTemplate<T>::load() {
     // Достаем список файлов для сущности, с которой работает репозиторий
     QDir dir(this->dir);
@@ -147,18 +181,8 @@ void RepositoryTemplate<T>::load() {
         jsonFile.open(QFile::ReadOnly);
         QJsonDocument json = QJsonDocument().fromJson(jsonFile.readAll());
         QJsonObject object = json.object();
-        QJsonArray data = object["data"].toArray();
-        QJsonObject metadata = object["metadata"].toObject();
 
-        // Считываемпредыдущее положение счетчика
-        this->increment = metadata["increment"].toInt();
-
-        // Добавлем в репозиторий данные
-        for (auto element : data) {
-            T t;
-            t.fromJson(element.toObject());
-            this->elements.append(t);
-        }
+        this->fromJson(object);
     }
 }
 
@@ -209,6 +233,11 @@ T RepositoryTemplate<T>::getById(int id) {
 }
 
 template <class T>
+T RepositoryTemplate<T>::getByIndex(int index) {
+    return this->elements[index];
+}
+
+template <class T>
 QList<T> RepositoryTemplate<T>::getByParameters(T searchObject) {
     QList<T> elements;
     for (T element : this->elements) {
@@ -232,6 +261,12 @@ int RepositoryTemplate<T>::getIncrement()
 }
 
 template <class T>
+int RepositoryTemplate<T>::getAmount()
+{
+    return this->elements.size();
+}
+
+template <class T>
 class QList<T>::iterator RepositoryTemplate<T>::begin()
 {
     return this->elements.begin();
@@ -244,14 +279,10 @@ class QList<T>::iterator RepositoryTemplate<T>::end()
 }
 
 template <class T>
-void RepositoryTemplate<T>::save() {
-    QJsonDocument json;
-
+QJsonObject RepositoryTemplate<T>::toJson() {
     QJsonArray data;
     QJsonObject metadata;
     QJsonObject object;
-
-    object = json.object();
 
     for (T element : this->elements) {
         data.append(element.toJson());
@@ -260,12 +291,41 @@ void RepositoryTemplate<T>::save() {
 
     object["data"] = data;
     object["metadata"] = metadata;
+
+    return object;
+}
+
+template <class T>
+void RepositoryTemplate<T>::save() {
+    QJsonDocument json;
+
+    QJsonObject object = this->toJson();
+
     json.setObject(object);
 
     QString jsonName = QString("storage/%1/%2_%3.json").arg(this->tname).arg(this->tname).arg(time(NULL));
     QFile jsonFine(jsonName);
     jsonFine.open(QFile::WriteOnly);
     jsonFine.write(json.toJson());
+}
+
+template <class T>
+void RepositoryTemplate<T>::save(QString  filename) {
+    QJsonDocument json;
+
+    QJsonObject object = this->toJson();
+
+    json.setObject(object);
+
+    QString jsonName = QString(filename);
+    QFile jsonFine(jsonName);
+    jsonFine.open(QFile::WriteOnly);
+    jsonFine.write(json.toJson());
+}
+
+template <class T>
+QString RepositoryTemplate<T>::getTname() {
+    return this->tname;
 }
 
 template <class T>

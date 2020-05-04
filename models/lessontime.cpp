@@ -44,10 +44,10 @@ QJsonObject LessonTime::toJson() {
 }
 
 void LessonTime::fromJson(QJsonObject items) {
-    this->id = items.value("id").toInt();
-    this->parity = items.value("parity").toInt();
-    this->dayOfWeek = items.value("dayOfWeek").toInt();
-    this->time = QTime(items.value("hour").toInt(), items.value("minute").toInt(), 0, 0);
+    this->id = items.value("id").toString().toInt();
+    this->parity = items.value("parity").toString().toInt();
+    this->dayOfWeek = items.value("dayOfWeek").toString().toInt();
+    this->time = QTime(items.value("hour").toString().toInt(), items.value("minute").toString().toInt(), 0, 0);
 }
 
 QString LessonTime::toString() {
@@ -56,5 +56,9 @@ QString LessonTime::toString() {
 
 bool LessonTime::operator== (const LessonTime &object)
 {
-    return ((this->parity == object.parity || object.parity != 0) && (this->dayOfWeek == object.dayOfWeek || object.dayOfWeek == 0) && (this->time == object.time ||  object.time == QTime(0,0,0,0)));
+    return (
+                (this->parity == object.parity || object.parity != 0)
+             && (this->dayOfWeek == object.dayOfWeek || object.dayOfWeek == 0)
+             && (this->time == object.time ||  object.time == QTime(0,0,0,0))
+    );
 }
