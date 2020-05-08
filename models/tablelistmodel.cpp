@@ -1,15 +1,15 @@
-#include "table_model.h"
+#include "tablelistmodel.h"
 #include <QTableView>
 #include <QDebug>
 
 
 
-int StringListModel::rowCount(const QModelIndex &parent) const
+int TableListModel::rowCount(const QModelIndex &parent) const
  {
      return stringList.count();
  }
 
-QVariant StringListModel::data(const QModelIndex &index, int role) const
+QVariant TableListModel::data(const QModelIndex &index, int role) const
  {
      if (!index.isValid())
          return QVariant();
@@ -23,7 +23,7 @@ QVariant StringListModel::data(const QModelIndex &index, int role) const
          return QVariant();
  }
 
-QVariant StringListModel::headerData(int section, Qt::Orientation orientation,
+QVariant TableListModel::headerData(int section, Qt::Orientation orientation,
                                       int role) const
  {
      if (role != Qt::DisplayRole)
@@ -34,13 +34,13 @@ QVariant StringListModel::headerData(int section, Qt::Orientation orientation,
      else
          return QString("%1").arg(section);
  }
-Qt::ItemFlags StringListModel::flags(const QModelIndex &index) const
+Qt::ItemFlags TableListModel::flags(const QModelIndex &index) const
  {
      if (!index.isValid())
          return Qt::ItemIsEnabled;
      return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
  }
-bool StringListModel::setData(const QModelIndex &index,
+bool TableListModel::setData(const QModelIndex &index,
                               const QVariant &value, int role)
 {
     if (index.isValid() && role == Qt::EditRole) {
@@ -52,7 +52,7 @@ bool StringListModel::setData(const QModelIndex &index,
     return false;
 }
 
-bool StringListModel::insertRows(int position, int rows, const QModelIndex &parent)
+bool TableListModel::insertRows(int position, int rows, const QModelIndex &parent)
  {
      beginInsertRows(QModelIndex(), position, position+rows-1);
 
@@ -63,7 +63,7 @@ bool StringListModel::insertRows(int position, int rows, const QModelIndex &pare
      endInsertRows();
      return true;
  }
-bool StringListModel::removeRows(int position, int rows, const QModelIndex &parent)
+bool TableListModel::removeRows(int position, int rows, const QModelIndex &parent)
 {
     beginRemoveRows(QModelIndex(), position, position+rows-1);
     for (int row = 0; row < rows; ++row) {

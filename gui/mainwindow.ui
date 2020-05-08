@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1074</width>
-    <height>536</height>
+    <width>1071</width>
+    <height>530</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,36 +18,17 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
-      <widget class="QWidget" name="dataTab">
+      <widget class="QWidget" name="data_tab">
        <property name="cursor">
-        <cursorShape>PointingHandCursor</cursorShape>
+        <cursorShape>ArrowCursor</cursorShape>
        </property>
        <attribute name="title">
         <string>Данные</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="5" column="0">
-         <widget class="QTableView" name="subject_table"/>
-        </item>
-        <item row="3" column="2">
-         <widget class="QLabel" name="cabinetsLabel">
-          <property name="text">
-           <string>Кабинеты</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1">
-         <widget class="QTableView" name="group_table"/>
-        </item>
-        <item row="5" column="2">
-         <widget class="QTableView" name="cabinets_table"/>
-        </item>
-        <item row="3" column="3">
+        <item row="2" column="3">
          <widget class="QLabel" name="timeLabel">
           <property name="text">
            <string>Время</string>
@@ -57,17 +38,13 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
-         <widget class="QLabel" name="groupsLabel">
-          <property name="text">
-           <string>Группы</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
+        <item row="4" column="2">
+         <widget class="QTableView" name="cabinets_table"/>
         </item>
-        <item row="3" column="0">
+        <item row="4" column="3">
+         <widget class="QTableView" name="time_table"/>
+        </item>
+        <item row="2" column="0">
          <widget class="QLabel" name="fieldsLabel">
           <property name="text">
            <string>Предметы</string>
@@ -77,11 +54,51 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="3">
-         <widget class="QTableView" name="time_table"/>
+        <item row="2" column="2">
+         <widget class="QLabel" name="cabinetsLabel">
+          <property name="text">
+           <string>Кабинеты</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
         </item>
-        <item row="6" column="3">
-         <layout class="QGridLayout" name="gridLayout_time_btn"/>
+        <item row="4" column="0">
+         <widget class="QTableView" name="subject_table"/>
+        </item>
+        <item row="4" column="1">
+         <widget class="QTableView" name="group_table"/>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="groupsLabel">
+          <property name="text">
+           <string>Группы</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="group_subject_tab">
+       <attribute name="title">
+        <string>Группы</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="1" column="0">
+         <widget class="QTableView" name="gr_sub_table"/>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_gr_sb">
+          <property name="text">
+           <string>Группы</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -99,8 +116,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1074</width>
-     <height>33</height>
+     <width>1071</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

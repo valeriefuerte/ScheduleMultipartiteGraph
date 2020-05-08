@@ -10,19 +10,22 @@
 #include <QTime>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "models/table_model.h"
+#include "models/tablelistmodel.h"
 #include "dialogWindowEmptyRow.h"
 #include "dialogCabinetWindow.h"
 #include "models/repository/repositorytemplate.h"
 #include "gui/dialogLessonTimeWindow.h"
 #include "gui/visualizationwidget.h"
+#include "gui/group_subject.h"
+
+GroupSubject grsub;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-      ui->setupUi(this);
 
+      ui->setupUi(this);
       receiveDay[1]="Понедельник";
       receiveDay[2]="Вторник";
       receiveDay[3]="Среда";
@@ -38,20 +41,23 @@ MainWindow::MainWindow(QWidget *parent) :
 
       //Начальная визуализация QTableView
       //Таблица "Предметы"
-      subjectModel = new StringListModel(*list_s);
+      subjectModel = new TableListModel(*list_s);
       ui->subject_table->setContextMenuPolicy(Qt::CustomContextMenu);
 
       //Таблица "Группы"
-      groupModel=new StringListModel(*list_gr);
+      groupModel=new TableListModel(*list_gr);
       ui->group_table->setContextMenuPolicy(Qt::CustomContextMenu);
 
       //Таблица Кабинеты
-      cabinetModel=new StringListModel(*list_cb);
+      cabinetModel=new TableListModel(*list_cb);
       ui->cabinets_table->setContextMenuPolicy(Qt::CustomContextMenu);
 
       //Таблица время
-      timeModel = new StringListModel(*list_tm);
+      timeModel = new TableListModel(*list_tm);
       ui->time_table->setContextMenuPolicy(Qt::CustomContextMenu);
+
+      //Таблица группы_дисциплины
+      ui->gr_sub_table->setContextMenuPolicy(Qt::CustomContextMenu);
 
       //Инициализация диалоговых окон
       dialogEmptyRow = new DialogWindowEmptyRow();
@@ -64,6 +70,8 @@ MainWindow::MainWindow(QWidget *parent) :
       dialogGroup = new DialogGroupWindow();
       dialogCabinet = new DialogCabinetWindow();
       dialogLessonTime = new DialogLessonTimeWindow();
+
+
 
       //Таблица Предметы
       connect(dialogSubject, SIGNAL(sendDataSubject(Subject)), this, SLOT(receiveDataSubject(Subject)));
@@ -89,6 +97,7 @@ MainWindow::MainWindow(QWidget *parent) :
       connect(dialogLessonTime, SIGNAL(sendEditDataLessonTime(LessonTime)), this,SLOT(receiveEditDataLessonTime(LessonTime)));
 
       connect(ui->time_table,SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(customTimeMenuRequested(QPoint)));
+
 
       //connect(this,SIGNAL(sendSelectionCabinet(Cabinet)),dialogConfirmCabinet,SLOT(receiveSelectionCabinet(Cabinet)));
 
@@ -157,7 +166,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::visualRows(QTableView *table, StringListModel *model){
+void MainWindow::visualRows(QTableView *table, TableListModel *model){
     table->setModel(model);
     table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
@@ -351,7 +360,6 @@ void MainWindow::receiveEditDataCabinet(Cabinet cabinet){
 
 }
 
-
 void MainWindow::customCabinetMenuRequested(const QPoint &pos){
 
    QMenu *menu = new QMenu(this);
@@ -440,25 +448,26 @@ void MainWindow::receiveEditDataLessonTime(LessonTime lessonTime){
 }
 
 
-void MainWindow::on_addTimeButton_clicked()
+void MainWindow::on_tabWidget_currentChanged(int index)
 {
-   dialogLessonTime->show();
+    grsub.receiveGroup(list_gr,this);
+    connect(ui->gr_sub_table,SIGNAL(customContextMenuRequested(QPoint))
+            ,&grsub,SLOT(customGroupSubjectMenuRequested(QPoint)));
 }
 
-void MainWindow::on_removeTimeButton_clicked()
-{
-    int r =ui->time_table->selectionModel()->currentIndex().row();
-    list_tm->removeAt(r);
-    ui->time_table->model()->removeRow(r);
+void MainWindow::customGroupSubjectMenuRequested(const QPoint &pos){
+
+   QMenu *menu = new QMenu(this);
+
+   QAction *addSG= new QAction(("Соотнести"),this);
+
+   connect(addSG, SIGNAL(triggered()),&grsub,SLOT(slotAddSG()));
+   menu->addAction(addSG);
+   menu->popup( ui->gr_sub_table->viewport()->mapToGlobal(pos));
+
 }
 
-void MainWindow::on_confirmTimeButton_clicked()
-{
-    int index = ui->time_table->selectionModel()->currentIndex().row();
-    QVariant value = ui->time_table->selectionModel()->currentIndex().data();
-    QString str = value.toString();
-    list_tm->replace(index,str);
-}
+
 
 void MainWindow::on_subject_table_clicked(const QModelIndex &index)
 {
@@ -527,8 +536,4 @@ void MainWindow::on_cabinets_table_clicked(const QModelIndex &index)
     }
         qDebug()<<"Индекс по нажатию"<<index.row();
 }
-
-
-
-
 

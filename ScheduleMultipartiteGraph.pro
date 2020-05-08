@@ -33,6 +33,7 @@ SOURCES += \
     gui/dialogWindowEmptyRow.cpp \
     gui/edge.cpp \
     gui/graphwidget.cpp \
+    gui/group_subject.cpp \
     gui/node.cpp \
     gui/visualizationwidget.cpp \
     gui/mainwindow.cpp \
@@ -44,8 +45,8 @@ SOURCES += \
     models/repository/repository.cpp \
     models/repository/repositorytemplate.cpp \
     models/router.cpp \
-    models/table_model.cpp \
-    models/subject.cpp
+    models/subject.cpp \
+    models/tablelistmodel.cpp
 
 
 HEADERS += \
@@ -57,20 +58,20 @@ HEADERS += \
     gui/dialogWindowEmptyRow.h \
     gui/edge.h \
     gui/graphwidget.h \
+    gui/group_subject.h \
     gui/node.h \
     gui/visualizationwidget.h \
     gui/mainwindow.h \
     models/abstractnoderepository.h \
     models/cabinet.h \
     models/repository/repositorytemplate.h \
-    models/table_model.h \
     models/groupstudents.h \
     models/lessontime.h \
     models/repository/repository.h \
     models/router.h \
-    models/table_model.h \
     models/router.h \
-    models/subject.h
+    models/subject.h \
+    models/tablelistmodel.h
 
 
 

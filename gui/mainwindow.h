@@ -8,7 +8,7 @@
 #include "models/groupstudents.h"
 #include "models/lessontime.h"
 #include "models/subject.h"
-#include "models/table_model.h"
+#include "models/tablelistmodel.h"
 
 #include "dialogSubjectWindow.h"
 #include "dialogGroupWindow.h"
@@ -30,15 +30,15 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    Ui::MainWindow *ui;
     explicit MainWindow(QWidget *parent = nullptr);
-    void  visualRows(QTableView *table,StringListModel *model);
+    void  visualRows(QTableView *table,TableListModel *model);
     ~MainWindow();
 private:
 
 signals:
     void sendSelectionCabinet(Cabinet cabinet);
 private slots:
-
     //void on_tabWidget_currentChanged(int index);
     //Предметы
     void slotSubjectAddRecord();
@@ -77,11 +77,6 @@ private slots:
 
     void receiveDataCabinet(Cabinet);
 
-    void on_addTimeButton_clicked();
-
-    void on_removeTimeButton_clicked();
-
-    void on_confirmTimeButton_clicked();
     //Контекстные меню
     void customSubjectMenuRequested(const QPoint &pos);
 
@@ -90,6 +85,8 @@ private slots:
     void customCabinetMenuRequested(const QPoint &pos);
 
     void customTimeMenuRequested(const QPoint &pos);
+
+    void customGroupSubjectMenuRequested(const QPoint &pos);
 
     void receiveDataLessonTime(LessonTime);
 
@@ -101,11 +98,10 @@ private slots:
 
     void on_saveFile_triggered();
 
-    void on_cabinets_table_clicked(const QModelIndex &index);
-
-
+    void on_cabinets_table_clicked(const QModelIndex &index);    
+public slots:
+    void on_tabWidget_currentChanged(int index);
 private:
-    Ui::MainWindow *ui;
 
     QHash<int,QString> receiveDay;
 
@@ -124,10 +120,10 @@ private:
     DialogLessonTimeWindow *dialogLessonTime;
 
     //Абстрактные модели QTableView
-    StringListModel *subjectModel;
-    StringListModel *groupModel;
-    StringListModel *cabinetModel;
-    StringListModel *timeModel;
+    TableListModel *subjectModel;
+    TableListModel *groupModel;
+    TableListModel *cabinetModel;
+    TableListModel *timeModel;
 
     //Репозитории
     RepositoryTemplate<Cabinet> repoCabinets;
