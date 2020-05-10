@@ -16,7 +16,6 @@ public:
     void editTitle();
     void addTitle();
     void outputEditData(GroupStudents);
-
 signals:
     void sendDataGroup(GroupStudents);
     void sendEditDataGroup(GroupStudents);

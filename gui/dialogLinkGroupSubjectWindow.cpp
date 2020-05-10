@@ -36,7 +36,7 @@ DialogLinkGroupSubjectWindow::DialogLinkGroupSubjectWindow(QWidget* parent): QDi
     dialogLinkGS = new DialogAddLinkGroupSubject();
 
     connect(table_subject,SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(customLinkGroupSubjectMenuRequested(QPoint)));
-    connect(dialogLinkGS,SIGNAL(sendRepoGroupSubject(RepositoryTemplate<LinkGroupSubject>,QString)),this,SLOT(receiveRepoGroupSubject(RepositoryTemplate<LinkGroupSubject>,QString)));
+    connect(dialogLinkGS,SIGNAL(sendRepoGroupSubject(LinkGroupSubject,QString)),this,SLOT(receiveRepoGroupSubject(LinkGroupSubject,QString)));
 
 
     //int index =table_subject->currentIndex().row()+1;
@@ -71,9 +71,10 @@ void DialogLinkGroupSubjectWindow::receiveGroup(int currentIndex,QStringList lis
    for (int i =0; i<repoSubjects.getAmount(); i++){
        repoRecSubject.add(repoSubjects.getById(i).name);
    }
-
-   sub_model = new TableListModel(*list_s);
-
+   if (!recList){
+        sub_model = new TableListModel(*list_s);
+        recList =true;
+    }
    visualRows(table_subject,sub_model);
    visualRows(table_link_subject,link_sub_model);
 
@@ -84,9 +85,15 @@ void DialogLinkGroupSubjectWindow::receiveGroup(int currentIndex,QStringList lis
 
    this->setLayout(gridLayout);
    if (table_link_subject->model()->rowCount()!=0){
-   clearTableView();
+        clearTableView();
    }
-
+   if (repoLinkGroupSubjects.getAmount()!=0){
+       for (int i =0; i<repoLinkGroupSubjects.getAmount(); i++){
+           if (repoGroupStudents.getById(repoGroupStudents.getByIndex(currentIndex).id).id==repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).groupId){
+               insertTableView(repoSubjects.getById(repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).subjectId).name);
+          }
+       }
+   }
   /* qDebug()<<"репоПредметы";
    for (int i =0; i<repoRecSubject.getAmount(); i++){
        qDebug()<<repoRecSubject.getById(i).name;
@@ -101,6 +108,18 @@ void DialogLinkGroupSubjectWindow::receiveGroup(int currentIndex,QStringList lis
   }*/
 
 }
+
+void DialogLinkGroupSubjectWindow::insertTableView(QString nameS){
+    int index =table_link_subject->currentIndex().row()+1;
+
+    link_sub_model->insertRow(index);
+    const QModelIndex indexNext=link_sub_model->index(index,0);
+    link_sub_model->setData(indexNext,QVariant(nameS));
+    visualRows(table_link_subject,link_sub_model);
+    table_link_subject->setCurrentIndex(indexNext);
+}
+
+
 void DialogLinkGroupSubjectWindow::customLinkGroupSubjectMenuRequested(const QPoint &pos){
     QMenu *menu = new QMenu(this);
 
@@ -118,7 +137,9 @@ void DialogLinkGroupSubjectWindow::slotLinkSubject_GroupAddRecord(){
 
 }
 
-void DialogLinkGroupSubjectWindow::receiveRepoGroupSubject(RepositoryTemplate<LinkGroupSubject> receiveRepoGroupSubject,QString nameSubject){
+void DialogLinkGroupSubjectWindow::receiveRepoGroupSubject(LinkGroupSubject gr_sub,QString nameSubject){
+
+    repoLinkGroupSubjects.add(gr_sub);
     int index =table_link_subject->currentIndex().row()+1;
 
     link_sub_model->insertRow(index);
@@ -130,7 +151,7 @@ void DialogLinkGroupSubjectWindow::receiveRepoGroupSubject(RepositoryTemplate<Li
 }
 void DialogLinkGroupSubjectWindow::clearTableView(){
     int r = table_link_subject->model()->rowCount();
-    --r;
+    r--;
     while(link_sub_model->rowCount()>0){
      table_link_subject->model()->removeRow(r);
      r--;
@@ -143,3 +164,9 @@ void DialogLinkGroupSubjectWindow::visualRows(QTableView *table, TableListModel 
     table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     table->show();
 }
+
+void DialogLinkGroupSubjectWindow::closeEvent(QCloseEvent *){
+
+}
+
+

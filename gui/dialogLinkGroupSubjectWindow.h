@@ -16,6 +16,7 @@
 class DialogLinkGroupSubjectWindow : public QDialog{
     Q_OBJECT
 public:
+    RepositoryTemplate<LinkGroupSubject> repoLinkGroupSubjects;
     RepositoryTemplate<GroupStudents> repoRecGroupStudent;
     RepositoryTemplate<Subject> repoRecSubject;
 
@@ -23,10 +24,11 @@ public:
     DialogLinkGroupSubjectWindow(QWidget* parent=0);
 
 private:
+    bool recList = false;
     int indexGroup,indexSubject;
 
     DialogAddLinkGroupSubject *dialogLinkGS;
-    RepositoryTemplate<LinkGroupSubject> repoLinkGroupSubjects;
+
 
     QStringList *list_link_subject;
     QStringList *list_s;
@@ -42,14 +44,18 @@ private:
     TableListModel *link_sub_model;
     QGridLayout *gridLayout;
 
-
+   void insertTableView(QString subject);
    void visualRows(QTableView *table, TableListModel *model);
    void clearTableView();
+   void closeEvent(QCloseEvent *);
 
 private slots:
  void slotLinkSubject_GroupAddRecord();
  void customLinkGroupSubjectMenuRequested(const QPoint &pos);
- void receiveRepoGroupSubject(RepositoryTemplate<LinkGroupSubject>,QString);
+ void receiveRepoGroupSubject(LinkGroupSubject,QString);
+signals:
+
+
 };
 
 #endif // DIALOGLINKGROUPSUBJECTWINDOW_H

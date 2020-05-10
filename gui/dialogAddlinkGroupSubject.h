@@ -31,10 +31,11 @@ private:
     QLabel *nameGroup;
     QLabel *nameSubject;
     QLineEdit *academHours;
+    int increment =0;
 private slots:
     void apply_clicked();
 signals:
-    void sendRepoGroupSubject(RepositoryTemplate<LinkGroupSubject>,QString);
+    void sendRepoGroupSubject(LinkGroupSubject,QString);
 };
 
 #endif // DIALOGWINDOWADDLINKGROUPSUBJECT_H

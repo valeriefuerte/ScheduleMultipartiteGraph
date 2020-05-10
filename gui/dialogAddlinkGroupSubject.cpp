@@ -56,10 +56,12 @@ void DialogAddLinkGroupSubject::addLinkGroupSubject(int indexGroup,int indexSubj
 
 }
 void DialogAddLinkGroupSubject::apply_clicked(){
+
     int academic= academHours->text().toInt();
     repoLinkGrSub.add(LinkGroupSubject(receiveRepGroup.getById(receiveRepGroup.getByIndex(indexRGroup).id).id,
                      receiveRepSubject.getById(receiveRepSubject.getByIndex(indexRSub).id).id, academic));
-   emit sendRepoGroupSubject(repoLinkGrSub,receiveRepSubject.getById(receiveRepSubject.getByIndex(indexRSub).id).name);
+   emit sendRepoGroupSubject(repoLinkGrSub.getById(repoLinkGrSub.getByIndex(increment).id),receiveRepSubject.getById(receiveRepSubject.getByIndex(indexRSub).id).name);
+   increment++;
    academHours->clear();
    this->close();
  }
