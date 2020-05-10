@@ -17,8 +17,8 @@
 #include "gui/dialogLessonTimeWindow.h"
 #include "gui/visualizationwidget.h"
 #include "gui/group_subject.h"
-
-GroupSubject grsub;
+#include "models/linkgroupsubject.h"
+#include "gui/dialogLinkGroupSubjectWindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -26,6 +26,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
       ui->setupUi(this);
+      this->initStorage();
+      this->loadReps();
+
+
       receiveDay[1]="Понедельник";
       receiveDay[2]="Вторник";
       receiveDay[3]="Среда";
@@ -39,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
       list_cb=new QStringList();
       list_tm = new QStringList();
 
-      //Начальная визуализация QTableView
+      //Начальная визуализация QTableViewsendGroupStudents
       //Таблица "Предметы"
       subjectModel = new TableListModel(*list_s);
       ui->subject_table->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -57,6 +61,7 @@ MainWindow::MainWindow(QWidget *parent) :
       ui->time_table->setContextMenuPolicy(Qt::CustomContextMenu);
 
       //Таблица группы_дисциплины
+      gr_subModel = new TableListModel(*list_gr);
       ui->gr_sub_table->setContextMenuPolicy(Qt::CustomContextMenu);
 
       //Инициализация диалоговых окон
@@ -70,6 +75,9 @@ MainWindow::MainWindow(QWidget *parent) :
       dialogGroup = new DialogGroupWindow();
       dialogCabinet = new DialogCabinetWindow();
       dialogLessonTime = new DialogLessonTimeWindow();
+      dialogLinkGroupSubject = new DialogLinkGroupSubjectWindow();
+      testSubject();
+      //dialogLinkGroupSubject->show();
 
 
 
@@ -97,6 +105,9 @@ MainWindow::MainWindow(QWidget *parent) :
       connect(dialogLessonTime, SIGNAL(sendEditDataLessonTime(LessonTime)), this,SLOT(receiveEditDataLessonTime(LessonTime)));
 
       connect(ui->time_table,SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(customTimeMenuRequested(QPoint)));
+      //Таблица Группы_Предметы
+      connect(ui->gr_sub_table,SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(customGroupSubjectMenuRequested(QPoint)));
+
 
 
       //connect(this,SIGNAL(sendSelectionCabinet(Cabinet)),dialogConfirmCabinet,SLOT(receiveSelectionCabinet(Cabinet)));
@@ -203,6 +214,7 @@ void MainWindow::receiveDataSubject(Subject subject){
      visualRows(ui->subject_table,subjectModel);
      ui->subject_table->setCurrentIndex(indexNext);
  }
+
 void MainWindow::receiveEditDataSubject(Subject subject){
 
     int index =ui->subject_table->selectionModel()->currentIndex().row();
@@ -243,15 +255,17 @@ void MainWindow::slotGroupEditRecord()
 {
     dialogGroup->show();
     dialogGroup->editTitle();
-    dialogGroup->outputEditData(repoGroupStudents.getById(ui->group_table->selectionModel()->currentIndex().row()));
+    dialogGroup->outputEditData(repoGroupStudents.getByIndex(ui->group_table->selectionModel()->currentIndex().row()));
+
 }
 
 void MainWindow::slotGroupRemoveRecord()
 {
     int index =ui->group_table->selectionModel()->currentIndex().row();
-    this->repoGroupStudents.remove(index);
+    this->repoGroupStudents.remove(repoGroupStudents.getByIndex(index).id);
     list_gr->removeAt(index);
     ui->group_table->model()->removeRow(index);
+    ui->gr_sub_table->model()->removeRow(index);
 }
 
 
@@ -261,11 +275,17 @@ void MainWindow::receiveDataGroup(GroupStudents group){
 
      int index =ui->group_table->currentIndex().row()+1;
      groupModel->insertRow(index);
+     gr_subModel->insertRow(index);
 
      const QModelIndex indexNext=groupModel->index(index,0);
      groupModel->setData(indexNext,QVariant(group.name));
+     gr_subModel->setData(indexNext,QVariant(group.name));
+
      visualRows(ui->group_table,groupModel);
+     visualRows(ui->gr_sub_table,gr_subModel);
+
      ui->group_table->setCurrentIndex(indexNext);
+     ui->gr_sub_table->setCurrentIndex(indexNext);
  }
 void MainWindow::receiveEditDataGroup(GroupStudents group){
 
@@ -276,6 +296,7 @@ void MainWindow::receiveEditDataGroup(GroupStudents group){
 
     const QModelIndex curSelectIndex=groupModel->index(index,0);
     groupModel->setData(curSelectIndex,QVariant(group.name));
+    gr_subModel->setData(curSelectIndex,QVariant(group.name));
 }
 
 void MainWindow::customGroupMenuRequested(const QPoint &pos){
@@ -309,7 +330,7 @@ void MainWindow::slotCabinetEditRecord()
 {
     dialogCabinet->show();
     dialogCabinet->editTitle();
-    dialogCabinet->outputEditData(repoCabinets.getById(ui->cabinets_table->selectionModel()->currentIndex().row()));
+    dialogCabinet->outputEditData(repoCabinets.getByIndex(ui->cabinets_table->selectionModel()->currentIndex().row()));
 }
 void MainWindow::slotCabinetRemoveRecord()
 {
@@ -403,17 +424,17 @@ void MainWindow::customTimeMenuRequested(const QPoint &pos){
 
     QMenu *menu = new QMenu(this);
 
-    QAction *addCabinet = new QAction(("Добавить"),this);
-    QAction *editCabinet = new QAction(("Редактировать"),this);
-    QAction *deleteCabinet = new QAction(("Удалить"),this);
+    QAction *addTime = new QAction(("Добавить"),this);
+    QAction *editTime = new QAction(("Редактировать"),this);
+    QAction *deleteTime = new QAction(("Удалить"),this);
 
-    connect(addCabinet, SIGNAL(triggered()),this,SLOT(slotTimeAddRecord()));
-    connect(editCabinet, SIGNAL(triggered()),this,SLOT(slotTimeEditRecord()));
-    connect(deleteCabinet, SIGNAL(triggered()),this,SLOT(slotTimeRemoveRecord()));
+    connect(addTime, SIGNAL(triggered()),this,SLOT(slotTimeAddRecord()));
+    connect(editTime, SIGNAL(triggered()),this,SLOT(slotTimeEditRecord()));
+    connect(deleteTime, SIGNAL(triggered()),this,SLOT(slotTimeRemoveRecord()));
 
-    menu->addAction(addCabinet);
-    menu->addAction(editCabinet);
-    menu->addAction(deleteCabinet);
+    menu->addAction(addTime);
+    menu->addAction(editTime);
+    menu->addAction(deleteTime);
 
     menu->popup(ui->time_table->viewport()->mapToGlobal(pos));
 }
@@ -448,22 +469,70 @@ void MainWindow::receiveEditDataLessonTime(LessonTime lessonTime){
 }
 
 
-void MainWindow::on_tabWidget_currentChanged(int index)
-{
-    grsub.receiveGroup(list_gr,this);
-    connect(ui->gr_sub_table,SIGNAL(customContextMenuRequested(QPoint))
-            ,&grsub,SLOT(customGroupSubjectMenuRequested(QPoint)));
-}
-
 void MainWindow::customGroupSubjectMenuRequested(const QPoint &pos){
 
    QMenu *menu = new QMenu(this);
 
    QAction *addSG= new QAction(("Соотнести"),this);
 
-   connect(addSG, SIGNAL(triggered()),&grsub,SLOT(slotAddSG()));
+   connect(addSG, SIGNAL(triggered()),this,SLOT(slotAddSG()));
+
    menu->addAction(addSG);
    menu->popup( ui->gr_sub_table->viewport()->mapToGlobal(pos));
+
+}
+
+void MainWindow::slotAddSG(){
+    dialogLinkGroupSubject->receiveGroup(ui->gr_sub_table->selectionModel()->currentIndex().row(),*list_s,repoGroupStudents,repoSubjects);
+    dialogLinkGroupSubject->show();
+}
+void MainWindow::testSubject(){
+
+    QHash<int,Subject> subHash;
+    subHash[0]=Subject("АКЗ");
+    subHash[1]=Subject("Иностранный язык");
+    subHash[2]=Subject("СКВПС");
+    subHash[3]=Subject("ООТРП");
+    subHash[4]=Subject("Верификация ПО");
+    subHash[5]=Subject("РВС");
+    for (int i =0; i<subHash.size();i++){
+        list_s->append(subHash[i].name);
+    }
+
+    QHash<int,GroupStudents> grHash;
+    grHash[0]=GroupStudents("5303");
+    grHash[1]=GroupStudents("5304");
+    grHash[2]=GroupStudents("5305");
+    grHash[3]=GroupStudents("5306");
+    grHash[4]=GroupStudents("5307");
+    grHash[5]=GroupStudents("5308");
+    //repoSubjects.add(subject);
+    //list_s->append(subject.name);
+
+    for (int i =0; i<=5; i++){
+        //int index =ui->subject_table->currentIndex().row()+1;
+        subjectModel->insertRow(i);
+        groupModel->insertRow(i);
+        gr_subModel->insertRow(i);
+
+        repoSubjects.add(subHash[i]);
+        repoGroupStudents.add(grHash[i]);
+
+
+        const QModelIndex indexNext=subjectModel->index(i,0);
+
+        groupModel->setData(indexNext,QVariant(grHash[i].name));
+        subjectModel->setData(indexNext,QVariant(subHash[i].name));
+        gr_subModel->setData(indexNext,QVariant(grHash[i].name));
+
+        visualRows(ui->group_table,groupModel);
+        visualRows(ui->subject_table,subjectModel);
+        visualRows(ui->gr_sub_table,gr_subModel);
+
+        ui->subject_table->setCurrentIndex(indexNext);
+        ui->group_table->setCurrentIndex(indexNext);
+        ui->gr_sub_table->setCurrentIndex(indexNext);
+    }
 
 }
 
@@ -517,10 +586,21 @@ void MainWindow::on_group_table_clicked(const QModelIndex &index)
 
 void MainWindow::on_saveFile_triggered()
 {
-    this->repoCabinets.save();
-    this->repoSubjects.save();
-    this->repoLessonTime.save();
-    this->repoGroupStudents.save();
+    QJsonDocument json;
+    QJsonObject object = json.object();
+
+    object[this->repoCabinets.getTname()] = this->repoCabinets.toJson();
+    object[this->repoSubjects.getTname()] = this->repoSubjects.toJson();
+    object[this->repoLessonTime.getTname()] = this->repoLessonTime.toJson();
+    object[this->repoGroupStudents.getTname()] = this->repoGroupStudents.toJson();
+    object[this->repoLinkGroupSubject.getTname()] = this->repoLinkGroupSubject.toJson();
+
+    json.setObject(object);
+
+    QString jsonName = QString("storage/%1.json").arg(time(NULL));
+    QFile jsonFine(jsonName);
+    jsonFine.open(QFile::WriteOnly);
+    jsonFine.write(json.toJson());
 }
 
 void MainWindow::on_cabinets_table_clicked(const QModelIndex &index)
@@ -535,5 +615,53 @@ void MainWindow::on_cabinets_table_clicked(const QModelIndex &index)
         qDebug()<<list_cb->at(i);
     }
         qDebug()<<"Индекс по нажатию"<<index.row();
+}
+
+
+void MainWindow::loadReps()
+{
+    // Достаем список файлов для сущности, с которой работает репозиторий
+    QDir dir(this->dirStorage);
+    dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+    dir.setSorting(QDir::Name);
+    QFileInfoList list = dir.entryInfoList();
+
+    // Если файлы существуют, то считываем их
+    if (!list.empty()){
+        // Берем файл последний файл
+        QString jsonName = QString("%1/%2").arg(this->dirStorage).arg(list.at(list.size()-1).fileName());
+        this->loadReps(jsonName);
+    }
+}
+
+void MainWindow::loadReps(QString jsonName)
+{
+    // Десериализуем
+    QFile jsonFile(jsonName);
+    jsonFile.open(QFile::ReadOnly);
+    QJsonDocument json = QJsonDocument().fromJson(jsonFile.readAll());
+    QJsonObject object = json.object();
+
+    QJsonObject objectCabinets = object[this->repoCabinets.getTname()].toObject();
+    QJsonObject objectSubjects = object[this->repoSubjects.getTname()].toObject();
+    QJsonObject objectLessonTime = object[this->repoLessonTime.getTname()].toObject();
+    QJsonObject objectGroupStudents = object[this->repoGroupStudents.getTname()].toObject();
+    QJsonObject objectLinkGroupSubject = object[this->repoLinkGroupSubject.getTname()].toObject();
+
+    this->repoCabinets.fromJson(objectCabinets);
+    this->repoSubjects.fromJson(objectSubjects);
+    this->repoLessonTime.fromJson(objectLessonTime);
+    this->repoGroupStudents.fromJson(objectGroupStudents);
+    this->repoLinkGroupSubject.fromJson(objectLinkGroupSubject);
+
+    qDebug() << "work" << endl;
+}
+
+void MainWindow::initStorage() {
+    QDir dirStorage(this->dirStorage);
+
+    if (!dirStorage.exists()) {
+        QDir().mkdir(this->dirStorage);
+    }
 }
 

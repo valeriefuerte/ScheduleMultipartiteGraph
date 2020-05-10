@@ -10,12 +10,16 @@
 #include "models/subject.h"
 #include "models/tablelistmodel.h"
 
+#include "models/linkgroupsubject.h"
+
+
 #include "dialogSubjectWindow.h"
 #include "dialogGroupWindow.h"
 #include "dialogWindowEmptyRow.h"
 #include "dialogCabinetWindow.h"
 #include "dialogWindowConfrimEditRow.h"
 #include "dialogLessonTimeWindow.h"
+#include "dialogLinkGroupSubjectWindow.h"
 
 
 
@@ -31,11 +35,16 @@ class MainWindow : public QMainWindow
 
 public:
     Ui::MainWindow *ui;
+    void testSubject();
     explicit MainWindow(QWidget *parent = nullptr);
     void  visualRows(QTableView *table,TableListModel *model);
+    void loadReps();
+    void loadReps(QString jsonName);
+    // Инициализация хранилищ.
+    void initStorage();
     ~MainWindow();
 private:
-
+    QString dirStorage = "storage";
 signals:
     void sendSelectionCabinet(Cabinet cabinet);
 private slots:
@@ -76,6 +85,9 @@ private slots:
     void slotTimeRemoveRecord();
 
     void receiveDataCabinet(Cabinet);
+    //Группы_предметы
+
+    void slotAddSG();
 
     //Контекстные меню
     void customSubjectMenuRequested(const QPoint &pos);
@@ -100,7 +112,6 @@ private slots:
 
     void on_cabinets_table_clicked(const QModelIndex &index);    
 public slots:
-    void on_tabWidget_currentChanged(int index);
 private:
 
     QHash<int,QString> receiveDay;
@@ -110,6 +121,7 @@ private:
     QStringList *list_gr;
     QStringList *list_cb;
     QStringList *list_tm;
+    QStringList *list_gr_sub;
 
     //Диалоговые окна
     DialogSubjectWindow *dialogSubject;
@@ -118,18 +130,21 @@ private:
     DialogWindowConfirmEditRow *dialogConfrimEdit;
     DialogCabinetWindow *dialogCabinet;
     DialogLessonTimeWindow *dialogLessonTime;
+    DialogLinkGroupSubjectWindow *dialogLinkGroupSubject;
 
     //Абстрактные модели QTableView
     TableListModel *subjectModel;
     TableListModel *groupModel;
     TableListModel *cabinetModel;
     TableListModel *timeModel;
+    TableListModel *gr_subModel;
 
     //Репозитории
     RepositoryTemplate<Cabinet> repoCabinets;
     RepositoryTemplate<GroupStudents> repoGroupStudents;
     RepositoryTemplate<LessonTime> repoLessonTime;
     RepositoryTemplate<Subject> repoSubjects;
+    RepositoryTemplate<LinkGroupSubject> repoLinkGroupSubject;
 };
 
 #endif // MAINWINDOW_H

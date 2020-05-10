@@ -25,15 +25,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    gui/dialogAddlinkGroupSubject.cpp \
     gui/dialogCabinetWindow.cpp \
     gui/dialogGroupWindow.cpp \
     gui/dialogLessonTimeWindow.cpp \
+    gui/dialogLinkGroupSubjectWindow.cpp \
     gui/dialogSubjectWindow.cpp \
     gui/dialogWindowConfrimEditRow.cpp \
     gui/dialogWindowEmptyRow.cpp \
     gui/edge.cpp \
     gui/graphwidget.cpp \
-    gui/group_subject.cpp \
     gui/node.cpp \
     gui/visualizationwidget.cpp \
     gui/mainwindow.cpp \
@@ -42,6 +43,7 @@ SOURCES += \
     models/cabinet.cpp \
     models/groupstudents.cpp \
     models/lessontime.cpp \
+    models/linkgroupsubject.cpp \
     models/repository/repository.cpp \
     models/repository/repositorytemplate.cpp \
     models/router.cpp \
@@ -50,20 +52,22 @@ SOURCES += \
 
 
 HEADERS += \
+    gui/dialogAddlinkGroupSubject.h \
     gui/dialogCabinetWindow.h \
     gui/dialogGroupWindow.h \
     gui/dialogLessonTimeWindow.h \
+    gui/dialogLinkGroupSubjectWindow.h \
     gui/dialogSubjectWindow.h \
     gui/dialogWindowConfrimEditRow.h \
     gui/dialogWindowEmptyRow.h \
     gui/edge.h \
     gui/graphwidget.h \
-    gui/group_subject.h \
     gui/node.h \
     gui/visualizationwidget.h \
     gui/mainwindow.h \
     models/abstractnoderepository.h \
     models/cabinet.h \
+    models/linkgroupsubject.h \
     models/repository/repositorytemplate.h \
     models/groupstudents.h \
     models/lessontime.h \

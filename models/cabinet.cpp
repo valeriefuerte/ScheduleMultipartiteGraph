@@ -1,4 +1,5 @@
 #include "cabinet.h"
+#include <QDebug>
 
 Cabinet::Cabinet(int number, int floor, int building)
 {
@@ -22,10 +23,10 @@ QJsonObject Cabinet::toJson() {
 }
 
 void Cabinet::fromJson(QJsonObject items) {
-    this->id = items.value("id").toInt();
-    this->number = items.value("number").toInt();
-    this->floor = items.value("floor").toInt();
-    this->building = items.value("building").toInt();
+    this->id = items.value("id").toString().toInt();
+    this->number = items.value("number").toString().toInt();
+    this->floor = items.value("floor").toString().toInt();
+    this->building = items.value("building").toString().toInt();
 }
 
 QString Cabinet::toString() {
@@ -34,5 +35,9 @@ QString Cabinet::toString() {
 
 bool Cabinet::operator== (const Cabinet &object)
 {
-    return ((this->building == object.building || object.building != 0) && (this->floor == object.floor || object.floor == 0) && (this->number == object.number ||  object.number == 0));
+    return (
+               (this->building == object.building || object.building != 0)
+            && (this->floor == object.floor || object.floor == 0)
+            && (this->number == object.number ||  object.number == 0)
+    );
 }
