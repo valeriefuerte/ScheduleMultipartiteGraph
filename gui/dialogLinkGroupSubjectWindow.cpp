@@ -23,6 +23,7 @@ DialogLinkGroupSubjectWindow::DialogLinkGroupSubjectWindow(QWidget* parent): QDi
 
     table_link_subject = new QTableView(this);
     link_sub_model = new TableListModel(*list_link_subject);
+    table_link_subject->setContextMenuPolicy(Qt::CustomContextMenu);
 
     label_allSub = new QLabel();
     label_link = new QLabel();
@@ -35,7 +36,7 @@ DialogLinkGroupSubjectWindow::DialogLinkGroupSubjectWindow(QWidget* parent): QDi
 
     dialogLinkGS = new DialogAddLinkGroupSubject();
 
-    connect(table_subject,SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(customLinkGroupSubjectMenuRequested(QPoint)));
+    connect(table_subject,SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(customGroupSubjectMenuRequested(QPoint)));
     connect(dialogLinkGS,SIGNAL(sendRepoGroupSubject(LinkGroupSubject,QString)),this,SLOT(receiveRepoGroupSubject(LinkGroupSubject,QString)));
 
 
@@ -58,23 +59,49 @@ void DialogLinkGroupSubjectWindow::receiveGroup(int currentIndex,QStringList lis
    indexGroup = currentIndex;
    label_link->setText(QString("Предметы группы %1").arg(repoGroupStudents.getById(repoGroupStudents.getByIndex(currentIndex).id).name));
 
-
-    for (int i =0; i<list_sub.size(); i++){
-       list_s->append(list_sub.at(i));
-   }
-
-     for (int i =0; i<repoGroupStudents.getAmount(); i++){
-        repoRecGroupStudent.add(repoGroupStudents.getById(i));
-     }
-
-
-   for (int i =0; i<repoSubjects.getAmount(); i++){
-       repoRecSubject.add(repoSubjects.getById(i).name);
-   }
+   //обновление списка
    if (!recList){
-        sub_model = new TableListModel(*list_s);
-        recList =true;
+       for (int i =0; i<list_sub.size(); i++){
+          list_s->append(list_sub.at(i));
+       }
+      sub_model = new TableListModel(*list_s);
+      recList = true;
     }
+    else
+   {
+       for (int i =0; i<list_sub.size(); i++){
+          list_s->append(list_sub.at(i));
+          insertTableView(list_s->last(),table_subject,sub_model);
+        }
+
+   }
+
+    editDataRepoGroup(repoGroupStudents);
+    editDataRepoSubject(repoSubjects);
+
+    /* qDebug()<<"RepoGroupStudents: ";
+    for (int i = 0; i<repoGroupStudents.getAmount(); i++){
+        qDebug()<<repoGroupStudents.getByIndex(i).name;
+    }
+    qDebug()<<"RepoRecGroupStudents: ";
+    for (int i = 0; i<repoRecGroupStudent.getAmount(); i++){
+        qDebug()<<repoRecGroupStudent.getByIndex(i).name;
+    }
+    qDebug()<<"RepoSubjects: ";
+   for (int i = 0; i<repoSubjects.getAmount(); i++){
+       qDebug()<<repoSubjects.getByIndex(i).name;
+   }
+   qDebug()<<"RepoRecSubjects: ";
+   for (int i = 0; i<repoRecSubject.getAmount(); i++){
+       qDebug()<<repoRecSubject.getByIndex(i).name;
+   }*/
+
+       /*qDebug()<<"RepoSubject: "<<repoSubjects.getAmount()<<"RepoSubject: "<<repoRecSubject.getAmount();
+       for (int i =0; i<repoRecSubject.getAmount(); i++){
+            qDebug()<<repoRecSubject.getById(i).name;
+      }*/
+
+
    visualRows(table_subject,sub_model);
    visualRows(table_link_subject,link_sub_model);
 
@@ -85,12 +112,12 @@ void DialogLinkGroupSubjectWindow::receiveGroup(int currentIndex,QStringList lis
 
    this->setLayout(gridLayout);
    if (table_link_subject->model()->rowCount()!=0){
-        clearTableView();
+        clearTableView(table_link_subject,link_sub_model);
    }
    if (repoLinkGroupSubjects.getAmount()!=0){
        for (int i =0; i<repoLinkGroupSubjects.getAmount(); i++){
            if (repoGroupStudents.getById(repoGroupStudents.getByIndex(currentIndex).id).id==repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).groupId){
-               insertTableView(repoSubjects.getById(repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).subjectId).name);
+               insertTableView(repoSubjects.getById(repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).subjectId).name,table_link_subject,link_sub_model);
           }
        }
    }
@@ -109,26 +136,24 @@ void DialogLinkGroupSubjectWindow::receiveGroup(int currentIndex,QStringList lis
 
 }
 
-void DialogLinkGroupSubjectWindow::insertTableView(QString nameS){
-    int index =table_link_subject->currentIndex().row()+1;
+void DialogLinkGroupSubjectWindow::insertTableView(QString nameS, QTableView *tableView, TableListModel *model){
+    int index =tableView->currentIndex().row()+1;
 
-    link_sub_model->insertRow(index);
-    const QModelIndex indexNext=link_sub_model->index(index,0);
-    link_sub_model->setData(indexNext,QVariant(nameS));
-    visualRows(table_link_subject,link_sub_model);
-    table_link_subject->setCurrentIndex(indexNext);
+    model->insertRow(index);
+    const QModelIndex indexNext=model->index(index,0);
+    model->setData(indexNext,QVariant(nameS));
+    visualRows(tableView,model);
+    tableView->setCurrentIndex(indexNext);
 }
 
 
-void DialogLinkGroupSubjectWindow::customLinkGroupSubjectMenuRequested(const QPoint &pos){
+void DialogLinkGroupSubjectWindow::customGroupSubjectMenuRequested(const QPoint &pos){
     QMenu *menu = new QMenu(this);
-
     QAction *addSubject = new QAction(("Добавить в группу"),this);
     indexSubject=table_subject->selectionModel()->currentIndex().row();
     connect(addSubject, SIGNAL(triggered()),this,SLOT(slotLinkSubject_GroupAddRecord()));
     menu->addAction(addSubject);
     menu->popup(table_subject->viewport()->mapToGlobal(pos));
-    indexSubject=table_subject->selectionModel()->currentIndex().row();
 }
 void DialogLinkGroupSubjectWindow::slotLinkSubject_GroupAddRecord(){
 
@@ -137,26 +162,38 @@ void DialogLinkGroupSubjectWindow::slotLinkSubject_GroupAddRecord(){
 
 }
 
+void DialogLinkGroupSubjectWindow::customLinkGroupSubjectMenuRequested(const QPoint &pos){
+    QMenu *menu = new QMenu(this);
+    QAction *deleteSubject = new QAction(("Удалить"),this);
+
+    /*indexSubject=table_subject->selectionModel()->currentIndex().row();
+    connect(addSubject, SIGNAL(triggered()),this,SLOT(slotLinkSubject_GroupAddRecord()));
+    menu->addAction(addSubject);
+    menu->popup(table_subject->viewport()->mapToGlobal(pos));
+    indexSubject=table_subject->selectionModel()->currentIndex().row();*/
+}
+
 void DialogLinkGroupSubjectWindow::receiveRepoGroupSubject(LinkGroupSubject gr_sub,QString nameSubject){
 
+    QString sub_hr = QString("Предмет: %1; Академические часы: %2").arg(nameSubject).arg(gr_sub.academicHours);
     repoLinkGroupSubjects.add(gr_sub);
     int index =table_link_subject->currentIndex().row()+1;
 
     link_sub_model->insertRow(index);
     const QModelIndex indexNext=link_sub_model->index(index,0);
-    link_sub_model->setData(indexNext,QVariant(nameSubject));
+    link_sub_model->setData(indexNext,QVariant(sub_hr));
     visualRows(table_link_subject,link_sub_model);
     table_link_subject->setCurrentIndex(indexNext);
 
 }
-void DialogLinkGroupSubjectWindow::clearTableView(){
-    int r = table_link_subject->model()->rowCount();
+void DialogLinkGroupSubjectWindow::clearTableView(QTableView *tableView, TableListModel *model){
+    int r = tableView->model()->rowCount();
     r--;
-    while(link_sub_model->rowCount()>0){
-     table_link_subject->model()->removeRow(r);
+    while(model->rowCount()>0){
+     tableView->model()->removeRow(r);
      r--;
   }
-  visualRows(table_link_subject,link_sub_model);
+  visualRows(tableView,model);
 }
 
 void DialogLinkGroupSubjectWindow::visualRows(QTableView *table, TableListModel *model){
@@ -165,8 +202,77 @@ void DialogLinkGroupSubjectWindow::visualRows(QTableView *table, TableListModel 
     table->show();
 }
 
-void DialogLinkGroupSubjectWindow::closeEvent(QCloseEvent *){
+void DialogLinkGroupSubjectWindow::editDataRepoGroup(RepositoryTemplate<GroupStudents> repoGroupStudents){
+    //Проверка на изменения(удаление, добавление, редактирование) репозиториев в главной вкладке
+    if (repoRecGroupStudent.getAmount()==0){
+        for (int i =0; i<repoGroupStudents.getAmount(); i++){
+            repoRecGroupStudent.add(repoGroupStudents.getById(i));
+        }
 
+    }else
+          if (repoGroupStudents.getAmount()>repoRecGroupStudent.getAmount()){
+            int raz = repoGroupStudents.getAmount()-repoRecGroupStudent.getAmount();
+            int addE = repoRecGroupStudent.getAmount();
+            for (int i =0; i<raz; i++){
+                repoRecGroupStudent.add(repoGroupStudents.getById(repoGroupStudents.getByIndex(addE).id));
+                ++addE;
+            }
+    }else
+          if (repoGroupStudents.getAmount()<repoRecGroupStudent.getAmount()){
+            int raz = repoRecGroupStudent.getAmount()-repoGroupStudents.getAmount();
+            int delE = repoRecGroupStudent.getAmount()-1;
+            for (int i =0; i<raz; i++){
+                repoRecGroupStudent.removeByIndex(delE);
+            --delE;
+            }
+    }
+    else
+         if (repoGroupStudents.getAmount()==repoRecGroupStudent.getAmount()){
+            for (int i =0; i<repoGroupStudents.getAmount(); i++){
+                if (repoGroupStudents.getByIndex(i).name!=repoRecGroupStudent.getByIndex(i).name){
+                    repoRecGroupStudent.update(repoGroupStudents.getById(repoGroupStudents.getByIndex(i).id).id,repoGroupStudents.getByIndex(i).name);
+                }
+            }
+          }
 }
 
+void DialogLinkGroupSubjectWindow::editDataRepoSubject(RepositoryTemplate<Subject> repoSubjects){
+    //Проверка на изменения(удаление, добавление, редактирование) репозиториев в главной вкладке
+    if (repoRecSubject.getAmount()==0){
+        for (int i =0; i<repoSubjects.getAmount(); i++){
+            repoRecSubject.add(repoSubjects.getByIndex(i));
+        }
+
+    }else
+          if (repoSubjects.getAmount()>repoRecSubject.getAmount()){
+            int raz = repoSubjects.getAmount()-repoRecSubject.getAmount();
+            int addE = repoRecSubject.getAmount();
+            for (int i =0; i<raz; i++){
+                repoRecSubject.add(repoSubjects.getById(repoSubjects.getByIndex(addE).id));
+                ++addE;
+            }
+    }else
+          if (repoSubjects.getAmount()<repoRecSubject.getAmount()){
+            int raz = repoRecSubject.getAmount()-repoSubjects.getAmount();
+            int delE = repoRecSubject.getAmount()-1;
+            for (int i =0; i<raz; i++){
+                repoRecSubject.removeByIndex(delE);
+            --delE;
+            }
+    }
+    else
+         if (repoSubjects.getAmount()==repoRecSubject.getAmount()){
+            for (int i =0; i<repoSubjects.getAmount(); i++){
+                if (repoSubjects.getByIndex(i).name!=repoRecSubject.getByIndex(i).name){
+                    repoRecSubject.update(repoSubjects.getById(repoSubjects.getByIndex(i).id).id,repoSubjects.getByIndex(i).name);
+                }
+            }
+          }
+  }
+void DialogLinkGroupSubjectWindow::closeEvent(QCloseEvent *){
+    if (list_s->size()!=0){
+      list_s->clear();
+      clearTableView(table_subject,sub_model);
+    }
+}
 

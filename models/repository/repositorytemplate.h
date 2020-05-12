@@ -57,6 +57,10 @@ public:
     // Удалить объект.
     bool remove(int id);
 
+    // Удалить объект по индексу
+
+    void removeByIndex(int index);
+
     // Обновить объект.
     bool update(int id, T data);
 
@@ -235,6 +239,11 @@ T RepositoryTemplate<T>::getById(int id) {
 template <class T>
 T RepositoryTemplate<T>::getByIndex(int index) {
      return this->elements[index];
+}
+
+template <class T>
+void RepositoryTemplate<T>::removeByIndex(int index) {
+     this->elements.removeAt(index);
 }
 
 template <class T>

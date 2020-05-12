@@ -192,12 +192,12 @@ void MainWindow::slotSubjectEditRecord()
 {
     dialogSubject->show();
     dialogSubject->editTitle();
-    dialogSubject->outputEditData(repoSubjects.getById(ui->subject_table->selectionModel()->currentIndex().row()));
+    dialogSubject->outputEditData(repoSubjects.getById(repoSubjects.getByIndex(ui->subject_table->selectionModel()->currentIndex().row()).id));
 }
 void MainWindow::slotSubjectRemoveRecord()
 {
     int index =ui->subject_table->selectionModel()->currentIndex().row();
-    repoSubjects.remove(index);
+    repoSubjects.remove(repoSubjects.getById(repoSubjects.getByIndex(index).id).id);
     list_s->removeAt(index);
     ui->subject_table->model()->removeRow(index);
 }
@@ -220,7 +220,7 @@ void MainWindow::receiveEditDataSubject(Subject subject){
     int index =ui->subject_table->selectionModel()->currentIndex().row();
 
     list_s->replace(index,subject.name);
-    repoSubjects.update(index,subject.name);
+    repoSubjects.update(repoSubjects.getById(repoSubjects.getByIndex(index).id).id,subject.name);
 
     const QModelIndex curSelectIndex=subjectModel->index(index,0);
     subjectModel->setData(curSelectIndex,QVariant(subject.name));
@@ -255,7 +255,7 @@ void MainWindow::slotGroupEditRecord()
 {
     dialogGroup->show();
     dialogGroup->editTitle();
-    dialogGroup->outputEditData(repoGroupStudents.getByIndex(ui->group_table->selectionModel()->currentIndex().row()));
+    dialogGroup->outputEditData(repoGroupStudents.getById(repoGroupStudents.getByIndex(ui->group_table->selectionModel()->currentIndex().row()).id));
 
 }
 
@@ -292,7 +292,7 @@ void MainWindow::receiveEditDataGroup(GroupStudents group){
     int index =ui->group_table->selectionModel()->currentIndex().row();
 
     list_gr->replace(index,group.name);
-    repoGroupStudents.update(index,group.name);
+    repoGroupStudents.update(repoGroupStudents.getById(repoGroupStudents.getByIndex(index).id).id,group.name);
 
     const QModelIndex curSelectIndex=groupModel->index(index,0);
     groupModel->setData(curSelectIndex,QVariant(group.name));
@@ -330,14 +330,14 @@ void MainWindow::slotCabinetEditRecord()
 {
     dialogCabinet->show();
     dialogCabinet->editTitle();
-    dialogCabinet->outputEditData(repoCabinets.getByIndex(ui->cabinets_table->selectionModel()->currentIndex().row()));
+    dialogCabinet->outputEditData(repoCabinets.getById(repoCabinets.getByIndex(ui->cabinets_table->selectionModel()->currentIndex().row()).id));
 }
 void MainWindow::slotCabinetRemoveRecord()
 {
-    int r =ui->cabinets_table->selectionModel()->currentIndex().row();
-    list_cb->removeAt(r);
-    repoCabinets.remove(r);
-    ui->cabinets_table->model()->removeRow(r);
+    int index =ui->cabinets_table->selectionModel()->currentIndex().row();
+    list_cb->removeAt(index);
+    repoCabinets.remove(repoCabinets.getById(repoCabinets.getByIndex(index).id).id);
+    ui->cabinets_table->model()->removeRow(index);
 }
 void MainWindow::receiveDataCabinet(Cabinet cabinet){
 
@@ -354,11 +354,11 @@ void MainWindow::receiveDataCabinet(Cabinet cabinet){
 }
 void MainWindow::receiveEditDataCabinet(Cabinet cabinet){
 
-    int index =ui->subject_table->selectionModel()->currentIndex().row();
+    int index =ui->cabinets_table->selectionModel()->currentIndex().row();
 
     QString s = QString("%1%2%3").arg(cabinet.building).arg(cabinet.floor).arg(cabinet.number);
     list_cb->replace(index,s);
-    repoCabinets.update(index,cabinet);
+    repoCabinets.update(repoCabinets.getById(repoCabinets.getByIndex(index).id).id,cabinet);
 
     const QModelIndex curSelectIndex=cabinetModel->index(ui->cabinets_table->selectionModel()->currentIndex().row(),0);
     cabinetModel->setData(curSelectIndex,QVariant(s));
@@ -410,14 +410,14 @@ void MainWindow::slotTimeEditRecord()
 {
     dialogLessonTime->show();
     dialogLessonTime->editTitle();
-    dialogLessonTime->outputEditData(repoLessonTime.getById(ui->time_table->selectionModel()->currentIndex().row()));
+    dialogLessonTime->outputEditData(repoLessonTime.getById(repoLessonTime.getByIndex(ui->time_table->selectionModel()->currentIndex().row()).id));
 }
 void MainWindow::slotTimeRemoveRecord()
 {
-    int r =ui->time_table->selectionModel()->currentIndex().row();
-    list_tm->removeAt(r);
-    repoLessonTime.remove(r);
-    ui->time_table->model()->removeRow(r);
+    int index =ui->time_table->selectionModel()->currentIndex().row();
+    list_tm->removeAt(index);
+    repoLessonTime.remove(repoLessonTime.getById(repoLessonTime.getByIndex(index).id).id);
+    ui->time_table->model()->removeRow(index);
 }
 
 void MainWindow::customTimeMenuRequested(const QPoint &pos){
@@ -461,7 +461,7 @@ void MainWindow::receiveEditDataLessonTime(LessonTime lessonTime){
     int index =ui->time_table->selectionModel()->currentIndex().row();
 
     QString s = QString("Четность:%1 %2 Время:%3").arg(lessonTime.parity).arg(receiveDay[lessonTime.dayOfWeek]).arg(lessonTime.time.toString());
-    list_tm->replace(index,s);
+    list_tm->replace(repoLessonTime.getById(repoLessonTime.getByIndex(index).id).id,s);
     repoLessonTime.update(index,lessonTime);
 
     const QModelIndex curSelectIndex=timeModel->index(ui->time_table->selectionModel()->currentIndex().row(),0);
@@ -511,8 +511,9 @@ void MainWindow::testSubject(){
     grHash[3]=GroupStudents("5306");
     grHash[4]=GroupStudents("5307");
     grHash[5]=GroupStudents("5308");
-    //repoSubjects.add(subject);
-    //list_s->append(subject.name);
+    for (int i =0; i<grHash.size();i++){
+        list_gr->append(grHash[i].name);
+    }
 
     for (int i =0; i<=5; i++){
         //int index =ui->subject_table->currentIndex().row()+1;

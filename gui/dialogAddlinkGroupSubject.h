@@ -32,6 +32,9 @@ private:
     QLabel *nameSubject;
     QLineEdit *academHours;
     int increment =0;
+
+    void editDataRepoGroup(RepositoryTemplate<GroupStudents>);
+    void editDataRepoSubject(RepositoryTemplate<Subject>);
 private slots:
     void apply_clicked();
 signals:

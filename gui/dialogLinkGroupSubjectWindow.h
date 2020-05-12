@@ -44,15 +44,20 @@ private:
     TableListModel *link_sub_model;
     QGridLayout *gridLayout;
 
-   void insertTableView(QString subject);
-   void visualRows(QTableView *table, TableListModel *model);
-   void clearTableView();
-   void closeEvent(QCloseEvent *);
+    void closeEvent(QCloseEvent *);
+
+    void insertTableView(QString subject, QTableView*, TableListModel *model);
+    void visualRows(QTableView *table, TableListModel *model);
+    void clearTableView(QTableView*, TableListModel*);
 
 private slots:
  void slotLinkSubject_GroupAddRecord();
+ void customGroupSubjectMenuRequested(const QPoint &pos);
  void customLinkGroupSubjectMenuRequested(const QPoint &pos);
  void receiveRepoGroupSubject(LinkGroupSubject,QString);
+
+ void editDataRepoGroup(RepositoryTemplate<GroupStudents>);
+ void editDataRepoSubject(RepositoryTemplate<Subject>);
 signals:
 
 
