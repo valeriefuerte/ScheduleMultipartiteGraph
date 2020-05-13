@@ -4,12 +4,12 @@
 #include <QAbstractTableModel>
 #include <QTableView>
 
-class StringListModel : public QAbstractListModel
+class TableListModel : public QAbstractListModel
  {
      Q_OBJECT
 
  public:
-     StringListModel(const QStringList &strings, QObject *parent = 0)
+     TableListModel(const QStringList &strings, QObject *parent = 0)
          : QAbstractListModel(parent), stringList(strings) {}
 
      int rowCount(const QModelIndex &parent = QModelIndex()) const;

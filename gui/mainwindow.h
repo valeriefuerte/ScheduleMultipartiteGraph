@@ -8,8 +8,10 @@
 #include "models/groupstudents.h"
 #include "models/lessontime.h"
 #include "models/subject.h"
+#include "models/tablelistmodel.h"
+
 #include "models/linkgroupsubject.h"
-#include "models/table_model.h"
+
 
 #include "dialogSubjectWindow.h"
 #include "dialogGroupWindow.h"
@@ -17,6 +19,7 @@
 #include "dialogCabinetWindow.h"
 #include "dialogWindowConfrimEditRow.h"
 #include "dialogLessonTimeWindow.h"
+#include "dialogLinkGroupSubjectWindow.h"
 
 
 
@@ -31,8 +34,10 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    Ui::MainWindow *ui;
+    void testSubject();
     explicit MainWindow(QWidget *parent = nullptr);
-    void  visualRows(QTableView *table,StringListModel *model);
+    void  visualRows(QTableView *table,TableListModel *model);
     void loadReps();
     void loadReps(QString jsonName);
     // Инициализация хранилищ.
@@ -43,7 +48,6 @@ private:
 signals:
     void sendSelectionCabinet(Cabinet cabinet);
 private slots:
-
     //void on_tabWidget_currentChanged(int index);
     //Предметы
     void slotSubjectAddRecord();
@@ -81,12 +85,10 @@ private slots:
     void slotTimeRemoveRecord();
 
     void receiveDataCabinet(Cabinet);
+    //Группы_предметы
 
-    void on_addTimeButton_clicked();
+    void slotAddSG();
 
-    void on_removeTimeButton_clicked();
-
-    void on_confirmTimeButton_clicked();
     //Контекстные меню
     void customSubjectMenuRequested(const QPoint &pos);
 
@@ -95,6 +97,8 @@ private slots:
     void customCabinetMenuRequested(const QPoint &pos);
 
     void customTimeMenuRequested(const QPoint &pos);
+
+    void customGroupSubjectMenuRequested(const QPoint &pos);
 
     void receiveDataLessonTime(LessonTime);
 
@@ -106,11 +110,9 @@ private slots:
 
     void on_saveFile_triggered();
 
-    void on_cabinets_table_clicked(const QModelIndex &index);
-
-
+    void on_cabinets_table_clicked(const QModelIndex &index);    
+public slots:
 private:
-    Ui::MainWindow *ui;
 
     QHash<int,QString> receiveDay;
 
@@ -119,6 +121,7 @@ private:
     QStringList *list_gr;
     QStringList *list_cb;
     QStringList *list_tm;
+    QStringList *list_gr_sub;
 
     //Диалоговые окна
     DialogSubjectWindow *dialogSubject;
@@ -127,12 +130,14 @@ private:
     DialogWindowConfirmEditRow *dialogConfrimEdit;
     DialogCabinetWindow *dialogCabinet;
     DialogLessonTimeWindow *dialogLessonTime;
+    DialogLinkGroupSubjectWindow *dialogLinkGroupSubject;
 
     //Абстрактные модели QTableView
-    StringListModel *subjectModel;
-    StringListModel *groupModel;
-    StringListModel *cabinetModel;
-    StringListModel *timeModel;
+    TableListModel *subjectModel;
+    TableListModel *groupModel;
+    TableListModel *cabinetModel;
+    TableListModel *timeModel;
+    TableListModel *gr_subModel;
 
     //Репозитории
     RepositoryTemplate<Cabinet> repoCabinets;

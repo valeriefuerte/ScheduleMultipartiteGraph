@@ -1,8 +1,10 @@
 #include "linkgroupsubject.h"
 
-LinkGroupSubject::LinkGroupSubject()
+LinkGroupSubject::LinkGroupSubject(int grId,int subId, int academicHours)
 {
-
+    this->groupId=grId;
+    this->subjectId=subId;
+    this->academicHours=academicHours;
 }
 
 QString LinkGroupSubject::getClassName() {

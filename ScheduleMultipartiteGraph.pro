@@ -25,9 +25,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    gui/dialogAddlinkGroupSubject.cpp \
     gui/dialogCabinetWindow.cpp \
     gui/dialogGroupWindow.cpp \
     gui/dialogLessonTimeWindow.cpp \
+    gui/dialogLinkGroupSubjectWindow.cpp \
     gui/dialogSubjectWindow.cpp \
     gui/dialogWindowConfrimEditRow.cpp \
     gui/dialogWindowEmptyRow.cpp \
@@ -45,14 +47,16 @@ SOURCES += \
     models/repository/repository.cpp \
     models/repository/repositorytemplate.cpp \
     models/router.cpp \
-    models/table_model.cpp \
-    models/subject.cpp
+    models/subject.cpp \
+    models/tablelistmodel.cpp
 
 
 HEADERS += \
+    gui/dialogAddlinkGroupSubject.h \
     gui/dialogCabinetWindow.h \
     gui/dialogGroupWindow.h \
     gui/dialogLessonTimeWindow.h \
+    gui/dialogLinkGroupSubjectWindow.h \
     gui/dialogSubjectWindow.h \
     gui/dialogWindowConfrimEditRow.h \
     gui/dialogWindowEmptyRow.h \
@@ -65,14 +69,13 @@ HEADERS += \
     models/cabinet.h \
     models/linkgroupsubject.h \
     models/repository/repositorytemplate.h \
-    models/table_model.h \
     models/groupstudents.h \
     models/lessontime.h \
     models/repository/repository.h \
     models/router.h \
-    models/table_model.h \
     models/router.h \
-    models/subject.h
+    models/subject.h \
+    models/tablelistmodel.h
 
 
 

@@ -10,7 +10,7 @@ public:
     int subjectId;
     int academicHours;
 
-    LinkGroupSubject();
+    LinkGroupSubject(int groupid=0,int subjectid=0, int academicHours=0);
 
     virtual QString getClassName();
     virtual void fromJson(QJsonObject);
