@@ -24,6 +24,11 @@ public:
     DialogLinkGroupSubjectWindow(QWidget* parent=0);
 
 private:
+    int haskey =0;
+    QHash<int,LinkGroupSubject> gr_sub_hash;
+
+    int sizeGroup, sizeSubject;
+
     bool recList = false;
     int indexGroup,indexSubject;
 
@@ -46,20 +51,24 @@ private:
 
     void closeEvent(QCloseEvent *);
 
-    void insertTableView(QString subject, QTableView*, TableListModel *model);
+    void insertTableView(QString subject, QTableView*, TableListModel *model,int academHours=0);
     void visualRows(QTableView *table, TableListModel *model);
     void clearTableView(QTableView*, TableListModel*);
 
 private slots:
  void slotLinkSubject_GroupAddRecord();
- void customGroupSubjectMenuRequested(const QPoint &pos);
- void customLinkGroupSubjectMenuRequested(const QPoint &pos);
+ void slotLinkSubject_GroupDeleteRecord();
+ void slotLinkSubject_GroupChangeRecord();
+
+ void customEditLinkGroupSubjectMenuRequested(const QPoint &pos);
+ void customSubjectMenuRequested(const QPoint &pos);
+
+ void receiveChangeAcH(QString, LinkGroupSubject);
  void receiveRepoGroupSubject(LinkGroupSubject,QString);
 
  void editDataRepoGroup(RepositoryTemplate<GroupStudents>);
  void editDataRepoSubject(RepositoryTemplate<Subject>);
 signals:
-
 
 };
 

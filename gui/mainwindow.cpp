@@ -485,11 +485,11 @@ void MainWindow::customGroupSubjectMenuRequested(const QPoint &pos){
 void MainWindow::slotAddSG(){
     dialogLinkGroupSubject->receiveGroup(ui->gr_sub_table->selectionModel()->currentIndex().row(),*list_s,repoGroupStudents,repoSubjects);
     dialogLinkGroupSubject->show();
-    qDebug()<<"Репозиторий групп_предметов";
+    /*qDebug()<<"Репозиторий групп_предметов";
     for (int i=0; i<dialogLinkGroupSubject->repoLinkGroupSubjects.getAmount();i++){
         qDebug()<<dialogLinkGroupSubject->repoLinkGroupSubjects.getById(i).groupId<<
                   dialogLinkGroupSubject->repoLinkGroupSubjects.getById(i).subjectId<<dialogLinkGroupSubject->repoLinkGroupSubjects.getById(i).academicHours;
-    }
+    }*/
 }
 void MainWindow::testSubject(){
 

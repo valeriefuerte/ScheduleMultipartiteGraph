@@ -13,7 +13,6 @@
 
 DialogAddLinkGroupSubject::DialogAddLinkGroupSubject(QWidget* parent): QDialog(parent)
 {
-    this->setWindowTitle("Добавление предмета");
     nameGroup = new QLabel();
     nameSubject = new QLabel();
 
@@ -75,23 +74,49 @@ void DialogAddLinkGroupSubject::addLinkGroupSubject(int indexGroup,int indexSubj
 }
 void DialogAddLinkGroupSubject::apply_clicked(){
 
-    int academic= academHours->text().toInt();
-    repoLinkGrSub.add(LinkGroupSubject(receiveRepGroup.getById(receiveRepGroup.getByIndex(indexRGroup).id).id,
-                     receiveRepSubject.getById(receiveRepSubject.getByIndex(indexRSub).id).id, academic));
-    for (int i =0; i<repoLinkGrSub.getAmount(); i++){
-        qDebug()<<"Link"<<repoLinkGrSub.getById(i).groupId<<repoLinkGrSub.getById(i).subjectId<<repoLinkGrSub.getById(i).academicHours;
-    }
-   emit sendRepoGroupSubject(repoLinkGrSub.getById(repoLinkGrSub.getByIndex(increment).id),receiveRepSubject.getById(receiveRepSubject.getByIndex(indexRSub).id).name);
-   increment++;
+  int academic= academHours->text().toInt();
+
+  if (!changeAcH){
+     emit sendRepoGroupSubject(LinkGroupSubject(receiveRepGroup.getById(receiveRepGroup.getByIndex(indexRGroup).id).id,
+     receiveRepSubject.getById(receiveRepSubject.getByIndex(indexRSub).id).id, academic),receiveRepSubject.getById(receiveRepSubject.getByIndex(indexRSub).id).name);
+   }
+   else
+  {
+    changeObject.academicHours=academic;
+    emit sendChangeAcH(nameSubject->text(), changeObject);
+  }
+
+   changeAcH=false;
    academHours->clear();
    this->close();
  }
+
+
+void DialogAddLinkGroupSubject::receiveSelecteDataRepoGrSub(QString nameGr,QString nameSub,LinkGroupSubject gr_sub){
+
+    nameGroup->setText(nameGr);
+    nameSubject->setText(nameSub);
+    academHours->setText(QString("%1").arg(gr_sub.academicHours));
+
+    changeObject = gr_sub;
+    changeAcH=true;
+}
+
+
+void DialogAddLinkGroupSubject::setTitle(){
+
+    this->setWindowTitle("Добавление предмета");
+}
+
+void DialogAddLinkGroupSubject::changeTitle(){
+    this->setWindowTitle("Изменение академических часов");
+}
 
 void DialogAddLinkGroupSubject::editDataRepoGroup(RepositoryTemplate<GroupStudents> repoGroupStudents){
     //Проверка на изменения(удаление, добавление, редактирование) репозиториев в главной вкладке
     if (receiveRepGroup.getAmount()==0){
         for (int i =0; i<repoGroupStudents.getAmount(); i++){
-            receiveRepGroup.add(repoGroupStudents.getById(i));
+            receiveRepGroup.add(repoGroupStudents.getByIndex(i));
         }
 
     }else
@@ -99,7 +124,7 @@ void DialogAddLinkGroupSubject::editDataRepoGroup(RepositoryTemplate<GroupStuden
             int raz = repoGroupStudents.getAmount()-receiveRepGroup.getAmount();
             int addE = receiveRepGroup.getAmount();
             for (int i =0; i<raz; i++){
-                receiveRepGroup.add(repoGroupStudents.getById(repoGroupStudents.getByIndex(addE).id));
+                receiveRepGroup.add(repoGroupStudents.getByIndex(i));
                 ++addE;
             }
     }else
@@ -114,8 +139,8 @@ void DialogAddLinkGroupSubject::editDataRepoGroup(RepositoryTemplate<GroupStuden
     else
          if (repoGroupStudents.getAmount()==receiveRepGroup.getAmount()){
             for (int i =0; i<repoGroupStudents.getAmount(); i++){
-                if (repoGroupStudents.getByIndex(i).name!=receiveRepGroup.getByIndex(i).name){
-                    receiveRepGroup.update(repoGroupStudents.getById(repoGroupStudents.getByIndex(i).id).id,repoGroupStudents.getByIndex(i).name);
+                if (repoGroupStudents.getById(repoGroupStudents.getByIndex(i).id).name!=receiveRepGroup.getById(receiveRepGroup.getByIndex(i).id).name){
+                    receiveRepGroup.update(receiveRepGroup.getById(receiveRepGroup.getByIndex(i).id).id,repoGroupStudents.getById(repoGroupStudents.getByIndex(i).id).name);
                 }
             }
           }
@@ -133,7 +158,7 @@ void DialogAddLinkGroupSubject::editDataRepoSubject(RepositoryTemplate<Subject> 
             int raz = repoSubjects.getAmount()-receiveRepSubject.getAmount();
             int addE = receiveRepSubject.getAmount();
             for (int i =0; i<raz; i++){
-                receiveRepSubject.add(repoSubjects.getById(repoSubjects.getByIndex(addE).id));
+                receiveRepSubject.add(repoSubjects.getByIndex(addE));
                 ++addE;
             }
     }else
@@ -148,8 +173,8 @@ void DialogAddLinkGroupSubject::editDataRepoSubject(RepositoryTemplate<Subject> 
     else
          if (repoSubjects.getAmount()==receiveRepSubject.getAmount()){
             for (int i =0; i<repoSubjects.getAmount(); i++){
-                if (repoSubjects.getByIndex(i).name!=receiveRepSubject.getByIndex(i).name){
-                    receiveRepSubject.update(repoSubjects.getById(repoSubjects.getByIndex(i).id).id,repoSubjects.getByIndex(i).name);
+                if (repoSubjects.getById(repoSubjects.getByIndex(i).id).name!=receiveRepSubject.getById(receiveRepSubject.getByIndex(i).id).name){
+                    receiveRepSubject.update(receiveRepSubject.getById(receiveRepSubject.getByIndex(i).id).id,repoSubjects.getById(repoSubjects.getByIndex(i).id).name);
                 }
             }
           }

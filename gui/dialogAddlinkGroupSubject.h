@@ -13,11 +13,17 @@
 class DialogAddLinkGroupSubject : public QDialog{
     Q_OBJECT
 public:
+    void changeTitle();
+    void setTitle();
+
+    void receiveSelecteDataRepoGrSub(QString,QString,LinkGroupSubject);
+
     DialogAddLinkGroupSubject(QWidget* parent=0);
     void addLinkGroupSubject(int, int, RepositoryTemplate<GroupStudents>, RepositoryTemplate<Subject>);
     ~DialogAddLinkGroupSubject();
 
 private:
+    bool changeAcH=false;
     RepositoryTemplate<GroupStudents> receiveRepGroup;
     RepositoryTemplate<Subject> receiveRepSubject;
     RepositoryTemplate<LinkGroupSubject> repoLinkGrSub;
@@ -31,7 +37,7 @@ private:
     QLabel *nameGroup;
     QLabel *nameSubject;
     QLineEdit *academHours;
-    int increment =0;
+    LinkGroupSubject changeObject;
 
     void editDataRepoGroup(RepositoryTemplate<GroupStudents>);
     void editDataRepoSubject(RepositoryTemplate<Subject>);
@@ -39,6 +45,7 @@ private slots:
     void apply_clicked();
 signals:
     void sendRepoGroupSubject(LinkGroupSubject,QString);
+    void sendChangeAcH(QString,LinkGroupSubject);
 };
 
 #endif // DIALOGWINDOWADDLINKGROUPSUBJECT_H
