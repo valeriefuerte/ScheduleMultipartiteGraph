@@ -13,6 +13,7 @@
 
 DialogAddLinkGroupSubject::DialogAddLinkGroupSubject(QWidget* parent): QDialog(parent)
 {
+
     nameGroup = new QLabel();
     nameSubject = new QLabel();
 
@@ -87,7 +88,6 @@ void DialogAddLinkGroupSubject::apply_clicked(){
   }
 
    changeAcH=false;
-   academHours->clear();
    this->close();
  }
 
@@ -180,4 +180,7 @@ void DialogAddLinkGroupSubject::editDataRepoSubject(RepositoryTemplate<Subject> 
           }
   }
 
+void DialogAddLinkGroupSubject::closeEvent(QCloseEvent *){
+    academHours->clear();
+}
 

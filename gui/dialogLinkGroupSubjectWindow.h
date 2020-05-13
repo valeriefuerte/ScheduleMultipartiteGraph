@@ -26,6 +26,7 @@ public:
 private:
     int haskey =0;
     QHash<int,LinkGroupSubject> gr_sub_hash;
+    QList<LinkGroupSubject> list_grsb;
 
     int sizeGroup, sizeSubject;
 

@@ -23,6 +23,7 @@ public:
     ~DialogAddLinkGroupSubject();
 
 private:
+
     bool changeAcH=false;
     RepositoryTemplate<GroupStudents> receiveRepGroup;
     RepositoryTemplate<Subject> receiveRepSubject;
@@ -41,7 +42,10 @@ private:
 
     void editDataRepoGroup(RepositoryTemplate<GroupStudents>);
     void editDataRepoSubject(RepositoryTemplate<Subject>);
+
+    void closeEvent(QCloseEvent *);
 private slots:
+
     void apply_clicked();
 signals:
     void sendRepoGroupSubject(LinkGroupSubject,QString);

@@ -206,7 +206,7 @@ void MainWindow::receiveDataSubject(Subject subject){
      repoSubjects.add(subject);
      list_s->append(subject.name);
 
-     int index =ui->subject_table->currentIndex().row()+1;
+     int index =ui->subject_table->model()->rowCount();
      subjectModel->insertRow(index);
 
      const QModelIndex indexNext=subjectModel->index(index,0);
@@ -273,7 +273,7 @@ void MainWindow::receiveDataGroup(GroupStudents group){
      repoGroupStudents.add(group);
      list_gr->append(group.name);
 
-     int index =ui->group_table->currentIndex().row()+1;
+     int index =ui->group_table->model()->rowCount();
      groupModel->insertRow(index);
      gr_subModel->insertRow(index);
 
@@ -344,7 +344,7 @@ void MainWindow::receiveDataCabinet(Cabinet cabinet){
      QString s = QString("%1%2%3").arg(cabinet.building).arg(cabinet.floor).arg(cabinet.number);
      repoCabinets.add(cabinet);
      list_cb->append(s);
-     int index =ui->cabinets_table->currentIndex().row()+1;
+     int index =ui->cabinets_table->model()->rowCount();
 
      cabinetModel->insertRow(index);
      const QModelIndex indexNext=cabinetModel->index(index,0);
@@ -446,7 +446,7 @@ void MainWindow::receiveDataLessonTime(LessonTime lessonTime){
 
      repoLessonTime.add(lessonTime);
      list_tm->append(s);
-     int index =ui->time_table->currentIndex().row()+1;
+     int index =ui->time_table->model()->rowCount();
 
      timeModel->insertRow(index);
      const QModelIndex indexNext=timeModel->index(index,0);
@@ -462,7 +462,7 @@ void MainWindow::receiveEditDataLessonTime(LessonTime lessonTime){
 
     QString s = QString("Четность:%1 %2 Время:%3").arg(lessonTime.parity).arg(receiveDay[lessonTime.dayOfWeek]).arg(lessonTime.time.toString());
     list_tm->replace(repoLessonTime.getById(repoLessonTime.getByIndex(index).id).id,s);
-    repoLessonTime.update(index,lessonTime);
+    repoLessonTime.update(repoLessonTime.getById(repoLessonTime.getByIndex(index).id).id,lessonTime);
 
     const QModelIndex curSelectIndex=timeModel->index(ui->time_table->selectionModel()->currentIndex().row(),0);
     timeModel->setData(curSelectIndex,QVariant(s));
@@ -485,11 +485,12 @@ void MainWindow::customGroupSubjectMenuRequested(const QPoint &pos){
 void MainWindow::slotAddSG(){
     dialogLinkGroupSubject->receiveGroup(ui->gr_sub_table->selectionModel()->currentIndex().row(),*list_s,repoGroupStudents,repoSubjects);
     dialogLinkGroupSubject->show();
-    /*qDebug()<<"Репозиторий групп_предметов";
+    qDebug()<<"Репозиторий групп_предметов";
     for (int i=0; i<dialogLinkGroupSubject->repoLinkGroupSubjects.getAmount();i++){
-        qDebug()<<dialogLinkGroupSubject->repoLinkGroupSubjects.getById(i).groupId<<
-                  dialogLinkGroupSubject->repoLinkGroupSubjects.getById(i).subjectId<<dialogLinkGroupSubject->repoLinkGroupSubjects.getById(i).academicHours;
-    }*/
+        qDebug()<<dialogLinkGroupSubject->repoLinkGroupSubjects.getById(dialogLinkGroupSubject->repoLinkGroupSubjects.getByIndex(i).id).groupId<<
+                  dialogLinkGroupSubject->repoLinkGroupSubjects.getById(dialogLinkGroupSubject->repoLinkGroupSubjects.getByIndex(i).id).subjectId
+               <<dialogLinkGroupSubject->repoLinkGroupSubjects.getById(dialogLinkGroupSubject->repoLinkGroupSubjects.getByIndex(i).id).academicHours;
+    }
 }
 void MainWindow::testSubject(){
 
