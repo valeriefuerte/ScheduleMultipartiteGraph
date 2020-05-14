@@ -197,6 +197,8 @@ void MainWindow::slotSubjectEditRecord()
 void MainWindow::slotSubjectRemoveRecord()
 {
     int index =ui->subject_table->selectionModel()->currentIndex().row();
+    dlindexSb.append(index);
+
     repoSubjects.remove(repoSubjects.getById(repoSubjects.getByIndex(index).id).id);
     list_s->removeAt(index);
     ui->subject_table->model()->removeRow(index);
@@ -263,6 +265,7 @@ void MainWindow::slotGroupRemoveRecord()
 {
     int index =ui->group_table->selectionModel()->currentIndex().row();
     this->repoGroupStudents.remove(repoGroupStudents.getByIndex(index).id);
+    dlindexGr.append(index);
     list_gr->removeAt(index);
     ui->group_table->model()->removeRow(index);
     ui->gr_sub_table->model()->removeRow(index);
@@ -483,7 +486,7 @@ void MainWindow::customGroupSubjectMenuRequested(const QPoint &pos){
 }
 
 void MainWindow::slotAddSG(){
-    dialogLinkGroupSubject->receiveGroup(ui->gr_sub_table->selectionModel()->currentIndex().row(),*list_s,repoGroupStudents,repoSubjects);
+    dialogLinkGroupSubject->receiveGroup(ui->gr_sub_table->selectionModel()->currentIndex().row(),*list_s,repoGroupStudents,repoSubjects,dlindexSb,dlindexGr);
     dialogLinkGroupSubject->show();
     qDebug()<<"Репозиторий групп_предметов";
     for (int i=0; i<dialogLinkGroupSubject->repoLinkGroupSubjects.getAmount();i++){
@@ -491,6 +494,8 @@ void MainWindow::slotAddSG(){
                   dialogLinkGroupSubject->repoLinkGroupSubjects.getById(dialogLinkGroupSubject->repoLinkGroupSubjects.getByIndex(i).id).subjectId
                <<dialogLinkGroupSubject->repoLinkGroupSubjects.getById(dialogLinkGroupSubject->repoLinkGroupSubjects.getByIndex(i).id).academicHours;
     }
+    dlindexSb.clear();
+    dlindexGr.clear();
 }
 void MainWindow::testSubject(){
 

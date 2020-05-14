@@ -114,6 +114,9 @@ private slots:
 public slots:
 private:
 
+    QList<int> dlindexSb;
+    QList<int> dlindexGr;
+
     QHash<int,QString> receiveDay;
 
     //Модели QTableView
