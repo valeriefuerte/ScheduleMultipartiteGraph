@@ -20,12 +20,14 @@ public:
     RepositoryTemplate<GroupStudents> repoRecGroupStudent;
     RepositoryTemplate<Subject> repoRecSubject;
 
-    void receiveGroup(int,QStringList,RepositoryTemplate<GroupStudents>,RepositoryTemplate<Subject>);
+    void receiveGroup(int,QStringList,RepositoryTemplate<GroupStudents>,RepositoryTemplate<Subject>,QList<int>,QList<int>);
     DialogLinkGroupSubjectWindow(QWidget* parent=0);
 
 private:
-    int haskey =0;
-    QHash<int,LinkGroupSubject> gr_sub_hash;
+
+    QList<int> dinSb;
+    QList<int> dinGr;
+
     QList<LinkGroupSubject> list_grsb;
 
     int sizeGroup, sizeSubject;
