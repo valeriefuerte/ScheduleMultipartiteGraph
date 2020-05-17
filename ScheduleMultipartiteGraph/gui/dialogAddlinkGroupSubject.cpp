@@ -39,7 +39,16 @@ DialogAddLinkGroupSubject::~DialogAddLinkGroupSubject(){
     delete this;
 }
 void DialogAddLinkGroupSubject::addLinkGroupSubject(int indexGroup,int indexSubject,
-                                   RepositoryTemplate<GroupStudents> repoGroupStud, RepositoryTemplate<Subject> repoSubject ){
+                                   RepositoryTemplate<GroupStudents> repoGroupStud, RepositoryTemplate<Subject> repoSubject, QList<int> dindexSb, QList<int> dindexGr ){
+
+    for (int i =0; i<dindexSb.size();i++){
+        recdinSb.append(dindexSb.at(i));
+    }
+
+    for (int i =0; i<dindexGr.size();i++){
+        recdinGr.append(dindexGr.at(i));
+    }
+
     indexRGroup = indexGroup;
     indexRSub = indexSubject;
 
@@ -129,11 +138,11 @@ void DialogAddLinkGroupSubject::editDataRepoGroup(RepositoryTemplate<GroupStuden
             }
     }else
           if (repoGroupStudents.getAmount()<receiveRepGroup.getAmount()){
-            int raz = receiveRepGroup.getAmount()-repoGroupStudents.getAmount();
-            int delE = receiveRepGroup.getAmount()-1;
-            for (int i =0; i<raz; i++){
-                receiveRepGroup.removeByIndex(delE);
-            --delE;
+            //int raz = receiveRepGroup.getAmount()-repoGroupStudents.getAmount();
+            //int delE = receiveRepGroup.getAmount()-1;
+            for (int i =0; i<recdinGr.size(); i++){
+                receiveRepGroup.remove(receiveRepGroup.getById(receiveRepGroup.getByIndex(recdinGr[i]).id).id);
+            //--delE;
             }
     }
     else
@@ -163,11 +172,11 @@ void DialogAddLinkGroupSubject::editDataRepoSubject(RepositoryTemplate<Subject> 
             }
     }else
           if (repoSubjects.getAmount()<receiveRepSubject.getAmount()){
-            int raz = receiveRepSubject.getAmount()-repoSubjects.getAmount();
-            int delE = receiveRepSubject.getAmount()-1;
-            for (int i =0; i<raz; i++){
-                receiveRepSubject.removeByIndex(delE);
-            --delE;
+            //int raz = receiveRepSubject.getAmount()-repoSubjects.getAmount();
+            //int delE = receiveRepSubject.getAmount()-1;
+            for (int i =0; i<recdinSb.size(); i++){
+                receiveRepSubject.remove(receiveRepSubject.getById(receiveRepSubject.getByIndex(recdinSb[i]).id).id);
+            //--delE;
             }
     }
     else
@@ -182,5 +191,7 @@ void DialogAddLinkGroupSubject::editDataRepoSubject(RepositoryTemplate<Subject> 
 
 void DialogAddLinkGroupSubject::closeEvent(QCloseEvent *){
     academHours->clear();
+    recdinGr.clear();
+    recdinSb.clear();
 }
 

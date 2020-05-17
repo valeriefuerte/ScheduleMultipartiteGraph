@@ -19,10 +19,14 @@ public:
     void receiveSelecteDataRepoGrSub(QString,QString,LinkGroupSubject);
 
     DialogAddLinkGroupSubject(QWidget* parent=0);
-    void addLinkGroupSubject(int, int, RepositoryTemplate<GroupStudents>, RepositoryTemplate<Subject>);
+    void addLinkGroupSubject(int, int, RepositoryTemplate<GroupStudents>, RepositoryTemplate<Subject>,QList<int>,QList<int>);
     ~DialogAddLinkGroupSubject();
 
 private:
+
+
+    QList<int> recdinSb;
+    QList<int> recdinGr;
 
     bool changeAcH=false;
     RepositoryTemplate<GroupStudents> receiveRepGroup;

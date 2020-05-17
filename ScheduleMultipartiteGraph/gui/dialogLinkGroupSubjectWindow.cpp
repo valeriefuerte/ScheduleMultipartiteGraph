@@ -58,7 +58,15 @@ DialogLinkGroupSubjectWindow::DialogLinkGroupSubjectWindow(QWidget* parent): QDi
     //table_subject->setCurrentIndex(indexNext);
  }
 
-void DialogLinkGroupSubjectWindow::receiveGroup(int currentIndex,QStringList list_sub,RepositoryTemplate<GroupStudents> repoGroupStudents,RepositoryTemplate<Subject> repoSubjects){
+void DialogLinkGroupSubjectWindow::receiveGroup(int currentIndex,QStringList list_sub,RepositoryTemplate<GroupStudents> repoGroupStudents,
+                                                RepositoryTemplate<Subject> repoSubjects, QList<int> dindexSb, QList<int> dindexGr){
+   for (int i =0; i<dindexSb.size();i++){
+       dinSb.append(dindexSb.at(i));
+   }
+
+   for (int i =0; i<dindexGr.size();i++){
+       dinGr.append(dindexGr.at(i));
+   }
 
    indexGroup = currentIndex;
    label_link->setText(QString("Предметы группы %1").arg(repoGroupStudents.getById(repoGroupStudents.getByIndex(currentIndex).id).name));
@@ -121,10 +129,16 @@ void DialogLinkGroupSubjectWindow::receiveGroup(int currentIndex,QStringList lis
    if (repoLinkGroupSubjects.getAmount()!=0){
        for (int i =0; i<repoLinkGroupSubjects.getAmount(); i++){
            if (repoGroupStudents.getById(repoGroupStudents.getByIndex(currentIndex).id).id==repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).groupId){
-               insertTableView(repoSubjects.getById(repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).subjectId).name,table_link_subject,link_sub_model,
-                               repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).academicHours);
-               list_grsb.append(LinkGroupSubject(indexGroup, repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).subjectId,
+                    if (repoSubjects.getById(repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).subjectId).name==""){
+                        repoLinkGroupSubjects.remove(repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).id);
+                    }
+                    else
+                        {
+                            insertTableView(repoSubjects.getById(repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).subjectId).name,table_link_subject,link_sub_model,
+                                repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).academicHours);
+                             list_grsb.append(LinkGroupSubject(indexGroup, repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).subjectId,
                                                  repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).academicHours));
+                        }
           }
        }
    }
@@ -172,7 +186,7 @@ void DialogLinkGroupSubjectWindow::customSubjectMenuRequested(const QPoint &pos)
     menu->popup(table_subject->viewport()->mapToGlobal(pos));
 }
 void DialogLinkGroupSubjectWindow::slotLinkSubject_GroupAddRecord(){
-    dialogLinkGS->addLinkGroupSubject(indexGroup,indexSubject, repoRecGroupStudent,repoRecSubject);
+    dialogLinkGS->addLinkGroupSubject(indexGroup,indexSubject, repoRecGroupStudent,repoRecSubject,dinSb,dinGr);
     dialogLinkGS->setTitle();
     dialogLinkGS->show();
 
@@ -312,11 +326,11 @@ void DialogLinkGroupSubjectWindow::editDataRepoGroup(RepositoryTemplate<GroupStu
             }
     }else
           if (repoGroupStudents.getAmount()<repoRecGroupStudent.getAmount()){
-            int raz = repoRecGroupStudent.getAmount()-repoGroupStudents.getAmount();
-            int delE = repoRecGroupStudent.getAmount()-1;
-            for (int i =0; i<raz; i++){
-                repoRecGroupStudent.removeByIndex(delE);
-            --delE;
+            //int raz = repoRecGroupStudent.getAmount()-repoGroupStudents.getAmount();
+            //int delE = repoRecGroupStudent.getAmount()-1;
+            for (int i =0; i<dinGr.size(); i++){
+                repoRecGroupStudent.remove(repoRecGroupStudent.getById(repoRecGroupStudent.getByIndex(dinGr[i]).id).id);
+            //--delE;
             }
     }
     else
@@ -346,11 +360,11 @@ void DialogLinkGroupSubjectWindow::editDataRepoSubject(RepositoryTemplate<Subjec
             }
     }else
           if (repoSubjects.getAmount()<repoRecSubject.getAmount()){
-            int raz = repoRecSubject.getAmount()-repoSubjects.getAmount();
-            int delE = repoRecSubject.getAmount()-1;
-            for (int i =0; i<raz; i++){
-                repoRecSubject.removeByIndex(delE);
-            --delE;
+            //int raz = repoRecSubject.getAmount()-repoSubjects.getAmount();
+            //int delE = repoRecSubject.getAmount()-1;
+            for (int i =0; i<dinSb.size(); i++){
+                repoRecSubject.remove(repoRecSubject.getById(repoRecSubject.getByIndex(dinSb[i]).id).id);
+            //--delE;
             }
     }
     else
@@ -367,6 +381,8 @@ void DialogLinkGroupSubjectWindow::closeEvent(QCloseEvent *){
       list_s->clear();
       clearTableView(table_subject,sub_model);
     }
+    dinSb.clear();
+    dinGr.clear();
 
     list_grsb.clear();
     clearTableView(table_link_subject,link_sub_model);
