@@ -8,10 +8,11 @@
 #include "models/groupstudents.h"
 #include "models/lessontime.h"
 #include "models/subject.h"
-#include "models/tablelistmodel.h"
-
 #include "models/linkgroupsubject.h"
 
+#include "models/repository/repositorytemplate.h"
+
+#include "models/tablelistmodel.h"
 
 #include "dialogSubjectWindow.h"
 #include "dialogGroupWindow.h"
@@ -21,6 +22,7 @@
 #include "dialogLessonTimeWindow.h"
 #include "dialogLinkGroupSubjectWindow.h"
 
+#include "visualizationwidget.h"
 
 
 #include <QTableView>

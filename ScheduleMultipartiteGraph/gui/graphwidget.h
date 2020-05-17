@@ -4,6 +4,9 @@
 #include <QObject>
 #include <QGraphicsView>
 
+#include "edge.h"
+#include "node.h"
+
 class Node;
 class FilterData;
 class GraphWidget: public QGraphicsView

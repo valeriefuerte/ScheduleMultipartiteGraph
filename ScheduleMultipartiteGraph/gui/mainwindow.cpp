@@ -10,15 +10,6 @@
 #include <QTime>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "models/tablelistmodel.h"
-#include "dialogWindowEmptyRow.h"
-#include "dialogCabinetWindow.h"
-#include "models/repository/repositorytemplate.h"
-#include "gui/dialogLessonTimeWindow.h"
-#include "gui/visualizationwidget.h"
-#include "gui/group_subject.h"
-#include "models/linkgroupsubject.h"
-#include "gui/dialogLinkGroupSubjectWindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),

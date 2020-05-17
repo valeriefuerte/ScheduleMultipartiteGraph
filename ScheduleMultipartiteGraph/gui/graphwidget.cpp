@@ -1,6 +1,5 @@
 #include "graphwidget.h"
-#include "edge.h"
-#include "node.h"
+
 #include <math.h>
 #include <QKeyEvent>
 #include <QRandomGenerator>

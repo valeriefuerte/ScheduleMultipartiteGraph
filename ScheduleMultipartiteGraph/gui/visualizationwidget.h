@@ -8,6 +8,8 @@
 #include <QGroupBox>
 #include <QBoxLayout>
 #include "filterwidget.h"
+#include "gui/graphwidget.h"
+
 class GraphWidget;
 
 //
