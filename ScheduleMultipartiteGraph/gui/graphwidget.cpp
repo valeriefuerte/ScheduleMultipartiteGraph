@@ -129,6 +129,11 @@ void GraphWidget::resetFilter()
         curNode->show();
     }
 }
+
+void GraphWidget::useFilter(FilterData &data)
+{
+    qDebug()<<"FraphUseFilter";
+}
 void GraphWidget::keyPressEvent(QKeyEvent *event)
 {
 

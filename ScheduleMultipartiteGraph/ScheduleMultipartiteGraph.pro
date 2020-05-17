@@ -34,6 +34,7 @@ SOURCES += \
     gui/dialogWindowConfrimEditRow.cpp \
     gui/dialogWindowEmptyRow.cpp \
     gui/edge.cpp \
+    gui/filterwidget.cpp \
     gui/graphwidget.cpp \
     gui/node.cpp \
     gui/visualizationwidget.cpp \
@@ -41,6 +42,7 @@ SOURCES += \
     main.cpp \
     models/abstractnoderepository.cpp \
     models/cabinet.cpp \
+    models/filterdata.cpp \
     models/groupstudents.cpp \
     models/lessontime.cpp \
     models/linkgroupsubject.cpp \
@@ -61,12 +63,14 @@ HEADERS += \
     gui/dialogWindowConfrimEditRow.h \
     gui/dialogWindowEmptyRow.h \
     gui/edge.h \
+    gui/filterwidget.h \
     gui/graphwidget.h \
     gui/node.h \
     gui/visualizationwidget.h \
     gui/mainwindow.h \
     models/abstractnoderepository.h \
     models/cabinet.h \
+    models/filterdata.h \
     models/linkgroupsubject.h \
     models/repository/repositorytemplate.h \
     models/groupstudents.h \
@@ -80,6 +84,7 @@ HEADERS += \
 
 
 FORMS += \
+        gui/filterwidget.ui \
         gui/mainwindow.ui
 
 # Default rules for deployment.

@@ -5,7 +5,7 @@
 #include <QGraphicsView>
 
 class Node;
-
+class FilterData;
 class GraphWidget: public QGraphicsView
 {
     Q_OBJECT
@@ -25,6 +25,7 @@ public slots:
     void zoomIn();
     void zoomOut();
     void resetFilter();
+    void useFilter(FilterData &data);
 
 };
 
