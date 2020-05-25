@@ -59,8 +59,11 @@ DialogLinkGroupSubjectWindow::DialogLinkGroupSubjectWindow(QWidget* parent): QDi
  }
 
 void DialogLinkGroupSubjectWindow::receiveGroup(int currentIndex,QStringList list_sub,RepositoryTemplate<GroupStudents> repoGroupStudents,
-                                                RepositoryTemplate<Subject> repoSubjects, QList<int> dlindexSb,QList<int> dlindexGr){
-
+                                                RepositoryTemplate<Subject> repoSubjects, QList<int> dlindexSb,QList<int> dlindexGr,RepositoryTemplate<LinkGroupSubject> recRepGroupSubject){
+   //загрузка репозитория из сохранненого файла
+    if (recRepGroupSubject.getAmount()!=0){
+       repoLinkGroupSubjects = recRepGroupSubject;
+   }
 
    delOnGrofLinkGroupSubject(dlindexGr);
    delOnSubofLinkGroupSubject(dlindexSb);

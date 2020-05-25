@@ -26,10 +26,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
       ui->setupUi(this);
-      this->initStorage();
-      this->loadReps();
-
-
 
       receiveDay[1]="Понедельник";
       receiveDay[2]="Вторник";
@@ -77,10 +73,9 @@ MainWindow::MainWindow(QWidget *parent) :
       dialogCabinet = new DialogCabinetWindow();
       dialogLessonTime = new DialogLessonTimeWindow();
       dialogLinkGroupSubject = new DialogLinkGroupSubjectWindow();
-      testSubject();
-      //dialogLinkGroupSubject->show();
-
-
+      //testSubject();
+      this->initStorage();
+      this->loadReps();
 
       //Таблица Предметы
       connect(dialogSubject, SIGNAL(sendDataSubject(Subject)), this, SLOT(receiveDataSubject(Subject)));
@@ -201,7 +196,7 @@ void MainWindow::slotSubjectRemoveRecord()
     dlindexSb.append(repoSubjects.getByIndex(index).id);
 
     repoSubjects.remove(repoSubjects.getByIndex(index).id);
-    list_s->removeAt(repoSubjects.getByIndex(index).id);
+    list_s->removeAt(index);
     ui->subject_table->model()->removeRow(index);
 }
 
@@ -209,7 +204,7 @@ void MainWindow::receiveDataSubject(Subject subject){
      repoSubjects.add(subject);
      list_s->append(subject.name);
 
-     int index =ui->subject_table->model()->rowCount();
+     int index =subjectModel->rowCount();
      subjectModel->insertRow(index);
 
      const QModelIndex indexNext=subjectModel->index(index,0);
@@ -278,7 +273,7 @@ void MainWindow::receiveDataGroup(GroupStudents group){
      repoGroupStudents.add(group);
      list_gr->append(group.name);
 
-     int index =ui->group_table->model()->rowCount();
+     int index =groupModel->rowCount();
      groupModel->insertRow(index);
      gr_subModel->insertRow(index);
 
@@ -349,7 +344,7 @@ void MainWindow::receiveDataCabinet(Cabinet cabinet){
      QString s = QString("%1%2%3").arg(cabinet.building).arg(cabinet.floor).arg(cabinet.number);
      repoCabinets.add(cabinet);
      list_cb->append(s);
-     int index =ui->cabinets_table->model()->rowCount();
+     int index =cabinetModel->rowCount();
 
      cabinetModel->insertRow(index);
      const QModelIndex indexNext=cabinetModel->index(index,0);
@@ -451,7 +446,7 @@ void MainWindow::receiveDataLessonTime(LessonTime lessonTime){
 
      repoLessonTime.add(lessonTime);
      list_tm->append(s);
-     int index =ui->time_table->model()->rowCount();
+     int index =timeModel->rowCount();
 
      timeModel->insertRow(index);
      const QModelIndex indexNext=timeModel->index(index,0);
@@ -488,7 +483,7 @@ void MainWindow::customGroupSubjectMenuRequested(const QPoint &pos){
 }
 
 void MainWindow::slotAddSG(){
-    dialogLinkGroupSubject->receiveGroup(ui->gr_sub_table->selectionModel()->currentIndex().row(),*list_s,repoGroupStudents,repoSubjects,dlindexSb,dlindexGr);
+    dialogLinkGroupSubject->receiveGroup(ui->gr_sub_table->selectionModel()->currentIndex().row(),*list_s,repoGroupStudents,repoSubjects,dlindexSb,dlindexGr,repoLinkGroupSubject);
     dialogLinkGroupSubject->show();
     qDebug()<<"Репозиторий групп_предметов";
     for (int i=0; i<dialogLinkGroupSubject->repoLinkGroupSubjects.getAmount();i++){
@@ -524,7 +519,6 @@ void MainWindow::testSubject(){
     }
 
     for (int i =0; i<=5; i++){
-        //int index =ui->subject_table->currentIndex().row()+1;
         subjectModel->insertRow(i);
         groupModel->insertRow(i);
         gr_subModel->insertRow(i);
@@ -597,9 +591,9 @@ void MainWindow::on_group_table_clicked(const QModelIndex &index)
 
 }
 
-
 void MainWindow::on_saveFile_triggered()
 {
+    repoLinkGroupSubject=dialogLinkGroupSubject->repoLinkGroupSubjects;
     QJsonDocument json;
     QJsonObject object = json.object();
 
@@ -667,8 +661,7 @@ void MainWindow::loadReps(QString jsonName)
     this->repoLessonTime.fromJson(objectLessonTime);
     this->repoGroupStudents.fromJson(objectGroupStudents);
     this->repoLinkGroupSubject.fromJson(objectLinkGroupSubject);
-
-    qDebug() << "work" << endl;
+    loadModelonRepo();
 }
 
 void MainWindow::initStorage() {
@@ -677,5 +670,56 @@ void MainWindow::initStorage() {
     if (!dirStorage.exists()) {
         QDir().mkdir(this->dirStorage);
     }
+}
+
+// загрузка моделей по файлу
+void MainWindow::loadModelonRepo(){
+
+
+    for (int i =0; i<repoSubjects.getAmount();i++){
+        list_s->append(repoSubjects.getByIndex(i).name);
+        subjectModel->insertRow(i);
+
+        subjectModel->setData(subjectModel->index(i,0),QVariant(repoSubjects.getByIndex(i).name));
+        visualRows(ui->subject_table,subjectModel);
+
+    }
+    for (int i =0; i<repoGroupStudents.getAmount();i++){
+        list_gr->append(repoGroupStudents.getByIndex(i).name);
+
+        groupModel->insertRow(i);
+        gr_subModel->insertRow(i);
+
+        groupModel->setData(groupModel->index(i,0),QVariant(repoGroupStudents.getByIndex(i).name));
+        gr_subModel->setData(gr_subModel->index(i,0),QVariant(repoGroupStudents.getByIndex(i).name));
+
+        visualRows(ui->group_table,groupModel);
+        visualRows(ui->gr_sub_table,gr_subModel);
+
+    }
+    for (int i =0; i<repoCabinets.getAmount();i++){
+        list_cb->append(QString("%1%2%3").arg(repoCabinets.getByIndex(i).building)
+                     .arg(repoCabinets.getByIndex(i).floor).arg(repoCabinets.getByIndex(i).number));
+        cabinetModel->insertRow(i);
+
+        cabinetModel->setData(cabinetModel->index(i,0),QVariant(QString("%1%2%3").arg(repoCabinets.getByIndex(i).building)
+        .arg(repoCabinets.getByIndex(i).floor).arg(repoCabinets.getByIndex(i).number)));
+
+        visualRows(ui->cabinets_table,cabinetModel);
+
+    }
+    for (int i =0; i<repoLessonTime.getAmount();i++){
+        list_tm->append(QString("Четность:%1 %2 Время:%3").arg(repoLessonTime.getByIndex(i).parity).arg(receiveDay[repoLessonTime.getByIndex(i).dayOfWeek]).
+        arg(repoLessonTime.getByIndex(i).time.toString()));
+        timeModel->insertRow(i);
+
+        timeModel->setData(timeModel->index(i,0),QVariant(QString("Четность:%1 %2 Время:%3").arg(repoLessonTime.getByIndex(i).parity).arg(receiveDay[repoLessonTime.getByIndex(i).dayOfWeek]).
+                           arg(repoLessonTime.getByIndex(i).time.toString())));
+
+        visualRows(ui->time_table,timeModel);
+    }
+
+
+
 }
 

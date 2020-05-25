@@ -20,7 +20,7 @@ public:
     RepositoryTemplate<GroupStudents> repoRecGroupStudent;
     RepositoryTemplate<Subject> repoRecSubject;
 
-    void receiveGroup(int,QStringList,RepositoryTemplate<GroupStudents>,RepositoryTemplate<Subject>,QList<int>,QList<int>);
+    void receiveGroup(int,QStringList,RepositoryTemplate<GroupStudents>,RepositoryTemplate<Subject>,QList<int>,QList<int>,RepositoryTemplate<LinkGroupSubject>);
     DialogLinkGroupSubjectWindow(QWidget* parent=0);
 
 
