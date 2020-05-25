@@ -150,6 +150,9 @@ private:
     RepositoryTemplate<LessonTime> repoLessonTime;
     RepositoryTemplate<Subject> repoSubjects;
     RepositoryTemplate<LinkGroupSubject> repoLinkGroupSubject;
+
+    //методы десереализации моделей
+    void loadModelonRepo();
 };
 
 #endif // MAINWINDOW_H

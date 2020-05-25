@@ -124,8 +124,9 @@
     <property name="title">
      <string>Файл</string>
     </property>
-    <addaction name="openFile"/>
+    <addaction name="action"/>
     <addaction name="saveFile"/>
+    <addaction name="openFile"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -137,6 +138,11 @@
   <action name="saveFile">
    <property name="text">
     <string>Сохранить</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>Создать</string>
    </property>
   </action>
  </widget>
