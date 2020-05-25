@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
       this->loadReps();
 
 
+
       receiveDay[1]="Понедельник";
       receiveDay[2]="Вторник";
       receiveDay[3]="Среда";
@@ -197,10 +198,10 @@ void MainWindow::slotSubjectEditRecord()
 void MainWindow::slotSubjectRemoveRecord()
 {
     int index =ui->subject_table->selectionModel()->currentIndex().row();
-    dlindexSb.append(index);
+    dlindexSb.append(repoSubjects.getByIndex(index).id);
 
-    repoSubjects.remove(repoSubjects.getById(repoSubjects.getByIndex(index).id).id);
-    list_s->removeAt(index);
+    repoSubjects.remove(repoSubjects.getByIndex(index).id);
+    list_s->removeAt(repoSubjects.getByIndex(index).id);
     ui->subject_table->model()->removeRow(index);
 }
 
@@ -264,8 +265,9 @@ void MainWindow::slotGroupEditRecord()
 void MainWindow::slotGroupRemoveRecord()
 {
     int index =ui->group_table->selectionModel()->currentIndex().row();
+    dlindexGr.append(repoGroupStudents.getByIndex(index).id);
+
     this->repoGroupStudents.remove(repoGroupStudents.getByIndex(index).id);
-    dlindexGr.append(index);
     list_gr->removeAt(index);
     ui->group_table->model()->removeRow(index);
     ui->gr_sub_table->model()->removeRow(index);
