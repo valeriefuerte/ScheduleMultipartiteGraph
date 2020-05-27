@@ -75,8 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
       dialogCabinet = new DialogCabinetWindow();
       dialogLessonTime = new DialogLessonTimeWindow();
       dialogLinkGroupSubject = new DialogLinkGroupSubjectWindow();
-      // диалоговое окно для работы с файлами
-      dSaveAs = new DialogSaveAs();
+
 
       /*qDebug()<<repoSubjects.getAmount();
       qDebug()<<repoGroupStudents.getAmount();
@@ -86,6 +85,10 @@ MainWindow::MainWindow(QWidget *parent) :
       */
 
       this->initStorage();
+
+      // диалоговое окно для работы с файлами
+      dSaveAs = new DialogSaveAs();
+
       this->loadReps();
       //testSubject();
 
