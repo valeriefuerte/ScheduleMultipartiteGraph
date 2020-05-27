@@ -690,10 +690,7 @@ void MainWindow::receiveDeleteFileName(QString pathFile,QString nameFile){
              jsonFile.remove();
              jsonFile.close();
 
-
-
              list = dir.entryInfoList();
-
 
              //если после удаления не осталось файлов
              if (list.empty()||!list.empty()){
@@ -863,7 +860,14 @@ void MainWindow::receiveFileName(QString pathFile, QString nameFile, bool create
     if (jsonFile.open(QFile::WriteOnly)){
         jsonFile.write(json.toJson());
         jsonFile.close();
+
+        clearModel();
+        clearRepository();
+        loadReps(jsonName);
+        this->setWindowTitle(nameFile+".json");
+
         dSaveAs->close();
+
         ui->status_label->setText("Новый файл успешно сохранен!");
     }
     else {
@@ -874,23 +878,10 @@ void MainWindow::receiveFileName(QString pathFile, QString nameFile, bool create
   else{
 
       clearModel();
+      clearRepository();
 
       QJsonDocument json;
       QJsonObject object = json.object();
-
-      RepositoryTemplate<Cabinet> lrepoCabinet;
-      RepositoryTemplate<Subject> lrepoSubject;
-      RepositoryTemplate<LessonTime> lrepoLessonTime;
-      RepositoryTemplate<GroupStudents> lrepoGroupStudent;
-      RepositoryTemplate<LinkGroupSubject> lrepoLinkGroupSubject;
-
-      repoCabinets= lrepoCabinet;
-      repoSubjects = lrepoSubject;
-      repoLessonTime = lrepoLessonTime;
-      repoGroupStudents = lrepoGroupStudent;
-      repoLinkGroupSubject = lrepoLinkGroupSubject;
-      //обнуление буфера группы_предметы
-      dialogLinkGroupSubject->repoLinkGroupSubjects = lrepoLinkGroupSubject;
 
       object[this->repoCabinets.getTname()] = this->repoCabinets.toJson();
       object[this->repoSubjects.getTname()] = this->repoSubjects.toJson();
@@ -1145,5 +1136,21 @@ void MainWindow::clearModel(){
     clearTableView(ui->cabinets_table,cabinetModel);
     clearTableView(ui->time_table,timeModel);
     clearTableView(ui->gr_sub_table,gr_subModel);
+}
+//очищение репозиториев
+void MainWindow::clearRepository(){
+    RepositoryTemplate<Cabinet> lrepoCabinet;
+    RepositoryTemplate<Subject> lrepoSubject;
+    RepositoryTemplate<LessonTime> lrepoLessonTime;
+    RepositoryTemplate<GroupStudents> lrepoGroupStudent;
+    RepositoryTemplate<LinkGroupSubject> lrepoLinkGroupSubject;
+
+    repoCabinets= lrepoCabinet;
+    repoSubjects = lrepoSubject;
+    repoLessonTime = lrepoLessonTime;
+    repoGroupStudents = lrepoGroupStudent;
+    repoLinkGroupSubject = lrepoLinkGroupSubject;
+    //обнуление буфера группы_предметы
+    dialogLinkGroupSubject->repoLinkGroupSubjects = lrepoLinkGroupSubject;
 }
 

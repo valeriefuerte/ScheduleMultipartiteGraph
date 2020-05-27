@@ -187,6 +187,8 @@ private:
     void loadOnSelectedFile(QString,QString);
     //очищение моделей
     void clearModel();
+    //очищение репозиториев
+    void clearRepository();
 
 
 };
