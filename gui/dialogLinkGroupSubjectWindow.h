@@ -20,8 +20,11 @@ public:
     RepositoryTemplate<GroupStudents> repoRecGroupStudent;
     RepositoryTemplate<Subject> repoRecSubject;
 
-    void receiveGroup(int,QStringList,RepositoryTemplate<GroupStudents>,RepositoryTemplate<Subject>,QList<int>,QList<int>,RepositoryTemplate<LinkGroupSubject>);
+    void receiveGroup(int,QStringList,RepositoryTemplate<GroupStudents>,RepositoryTemplate<Subject>);
     DialogLinkGroupSubjectWindow(QWidget* parent=0);
+
+    void delOnSubofLinkGroupSubject(int);
+    void delOnGrofLinkGroupSubject(int);
 
 
 
@@ -60,8 +63,6 @@ private:
     void visualRows(QTableView *table, TableListModel *model);
     void clearTableView(QTableView*, TableListModel*);
 
-    void delOnSubofLinkGroupSubject(QList<int>);
-    void delOnGrofLinkGroupSubject(QList<int>);
 
 private slots:
     void slotLinkSubject_GroupAddRecord();

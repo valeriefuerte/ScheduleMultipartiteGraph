@@ -20,6 +20,7 @@
 #include "dialogWindowConfrimEditRow.h"
 #include "dialogLessonTimeWindow.h"
 #include "dialogLinkGroupSubjectWindow.h"
+#include "dialogSaveAs.h"
 
 
 
@@ -44,9 +45,11 @@ public:
     void initStorage();
     ~MainWindow();
 private:
+
     QString dirStorage = "storage";
 signals:
     void sendSelectionCabinet(Cabinet cabinet);
+
 private slots:
     //void on_tabWidget_currentChanged(int index);
     //Предметы
@@ -104,15 +107,40 @@ private slots:
 
     void receiveEditDataLessonTime(LessonTime);
 
+
+
     void on_subject_table_clicked(const QModelIndex &index);
 
     void on_group_table_clicked(const QModelIndex &index);
 
     void on_saveFile_triggered();
 
-    void on_cabinets_table_clicked(const QModelIndex &index);    
+    void on_saveAs_triggered();
+
+    void on_openFile_triggered();
+
+    void on_newFile_triggered();
+
+    void on_deleteFile_triggered();
+
+    void on_cabinets_table_clicked(const QModelIndex &index);
+
+    // получение имя нового сохраненного файла
+    void  receiveFileName(QString,QString,bool);
+
+    //получение названия файла для открытия
+    void receiveOpenFileName(QString,QString);
+
+    //получение имени удаляемого файла
+    void receiveDeleteFileName(QString, QString);
+
+
 public slots:
 private:
+    //имя файла с которым работаем
+    QString curPathFile;
+    //флаг для нахождения одинаковых файлов
+    bool idenFlag = false;
 
     QList<int> dlindexSb;
     QList<int> dlindexGr;
@@ -149,8 +177,18 @@ private:
     RepositoryTemplate<Subject> repoSubjects;
     RepositoryTemplate<LinkGroupSubject> repoLinkGroupSubject;
 
-    //методы десереализации моделей
+    //метод загрузки модели по файлу
     void loadModelonRepo();
+    //диалоговое окно работы с файлами
+    DialogSaveAs *dSaveAs;
+    //очищение TableView
+    void clearTableView(QTableView*, TableListModel*);
+    //загрузка по выбранному файлу
+    void loadOnSelectedFile(QString,QString);
+    //очищение моделей
+    void clearModel();
+
+
 };
 
 #endif // MAINWINDOW_H
