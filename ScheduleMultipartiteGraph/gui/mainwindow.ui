@@ -28,31 +28,11 @@
         <string>Данные</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="2" column="3">
-         <widget class="QLabel" name="timeLabel">
-          <property name="text">
-           <string>Время</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
         <item row="4" column="2">
          <widget class="QTableView" name="cabinets_table"/>
         </item>
-        <item row="4" column="3">
-         <widget class="QTableView" name="time_table"/>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="fieldsLabel">
-          <property name="text">
-           <string>Предметы</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
+        <item row="4" column="1">
+         <widget class="QTableView" name="group_table"/>
         </item>
         <item row="2" column="2">
          <widget class="QLabel" name="cabinetsLabel">
@@ -64,16 +44,46 @@
           </property>
          </widget>
         </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="fieldsLabel">
+          <property name="text">
+           <string>Предметы</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
         <item row="4" column="0">
          <widget class="QTableView" name="subject_table"/>
         </item>
-        <item row="4" column="1">
-         <widget class="QTableView" name="group_table"/>
+        <item row="4" column="3">
+         <widget class="QTableView" name="time_table"/>
         </item>
         <item row="2" column="1">
          <widget class="QLabel" name="groupsLabel">
           <property name="text">
            <string>Группы</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QLabel" name="timeLabel">
+          <property name="text">
+           <string>Время</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0" colspan="4">
+         <widget class="QLabel" name="status_label">
+          <property name="text">
+           <string/>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -124,9 +134,11 @@
     <property name="title">
      <string>Файл</string>
     </property>
-    <addaction name="action"/>
-    <addaction name="saveFile"/>
+    <addaction name="newFile"/>
     <addaction name="openFile"/>
+    <addaction name="saveFile"/>
+    <addaction name="saveAs"/>
+    <addaction name="deleteFile"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -140,9 +152,19 @@
     <string>Сохранить</string>
    </property>
   </action>
-  <action name="action">
+  <action name="newFile">
    <property name="text">
     <string>Создать</string>
+   </property>
+  </action>
+  <action name="saveAs">
+   <property name="text">
+    <string>Сохранить как ...</string>
+   </property>
+  </action>
+  <action name="deleteFile">
+   <property name="text">
+    <string>Удалить</string>
    </property>
   </action>
  </widget>
