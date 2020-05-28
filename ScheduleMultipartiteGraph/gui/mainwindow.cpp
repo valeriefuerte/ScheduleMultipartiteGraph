@@ -1,4 +1,4 @@
-#include <QtGui>
+﻿#include <QtGui>
 #include <QApplication>
 #include <QTableView>
 #include <QTreeView>
@@ -8,7 +8,9 @@
 #include <QDebug>
 #include <QAbstractTableModel>
 #include <QTime>
+#include <QMessageBox>
 #include "mainwindow.h"
+#include "dialogSaveAs.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -17,9 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
       ui->setupUi(this);
-      this->initStorage();
-      this->loadReps();
-
 
       receiveDay[1]="Понедельник";
       receiveDay[2]="Вторник";
@@ -67,9 +66,22 @@ MainWindow::MainWindow(QWidget *parent) :
       dialogCabinet = new DialogCabinetWindow();
       dialogLessonTime = new DialogLessonTimeWindow();
       dialogLinkGroupSubject = new DialogLinkGroupSubjectWindow();
-      testSubject();
-      //dialogLinkGroupSubject->show();
 
+
+      /*qDebug()<<repoSubjects.getAmount();
+      qDebug()<<repoGroupStudents.getAmount();
+      qDebug()<<repoCabinets.getAmount();
+      qDebug()<<repoLessonTime.getAmount();
+      qDebug()<<dialogLinkGroupSubject->repoLinkGroupSubjects.getAmount();
+      */
+
+      this->initStorage();
+
+      // диалоговое окно для работы с файлами
+      dSaveAs = new DialogSaveAs();
+
+      this->loadReps();
+      //testSubject();
 
 
       //Таблица Предметы
@@ -98,6 +110,15 @@ MainWindow::MainWindow(QWidget *parent) :
       connect(ui->time_table,SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(customTimeMenuRequested(QPoint)));
       //Таблица Группы_Предметы
       connect(ui->gr_sub_table,SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(customGroupSubjectMenuRequested(QPoint)));
+
+      //получение имени нового файла
+      connect(dSaveAs,SIGNAL(sendFileName(QString,QString,bool)),this,SLOT(receiveFileName(QString,QString,bool)));
+
+      //получение имени файла для открытия
+      connect(dSaveAs,SIGNAL(sendSelectedFileName(QString,QString)),this,SLOT(receiveOpenFileName(QString, QString)));
+
+      //получение имени файла для удаления
+      connect(dSaveAs,SIGNAL(sendDeleteFileName(QString,QString)),this,SLOT(receiveDeleteFileName(QString,QString)));
 
 
 
@@ -188,9 +209,11 @@ void MainWindow::slotSubjectEditRecord()
 void MainWindow::slotSubjectRemoveRecord()
 {
     int index =ui->subject_table->selectionModel()->currentIndex().row();
-    dlindexSb.append(index);
+    dlindexSb.append(repoSubjects.getByIndex(index).id);
 
-    repoSubjects.remove(repoSubjects.getById(repoSubjects.getByIndex(index).id).id);
+    dialogLinkGroupSubject->delOnSubofLinkGroupSubject(repoSubjects.getByIndex(index).id);
+    repoSubjects.remove(repoSubjects.getByIndex(index).id);
+
     list_s->removeAt(index);
     ui->subject_table->model()->removeRow(index);
 }
@@ -199,7 +222,7 @@ void MainWindow::receiveDataSubject(Subject subject){
      repoSubjects.add(subject);
      list_s->append(subject.name);
 
-     int index =ui->subject_table->model()->rowCount();
+     int index =subjectModel->rowCount();
      subjectModel->insertRow(index);
 
      const QModelIndex indexNext=subjectModel->index(index,0);
@@ -255,8 +278,12 @@ void MainWindow::slotGroupEditRecord()
 void MainWindow::slotGroupRemoveRecord()
 {
     int index =ui->group_table->selectionModel()->currentIndex().row();
+    dlindexGr.append(repoGroupStudents.getByIndex(index).id);
+
+    dialogLinkGroupSubject->delOnGrofLinkGroupSubject(repoGroupStudents.getByIndex(index).id);
+
     this->repoGroupStudents.remove(repoGroupStudents.getByIndex(index).id);
-    dlindexGr.append(index);
+
     list_gr->removeAt(index);
     ui->group_table->model()->removeRow(index);
     ui->gr_sub_table->model()->removeRow(index);
@@ -267,7 +294,7 @@ void MainWindow::receiveDataGroup(GroupStudents group){
      repoGroupStudents.add(group);
      list_gr->append(group.name);
 
-     int index =ui->group_table->model()->rowCount();
+     int index =groupModel->rowCount();
      groupModel->insertRow(index);
      gr_subModel->insertRow(index);
 
@@ -338,7 +365,7 @@ void MainWindow::receiveDataCabinet(Cabinet cabinet){
      QString s = QString("%1%2%3").arg(cabinet.building).arg(cabinet.floor).arg(cabinet.number);
      repoCabinets.add(cabinet);
      list_cb->append(s);
-     int index =ui->cabinets_table->model()->rowCount();
+     int index =cabinetModel->rowCount();
 
      cabinetModel->insertRow(index);
      const QModelIndex indexNext=cabinetModel->index(index,0);
@@ -440,7 +467,7 @@ void MainWindow::receiveDataLessonTime(LessonTime lessonTime){
 
      repoLessonTime.add(lessonTime);
      list_tm->append(s);
-     int index =ui->time_table->model()->rowCount();
+     int index =timeModel->rowCount();
 
      timeModel->insertRow(index);
      const QModelIndex indexNext=timeModel->index(index,0);
@@ -477,7 +504,7 @@ void MainWindow::customGroupSubjectMenuRequested(const QPoint &pos){
 }
 
 void MainWindow::slotAddSG(){
-    dialogLinkGroupSubject->receiveGroup(ui->gr_sub_table->selectionModel()->currentIndex().row(),*list_s,repoGroupStudents,repoSubjects,dlindexSb,dlindexGr);
+    dialogLinkGroupSubject->receiveGroup(ui->gr_sub_table->selectionModel()->currentIndex().row(),*list_s,repoGroupStudents,repoSubjects);
     dialogLinkGroupSubject->show();
     qDebug()<<"Репозиторий групп_предметов";
     for (int i=0; i<dialogLinkGroupSubject->repoLinkGroupSubjects.getAmount();i++){
@@ -488,6 +515,7 @@ void MainWindow::slotAddSG(){
     dlindexSb.clear();
     dlindexGr.clear();
 }
+//тестовое заполнение данными
 void MainWindow::testSubject(){
 
     QHash<int,Subject> subHash;
@@ -513,7 +541,6 @@ void MainWindow::testSubject(){
     }
 
     for (int i =0; i<=5; i++){
-        //int index =ui->subject_table->currentIndex().row()+1;
         subjectModel->insertRow(i);
         groupModel->insertRow(i);
         gr_subModel->insertRow(i);
@@ -538,9 +565,6 @@ void MainWindow::testSubject(){
     }
 
 }
-
-
-
 void MainWindow::on_subject_table_clicked(const QModelIndex &index)
 {
     QList<Subject> repSubjects;
@@ -560,8 +584,6 @@ void MainWindow::on_subject_table_clicked(const QModelIndex &index)
         qDebug() << moSubject.name;
     }
 }
-
-
 void MainWindow::on_group_table_clicked(const QModelIndex &index)
 {
 
@@ -585,12 +607,13 @@ void MainWindow::on_group_table_clicked(const QModelIndex &index)
 
 
 }
-
-
+// сохранение прогресса в запущенном файле
 void MainWindow::on_saveFile_triggered()
 {
     QJsonDocument json;
     QJsonObject object = json.object();
+
+    repoLinkGroupSubject = dialogLinkGroupSubject->repoLinkGroupSubjects;
 
     object[this->repoCabinets.getTname()] = this->repoCabinets.toJson();
     object[this->repoSubjects.getTname()] = this->repoSubjects.toJson();
@@ -600,10 +623,289 @@ void MainWindow::on_saveFile_triggered()
 
     json.setObject(object);
 
-    QString jsonName = QString("storage/%1.json").arg(time(NULL));
-    QFile jsonFine(jsonName);
-    jsonFine.open(QFile::WriteOnly);
-    jsonFine.write(json.toJson());
+    QFile jsonFile(curPathFile);
+    if (jsonFile.open(QFile::WriteOnly)){
+        jsonFile.write(json.toJson());
+        jsonFile.close();
+        ui->status_label->setText("Прогресс успешно сохранен!");
+    }
+    else {
+        QMessageBox::information(this,"Файл","Ошибка записи в файл!");
+    }
+}
+//сохранить файл с раскрытием диалогового окна
+void MainWindow::on_saveAs_triggered(){
+    //путь до директории с файлами
+    dSaveAs->setModal(true);
+    dSaveAs->changeDialogSaveFile();
+    dSaveAs->show();
+}
+//загрузить файл из хранилища storage
+void MainWindow::on_openFile_triggered(){
+    dSaveAs->setModal(true);
+    dSaveAs->changeDialogOpenFile();
+    dSaveAs->show();
+
+}
+//удаление файла
+void MainWindow::on_deleteFile_triggered(){
+    dSaveAs->setModal(true);
+    dSaveAs->changeDialogDeleteFile();
+    dSaveAs->show();
+
+}
+
+
+void MainWindow::receiveDeleteFileName(QString pathFile,QString nameFile){
+
+     QFile jsonFile(pathFile);
+
+     //проверка на ввод имени файла
+     if (nameFile==""){
+         QMessageBox::information(this,"Ошибка","Вы не ввели имя файла!");
+         return;
+
+     }
+     QDir dir(this->dirStorage);
+     dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+     dir.setSorting(QDir::Name);
+     QFileInfoList list;
+
+     if (pathFile==curPathFile){
+         QMessageBox::StandardButton reply;
+         reply = QMessageBox::question(this, "Удаление", "Вы действительно хотите удалить "
+                                                         "файл с которым вы работаете в данный момент?",QMessageBox::Yes|QMessageBox::No);
+         if (reply==QMessageBox::Yes){
+
+             jsonFile.open(QFile::ReadOnly);
+             jsonFile.remove();
+             jsonFile.close();
+
+             list = dir.entryInfoList();
+
+             //если после удаления не осталось файлов
+             if (list.empty()||!list.empty()){
+                clearModel();
+
+                ui->saveFile->setEnabled(false);
+                ui->saveAs->setEnabled(false);
+                ui->deleteFile->setEnabled(false);
+
+                RepositoryTemplate<Cabinet> lrepoCabinet;
+                RepositoryTemplate<Subject> lrepoSubject;
+                RepositoryTemplate<LessonTime> lrepoLessonTime;
+                RepositoryTemplate<GroupStudents> lrepoGroupStudent;
+                RepositoryTemplate<LinkGroupSubject> lrepoLinkGroupSubject;
+
+                this->repoCabinets=lrepoCabinet;
+                this->repoSubjects=lrepoSubject;
+                this->repoLessonTime=lrepoLessonTime;
+                this->repoGroupStudents=lrepoGroupStudent;
+                this->repoLinkGroupSubject=lrepoLinkGroupSubject;
+                //обнуление буфера группы_предметы
+                dialogLinkGroupSubject->repoLinkGroupSubjects = lrepoLinkGroupSubject;
+                this->setWindowTitle("no name");
+                ui->status_label->setText("Файл успешно удален!");
+             }
+
+             dSaveAs->close();
+
+
+         }
+         else {
+             return;
+         }
+     }
+     else{
+        if (jsonFile.open(QFile::ReadOnly)){
+            jsonFile.remove();
+            jsonFile.close();
+            ui->status_label->setText("Файл успешно удален!");
+        }
+        else {
+            QMessageBox::information(this,"Ошибка","Удаляемый файл не обнаружен!");
+        }
+     }
+
+}
+
+//получение имени файла для открытия
+void MainWindow::receiveOpenFileName(QString pathFile, QString nameFile){
+
+    loadOnSelectedFile(pathFile, nameFile);
+ }
+//создание нового файла
+void MainWindow::on_newFile_triggered(){
+    dSaveAs->changeDialogNewFile();
+    dSaveAs->show();
+
+}
+
+//загрузка файла по выбору
+void MainWindow::loadOnSelectedFile(QString pathFile, QString nameFile){
+    QFile jsonFile(pathFile);
+
+    //проверка на ввод имени файла
+    if (nameFile==""){
+        QMessageBox::information(this,"Ошибка","Вы не ввели имя файла!");
+        return;
+
+    }
+
+
+    if (jsonFile.open(QFile::ReadOnly)){
+        curPathFile = pathFile;
+        QJsonDocument json = QJsonDocument().fromJson(jsonFile.readAll());
+        QJsonObject object = json.object();
+
+
+        RepositoryTemplate<Cabinet> lrepoCabinet;
+        RepositoryTemplate<Subject> lrepoSubject;
+        RepositoryTemplate<LessonTime> lrepoLessonTime;
+        RepositoryTemplate<GroupStudents> lrepoGroupStudent;
+        RepositoryTemplate<LinkGroupSubject> lrepoLinkGroupSubject;
+
+        QJsonObject objectCabinets = object[lrepoCabinet.getTname()].toObject();
+        QJsonObject objectSubjects = object[lrepoSubject.getTname()].toObject();
+        QJsonObject objectLessonTime = object[lrepoLessonTime.getTname()].toObject();
+        QJsonObject objectGroupStudents = object[lrepoGroupStudent.getTname()].toObject();
+        QJsonObject objectLinkGroupSubject = object[lrepoLinkGroupSubject.getTname()].toObject();
+
+        lrepoCabinet.fromJson(objectCabinets);
+        lrepoSubject.fromJson(objectSubjects);
+        lrepoLessonTime.fromJson(objectLessonTime);
+        lrepoGroupStudent.fromJson(objectGroupStudents);
+        lrepoLinkGroupSubject.fromJson(objectLinkGroupSubject);
+        jsonFile.close();
+
+        this->setWindowTitle(nameFile+".json");
+        //присвоение данных буферу группы_предметы
+        dialogLinkGroupSubject->repoLinkGroupSubjects = lrepoLinkGroupSubject;
+
+        this->repoCabinets=lrepoCabinet;
+        this->repoSubjects=lrepoSubject;
+        this->repoLessonTime=lrepoLessonTime;
+        this->repoGroupStudents=lrepoGroupStudent;
+        this->repoLinkGroupSubject=lrepoLinkGroupSubject;
+
+        ui->saveFile->setEnabled(true);
+        ui->saveAs->setEnabled(true);
+        ui->deleteFile->setEnabled(true);
+
+        clearModel();
+        loadModelonRepo();
+        dSaveAs->close();
+        ui->status_label->setText("Файл успешно загружен!");
+
+
+
+    }
+    else{
+        QMessageBox::information(this,"Файл","Ошибка чтения файла!");
+
+    }
+}
+void MainWindow::receiveFileName(QString pathFile, QString nameFile, bool createFlag){
+    qDebug()<<"pathFile"<<nameFile;
+
+   if (nameFile==""){
+       QMessageBox::information(this,"Ошибка","Вы не ввели имя файла!");
+       return;
+
+   }
+   QDir dir(this->dirStorage);
+   dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+   dir.setSorting(QDir::Name);
+
+   QFileInfoList list = dir.entryInfoList();
+
+   if (!list.empty()){
+        for (int i = 0; i<list.size(); i++){
+            if (pathFile==QDir::currentPath()+"/"+list.at(i).filePath()){
+                QMessageBox::information(this,"Ошибка","Файл с таким именем существует!");
+                idenFlag = true;
+                break;
+            }
+        }
+  }
+ if (idenFlag){
+     idenFlag = false;
+     return;
+  }
+  if (!createFlag){
+    QJsonDocument json;
+    QJsonObject object = json.object();
+
+    repoLinkGroupSubject = dialogLinkGroupSubject->repoLinkGroupSubjects;
+
+    object[this->repoCabinets.getTname()] = this->repoCabinets.toJson();
+    object[this->repoSubjects.getTname()] = this->repoSubjects.toJson();
+    object[this->repoLessonTime.getTname()] = this->repoLessonTime.toJson();
+    object[this->repoGroupStudents.getTname()] = this->repoGroupStudents.toJson();
+    object[this->repoLinkGroupSubject.getTname()] = this->repoLinkGroupSubject.toJson();
+
+    json.setObject(object);
+
+    QString jsonName = QString(pathFile).arg(time(NULL));
+    QFile jsonFile(jsonName);
+    if (jsonFile.open(QFile::WriteOnly)){
+        jsonFile.write(json.toJson());
+        jsonFile.close();
+
+        clearModel();
+        clearRepository();
+        loadReps(jsonName);
+        this->setWindowTitle(nameFile+".json");
+
+        dSaveAs->close();
+
+        ui->status_label->setText("Новый файл успешно сохранен!");
+    }
+    else {
+        QMessageBox::information(this,"Файл","Ошибка записи в файл!");
+    }
+
+  }
+  else{
+
+      clearModel();
+      clearRepository();
+
+      QJsonDocument json;
+      QJsonObject object = json.object();
+
+      object[this->repoCabinets.getTname()] = this->repoCabinets.toJson();
+      object[this->repoSubjects.getTname()] = this->repoSubjects.toJson();
+      object[this->repoLessonTime.getTname()] = this->repoLessonTime.toJson();
+      object[this->repoGroupStudents.getTname()] = this->repoGroupStudents.toJson();
+      object[this->repoLinkGroupSubject.getTname()] = this->repoLinkGroupSubject.toJson();
+
+      json.setObject(object);
+
+      QString jsonName = QString(pathFile).arg(time(NULL));
+      QFile jsonFile(jsonName);
+      if (jsonFile.open(QFile::WriteOnly)){
+            jsonFile.write(json.toJson());
+            jsonFile.close();
+            createFlag=false;
+
+            loadReps(jsonName);
+
+            this->setWindowTitle(nameFile);
+            dSaveAs->close();
+
+            ui->saveFile->setEnabled(true);
+            ui->saveAs->setEnabled(true);
+            ui->deleteFile->setEnabled(true);
+            ui->openFile->setEnabled(true);
+            ui->status_label->setText("Файл успешно загружен!");
+
+      }
+      else{
+          QMessageBox::information(this,"Файл","Ошибка записи в файл!");
+
+      }
+  }
 }
 
 void MainWindow::on_cabinets_table_clicked(const QModelIndex &index)
@@ -623,17 +925,70 @@ void MainWindow::on_cabinets_table_clicked(const QModelIndex &index)
 
 void MainWindow::loadReps()
 {
+    QDate lastDate;
+    QTime lastTime;
     // Достаем список файлов для сущности, с которой работает репозиторий
     QDir dir(this->dirStorage);
+
     dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     dir.setSorting(QDir::Name);
     QFileInfoList list = dir.entryInfoList();
+    //буфер для сравнения
+    QFileInfoList buffer;
+    //последний созданный файл
+    QString lastFile;
 
     // Если файлы существуют, то считываем их
     if (!list.empty()){
-        // Берем файл последний файл
-        QString jsonName = QString("%1/%2").arg(this->dirStorage).arg(list.at(list.size()-1).fileName());
+        if (list.size()<2){
+           //если один файл
+           lastFile = list.back().fileName();
+        } else
+        {
+            //Последняя дата создания
+            lastDate = list.first().created().date();
+
+            //поиск последнего добавленного файла
+            for (int i =1; i<list.size(); i++){
+                if (lastDate<list.at(i).created().date()){
+                    lastDate=list.at(i).created().date();
+                }
+            }
+
+        for (int i =0; i<list.size(); i++){
+             if (lastDate==list.at(i).created().date()){
+                  buffer.append(list.at(i));
+               }
+        }
+
+        lastTime = buffer.first().created().time();
+        lastFile=buffer.first().fileName();
+
+        for (int i =1; i<buffer.size(); i++){
+            if (lastTime<buffer.at(i).created().time()){
+                lastTime= buffer.at(i).created().time();
+                lastFile = buffer.at(i).fileName();
+        }
+      }
+
+    }
+        QFileInfo fileInfo;
+
+        //qDebug()<<lastTime;
+        // Берем файл последний измененный файл
+        QString jsonName =QDir::currentPath()+"/"+QString("%1/%2").arg(this->dirStorage).arg(lastFile);
+        this->setWindowTitle(lastFile);
+
         this->loadReps(jsonName);
+        ui->status_label->setText("Файл успешно загружен!");
+ }
+    else {
+        this->setWindowTitle("no name");
+        ui->status_label->setText("Файлов не обнаружено!");
+        ui->saveFile->setEnabled(false);
+        ui->saveAs->setEnabled(false);
+        ui->openFile->setEnabled(false);
+        ui->deleteFile->setEnabled(false);
     }
 }
 
@@ -641,30 +996,152 @@ void MainWindow::loadReps(QString jsonName)
 {
     // Десериализуем
     QFile jsonFile(jsonName);
-    jsonFile.open(QFile::ReadOnly);
-    QJsonDocument json = QJsonDocument().fromJson(jsonFile.readAll());
-    QJsonObject object = json.object();
+    if (jsonFile.open(QFile::ReadOnly)){
+        QJsonDocument json = QJsonDocument().fromJson(jsonFile.readAll());
+        QJsonObject object = json.object();
 
-    QJsonObject objectCabinets = object[this->repoCabinets.getTname()].toObject();
-    QJsonObject objectSubjects = object[this->repoSubjects.getTname()].toObject();
-    QJsonObject objectLessonTime = object[this->repoLessonTime.getTname()].toObject();
-    QJsonObject objectGroupStudents = object[this->repoGroupStudents.getTname()].toObject();
-    QJsonObject objectLinkGroupSubject = object[this->repoLinkGroupSubject.getTname()].toObject();
+        QJsonObject objectCabinets = object[this->repoCabinets.getTname()].toObject();
+        QJsonObject objectSubjects = object[this->repoSubjects.getTname()].toObject();
+        QJsonObject objectLessonTime = object[this->repoLessonTime.getTname()].toObject();
+        QJsonObject objectGroupStudents = object[this->repoGroupStudents.getTname()].toObject();
+        QJsonObject objectLinkGroupSubject = object[this->repoLinkGroupSubject.getTname()].toObject();
 
-    this->repoCabinets.fromJson(objectCabinets);
-    this->repoSubjects.fromJson(objectSubjects);
-    this->repoLessonTime.fromJson(objectLessonTime);
-    this->repoGroupStudents.fromJson(objectGroupStudents);
-    this->repoLinkGroupSubject.fromJson(objectLinkGroupSubject);
+        this->repoCabinets.fromJson(objectCabinets);
+        this->repoSubjects.fromJson(objectSubjects);
+        this->repoLessonTime.fromJson(objectLessonTime);
+        this->repoGroupStudents.fromJson(objectGroupStudents);
+        this->repoLinkGroupSubject.fromJson(objectLinkGroupSubject);
+        jsonFile.close();
 
-    qDebug() << "work" << endl;
+        curPathFile = jsonName;
+
+        loadModelonRepo();
+    }
+    else {
+        QMessageBox::information(this,"Файл","Ошибка чтения файла!");
+    }
+
+
 }
 
 void MainWindow::initStorage() {
     QDir dirStorage(this->dirStorage);
 
+
     if (!dirStorage.exists()) {
         QDir().mkdir(this->dirStorage);
     }
+}
+
+// загрузка моделей по файлу
+void MainWindow::loadModelonRepo(){
+
+
+    dialogLinkGroupSubject->repoLinkGroupSubjects=repoLinkGroupSubject;
+
+    for (int i =0; i<repoSubjects.getAmount();i++){
+        list_s->append(repoSubjects.getByIndex(i).name);
+        subjectModel->insertRow(i);
+
+        subjectModel->setData(subjectModel->index(i,0),QVariant(repoSubjects.getByIndex(i).name));
+        visualRows(ui->subject_table,subjectModel);
+
+    }
+    for (int i =0; i<repoGroupStudents.getAmount();i++){
+        list_gr->append(repoGroupStudents.getByIndex(i).name);
+
+        groupModel->insertRow(i);
+        gr_subModel->insertRow(i);
+
+        groupModel->setData(groupModel->index(i,0),QVariant(repoGroupStudents.getByIndex(i).name));
+        gr_subModel->setData(gr_subModel->index(i,0),QVariant(repoGroupStudents.getByIndex(i).name));
+
+        visualRows(ui->group_table,groupModel);
+        visualRows(ui->gr_sub_table,gr_subModel);
+
+    }
+    for (int i =0; i<repoCabinets.getAmount();i++){
+        list_cb->append(QString("%1%2%3").arg(repoCabinets.getByIndex(i).building)
+                     .arg(repoCabinets.getByIndex(i).floor).arg(repoCabinets.getByIndex(i).number));
+        cabinetModel->insertRow(i);
+
+        cabinetModel->setData(cabinetModel->index(i,0),QVariant(QString("%1%2%3").arg(repoCabinets.getByIndex(i).building)
+        .arg(repoCabinets.getByIndex(i).floor).arg(repoCabinets.getByIndex(i).number)));
+
+        visualRows(ui->cabinets_table,cabinetModel);
+
+    }
+    for (int i =0; i<repoLessonTime.getAmount();i++){
+        list_tm->append(QString("Четность:%1 %2 Время:%3").arg(repoLessonTime.getByIndex(i).parity).arg(receiveDay[repoLessonTime.getByIndex(i).dayOfWeek]).
+        arg(repoLessonTime.getByIndex(i).time.toString()));
+        timeModel->insertRow(i);
+
+        timeModel->setData(timeModel->index(i,0),QVariant(QString("Четность:%1 %2 Время:%3").arg(repoLessonTime.getByIndex(i).parity).arg(receiveDay[repoLessonTime.getByIndex(i).dayOfWeek]).
+                           arg(repoLessonTime.getByIndex(i).time.toString())));
+
+        visualRows(ui->time_table,timeModel);
+    }
+
+
+
+}
+
+void MainWindow::clearTableView(QTableView *tableView, TableListModel *model){
+
+  if (model->rowCount()!=0){
+        int r = tableView->model()->rowCount();
+        r--;
+        while(model->rowCount()>0){
+            tableView->model()->removeRow(r);
+        r--;
+        }
+        visualRows(tableView,model);
+        if (model->rowCount()==0){
+            while(tableView->model()->rowCount()>0){
+                tableView->model()->removeRow(r);
+                r--;
+         }
+  }
+}
+
+}
+
+void MainWindow::clearModel(){
+    //Очищение QStringList таблиц
+  if(list_s->size()!=0){
+    list_s->clear();
+  }
+  if (list_gr->size()!=0){
+    list_gr->clear();
+  }
+  if (list_cb->size()!=0){
+    list_cb->clear();
+  }
+  if(list_tm->size()!=0){
+    list_tm->clear();
+  }
+
+    //Очищение AbstarctModel таблиц
+    clearTableView(ui->subject_table,subjectModel);
+    clearTableView(ui->group_table,groupModel);
+    clearTableView(ui->cabinets_table,cabinetModel);
+    clearTableView(ui->time_table,timeModel);
+    clearTableView(ui->gr_sub_table,gr_subModel);
+}
+//очищение репозиториев
+void MainWindow::clearRepository(){
+    RepositoryTemplate<Cabinet> lrepoCabinet;
+    RepositoryTemplate<Subject> lrepoSubject;
+    RepositoryTemplate<LessonTime> lrepoLessonTime;
+    RepositoryTemplate<GroupStudents> lrepoGroupStudent;
+    RepositoryTemplate<LinkGroupSubject> lrepoLinkGroupSubject;
+
+    repoCabinets= lrepoCabinet;
+    repoSubjects = lrepoSubject;
+    repoLessonTime = lrepoLessonTime;
+    repoGroupStudents = lrepoGroupStudent;
+    repoLinkGroupSubject = lrepoLinkGroupSubject;
+    //обнуление буфера группы_предметы
+    dialogLinkGroupSubject->repoLinkGroupSubjects = lrepoLinkGroupSubject;
 }
 

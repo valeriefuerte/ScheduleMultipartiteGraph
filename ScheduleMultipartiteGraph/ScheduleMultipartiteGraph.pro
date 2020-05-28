@@ -30,6 +30,7 @@ SOURCES += \
     gui/dialogGroupWindow.cpp \
     gui/dialogLessonTimeWindow.cpp \
     gui/dialogLinkGroupSubjectWindow.cpp \
+    gui/dialogSaveAs.cpp \
     gui/dialogSubjectWindow.cpp \
     gui/dialogWindowConfrimEditRow.cpp \
     gui/dialogWindowEmptyRow.cpp \
@@ -60,6 +61,7 @@ HEADERS += \
     gui/dialogGroupWindow.h \
     gui/dialogLessonTimeWindow.h \
     gui/dialogLinkGroupSubjectWindow.h \
+    gui/dialogSaveAs.h \
     gui/dialogSubjectWindow.h \
     gui/dialogWindowConfrimEditRow.h \
     gui/dialogWindowEmptyRow.h \
@@ -86,6 +88,7 @@ HEADERS += \
 
 
 FORMS += \
+        gui/dialogSaveAs.ui \
         gui/filterwidget.ui \
         gui/mainwindow.ui
 

@@ -20,8 +20,13 @@ public:
     RepositoryTemplate<GroupStudents> repoRecGroupStudent;
     RepositoryTemplate<Subject> repoRecSubject;
 
-    void receiveGroup(int,QStringList,RepositoryTemplate<GroupStudents>,RepositoryTemplate<Subject>,QList<int>,QList<int>);
+    void receiveGroup(int,QStringList,RepositoryTemplate<GroupStudents>,RepositoryTemplate<Subject>);
     DialogLinkGroupSubjectWindow(QWidget* parent=0);
+
+    void delOnSubofLinkGroupSubject(int);
+    void delOnGrofLinkGroupSubject(int);
+
+
 
 private:
 
@@ -58,19 +63,20 @@ private:
     void visualRows(QTableView *table, TableListModel *model);
     void clearTableView(QTableView*, TableListModel*);
 
+
 private slots:
- void slotLinkSubject_GroupAddRecord();
- void slotLinkSubject_GroupDeleteRecord();
- void slotLinkSubject_GroupChangeRecord();
+    void slotLinkSubject_GroupAddRecord();
+    void slotLinkSubject_GroupDeleteRecord();
+    void slotLinkSubject_GroupChangeRecord();
 
- void customEditLinkGroupSubjectMenuRequested(const QPoint &pos);
- void customSubjectMenuRequested(const QPoint &pos);
+    void customEditLinkGroupSubjectMenuRequested(const QPoint &pos);
+    void customSubjectMenuRequested(const QPoint &pos);
 
- void receiveChangeAcH(QString, LinkGroupSubject);
- void receiveRepoGroupSubject(LinkGroupSubject,QString);
+    void receiveChangeAcH(QString, LinkGroupSubject);
+    void receiveRepoGroupSubject(LinkGroupSubject,QString);
 
- void editDataRepoGroup(RepositoryTemplate<GroupStudents>);
- void editDataRepoSubject(RepositoryTemplate<Subject>);
+    void editDataRepoGroup(RepositoryTemplate<GroupStudents>);
+    void editDataRepoSubject(RepositoryTemplate<Subject>);
 signals:
 
 };
