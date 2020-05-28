@@ -36,7 +36,7 @@ QString Cabinet::toString() {
 bool Cabinet::operator== (const Cabinet &object)
 {
     return (
-               (this->building == object.building || object.building != 0)
+               (this->building == object.building || object.building == 0)
             && (this->floor == object.floor || object.floor == 0)
             && (this->number == object.number ||  object.number == 0)
     );

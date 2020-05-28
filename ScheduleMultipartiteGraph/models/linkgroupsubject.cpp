@@ -36,7 +36,7 @@ QString LinkGroupSubject::toString() {
 bool LinkGroupSubject::operator== (const LinkGroupSubject &object)
 {
     return (
-               (this->groupId == object.groupId || object.groupId != 0)
+               (this->groupId == object.groupId || object.groupId == 0)
             && (this->subjectId == object.subjectId || object.subjectId == 0)
             && (this->academicHours == object.academicHours ||  object.academicHours == 0)
     );
