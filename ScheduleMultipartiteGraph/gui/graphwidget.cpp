@@ -1,6 +1,5 @@
 #include "graphwidget.h"
-#include "edge.h"
-#include "node.h"
+
 #include <math.h>
 #include <QKeyEvent>
 #include <QRandomGenerator>
@@ -128,6 +127,11 @@ void GraphWidget::resetFilter()
     foreach (Node * curNode, nodes) {
         curNode->show();
     }
+}
+
+void GraphWidget::useFilter(FilterData &data)
+{
+    qDebug()<<"FraphUseFilter";
 }
 void GraphWidget::keyPressEvent(QKeyEvent *event)
 {
