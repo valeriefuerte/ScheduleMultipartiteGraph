@@ -25,6 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    allocator/allocator.cpp \
     exceptions/graphexception.cpp \
     gui/dialogAddlinkGroupSubject.cpp \
     gui/dialogCabinetWindow.cpp \
@@ -43,6 +44,7 @@ SOURCES += \
     gui/schedulewidget.cpp \
     gui/visualizationwidget.cpp \
     gui/mainwindow.cpp \
+    iterator/repoiterator.cpp \
     main.cpp \
     models/abstractnoderepository.cpp \
     models/cabinet.cpp \
@@ -62,6 +64,7 @@ SOURCES += \
 
 
 HEADERS += \
+    allocator/allocator.h \
     exceptions/graphexception.h \
     gui/dialogAddlinkGroupSubject.h \
     gui/dialogCabinetWindow.h \
@@ -81,6 +84,7 @@ HEADERS += \
     gui/visualizationwidget.h \
     gui/mainwindow.h \
     models/Lesson.h \
+    iterator/repoiterator.h \
     models/TestLesson.h \
     models/abstractnoderepository.h \
     models/cabinet.h \

@@ -11,11 +11,19 @@
 #include <QFile>
 #include <QDir>
 #include <ctime>
+#include "../../allocator/allocator.h"
+#include "../../iterator/repoiterator.h"
 
+//template<class T, class AllocT = Allocator<T>> class RepositoryTemplate;
+
+//template<class T, class AllocT>
 template <class T>
 class RepositoryTemplate
 {
 private:
+
+    RepoIterator<T> * iterator();
+    //    TreeAllocator<Node<T>> * alocator = reinterpret_cast<TreeAllocator<Node<T>> *>( ::operator new(sizeof(AllocT)));
     // Список всех нод.
     QList<T> elements;
 
@@ -341,4 +349,10 @@ template <class T>
 RepositoryTemplate<T>::~RepositoryTemplate() {
 //    this->save();
 }
+
+template<class T>
+RepoIterator<T> * RepositoryTemplate<T>::iterator() {
+    return new RepoIterator<T>(this->begin());
+}
+
 #endif // REPOSITORYTEMPLATE_H
