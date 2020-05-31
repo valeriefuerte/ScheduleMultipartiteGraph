@@ -6,6 +6,7 @@
 #include <qcheckbox.h>
 #include <QDebug>
 #include<QFormLayout>
+#include <QMessageBox>
 #include<models/repository/repositorytemplate.h>
 #include<models/groupstudents.h>
 #include <gui/mainwindow.h>
@@ -41,15 +42,21 @@ DialogGroupWindow::~DialogGroupWindow(){
 }
 
 void DialogGroupWindow::apply_clicked(){
-if (!flag){
-    emit sendDataGroup(GroupStudents(groupLineEdit->text()));
-    this->close();
- } else if (flag){
-     emit sendEditDataGroup(GroupStudents(groupLineEdit->text()));
-    this->close();
- }
+
+ if (!groupLineEdit->text().isEmpty()){
+    if (!flag){
+        emit sendDataGroup(GroupStudents(groupLineEdit->text()));
+    } else if (flag){
+        emit sendEditDataGroup(GroupStudents(groupLineEdit->text()));
+        this->close();
+    }
     flag = false;
+  }
+ else {
+    QMessageBox::information(this,"Ошибка","Поле ввода пусто!");
+ }
 }
+
 
 void DialogGroupWindow::editTitle(){
     this->setWindowTitle("Редактирование");

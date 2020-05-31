@@ -6,6 +6,7 @@
 #include <qcheckbox.h>
 #include <QDebug>
 #include<QFormLayout>
+#include <QMessageBox>
 #include<models/repository/repositorytemplate.h>
 #include<models/subject.h>
 #include <gui/mainwindow.h>
@@ -22,6 +23,7 @@
    btnLayout->addWidget(applyButton);
 
    subjectLineEdit = new QLineEdit();
+
 
    formLayout->addRow("Предмет",subjectLineEdit);
    formLayout->addWidget(applyButton);
@@ -40,17 +42,21 @@ DialogSubjectWindow::~DialogSubjectWindow(){
 }
 
 void DialogSubjectWindow::apply_clicked(){
+   if (!subjectLineEdit->text().isEmpty()){
+        if (!flag){
 
-if (!flag){
+            emit sendDataSubject(Subject (subjectLineEdit->text()));
 
-    emit sendDataSubject(Subject (subjectLineEdit->text()));
-    this->close();
+        } else if (flag){
+            emit sendEditDataSubject(Subject(subjectLineEdit->text()));
 
- } else if (flag){
-     emit sendEditDataSubject(Subject(subjectLineEdit->text()));
-    this->close();
- }
+        }
     flag = false;
+   }
+   else {
+       QMessageBox::information(this,"Ошибка","Поле ввода пусто!");
+   }
+
 }
 
 void DialogSubjectWindow::editTitle(){

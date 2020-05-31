@@ -1,5 +1,5 @@
 #include "visualizationwidget.h"
-#include "gui/graphwidget.h"
+
 #include <QHBoxLayout>
 #include <QGraphicsAnchorLayout>
 #include <QGraphicsProxyWidget>
