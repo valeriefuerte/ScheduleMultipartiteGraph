@@ -12,6 +12,8 @@
 
 #include "models/repository/repositorytemplate.h"
 
+#include "models/graph.h"
+
 #include "models/tablelistmodel.h"
 
 #include "dialogSubjectWindow.h"
@@ -140,6 +142,8 @@ private slots:
     void receiveEditRepoLinkGrSb(RepositoryTemplate<LinkGroupSubject>);
 
 
+    void on_tabWidget_tabBarClicked(int index);
+
 public slots:
 private:
     //имя файла с которым работаем
@@ -178,6 +182,9 @@ private:
     RepositoryTemplate<LessonTime> repoLessonTime;
     RepositoryTemplate<Subject> repoSubjects;
     RepositoryTemplate<LinkGroupSubject> repoLinkGroupSubject;
+
+    // Графа, двумерный Лист, строки это путь {groupId -> subjectId -> cabinetId -> lessonTimeId}
+    QList<QList<int>> graph;
 
     //метод загрузки модели по файлу
     void loadModelonRepo();

@@ -47,6 +47,7 @@ SOURCES += \
     models/abstractnoderepository.cpp \
     models/cabinet.cpp \
     models/filterdata.cpp \
+    models/graph.cpp \
     models/groupstudents.cpp \
     models/lessontime.cpp \
     models/linkgroupsubject.cpp \
@@ -83,6 +84,7 @@ HEADERS += \
     models/abstractnoderepository.h \
     models/cabinet.h \
     models/filterdata.h \
+    models/graph.h \
     models/linkgroupsubject.h \
     models/repository/repositorytemplate.h \
     models/groupstudents.h \
