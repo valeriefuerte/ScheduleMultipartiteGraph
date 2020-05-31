@@ -136,6 +136,9 @@ private slots:
     //получение имени удаляемого файла
     void receiveDeleteFileName(QString, QString);
 
+    //получение изменений из буфера репозитория Группы_предметы
+    void receiveEditRepoLinkGrSb(RepositoryTemplate<LinkGroupSubject>);
+
 
 public slots:
 private:
@@ -143,9 +146,6 @@ private:
     QString curPathFile;
     //флаг для нахождения одинаковых файлов
     bool idenFlag = false;
-
-    QList<int> dlindexSb;
-    QList<int> dlindexGr;
 
     QHash<int,QString> receiveDay;
 
@@ -191,6 +191,12 @@ private:
     void clearModel();
     //очищение репозиториев
     void clearRepository();
+    //проверка на сопадения предметы, группы
+    int  checkidenticalDataRepo(QString =nullptr);
+    //проверка на сопадения кабинеты
+    int  checkidenticalDataCabinets(Cabinet);
+    //проверка на сопадения время
+    int  checkidenticalDataTime(LessonTime);
 
 
 };

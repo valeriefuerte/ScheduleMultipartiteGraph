@@ -119,7 +119,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
       //получение имени файла для удаления
       connect(dSaveAs,SIGNAL(sendDeleteFileName(QString,QString)),this,SLOT(receiveDeleteFileName(QString,QString)));
-
+      // получение изменений репозитория repoLinkGroupSubject
+      connect(dialogLinkGroupSubject,SIGNAL(editMainRepoLinkGroupSubject(RepositoryTemplate<LinkGroupSubject>)),this,SLOT(receiveEditRepoLinkGrSb(RepositoryTemplate<LinkGroupSubject>)));
 
 
       //connect(this,SIGNAL(sendSelectionCabinet(Cabinet)),dialogConfirmCabinet,SLOT(receiveSelectionCabinet(Cabinet)));
@@ -209,7 +210,6 @@ void MainWindow::slotSubjectEditRecord()
 void MainWindow::slotSubjectRemoveRecord()
 {
     int index =ui->subject_table->selectionModel()->currentIndex().row();
-    dlindexSb.append(repoSubjects.getByIndex(index).id);
 
     dialogLinkGroupSubject->delOnSubofLinkGroupSubject(repoSubjects.getByIndex(index).id);
     repoSubjects.remove(repoSubjects.getByIndex(index).id);
@@ -219,6 +219,7 @@ void MainWindow::slotSubjectRemoveRecord()
 }
 
 void MainWindow::receiveDataSubject(Subject subject){
+  if (checkidenticalDataRepo(subject.name)!=1){
      repoSubjects.add(subject);
      list_s->append(subject.name);
 
@@ -229,6 +230,9 @@ void MainWindow::receiveDataSubject(Subject subject){
      subjectModel->setData(indexNext,QVariant(subject.name));
      visualRows(ui->subject_table,subjectModel);
      ui->subject_table->setCurrentIndex(indexNext);
+
+     dialogSubject->close();
+  }
  }
 
 void MainWindow::receiveEditDataSubject(Subject subject){
@@ -240,23 +244,32 @@ void MainWindow::receiveEditDataSubject(Subject subject){
 
     const QModelIndex curSelectIndex=subjectModel->index(index,0);
     subjectModel->setData(curSelectIndex,QVariant(subject.name));
+
+    dialogSubject->close();
 }
 void MainWindow::customSubjectMenuRequested(const QPoint &pos)
 {
     QMenu *menu = new QMenu(this);
 
+
     QAction *addSubject = new QAction(("Добавить"),this);
     QAction *editSubject = new QAction(("Редактировать"),this);
     QAction *deleteSubject = new QAction(("Удалить"),this);
+
 
     connect(addSubject, SIGNAL(triggered()),this,SLOT(slotSubjectAddRecord()));
     connect(editSubject, SIGNAL(triggered()),this,SLOT(slotSubjectEditRecord()));
     connect(deleteSubject, SIGNAL(triggered()),this,SLOT(slotSubjectRemoveRecord()));
 
-    menu->addAction(addSubject);
-    menu->addAction(editSubject);
-    menu->addAction(deleteSubject);
-
+    if (list_s->isEmpty()){
+        menu->addAction(addSubject);
+    }
+    else
+    {
+        menu->addAction(addSubject);
+        menu->addAction(editSubject);
+        menu->addAction(deleteSubject);
+    }
     menu->popup(ui->subject_table->viewport()->mapToGlobal(pos));
 }
 
@@ -278,7 +291,7 @@ void MainWindow::slotGroupEditRecord()
 void MainWindow::slotGroupRemoveRecord()
 {
     int index =ui->group_table->selectionModel()->currentIndex().row();
-    dlindexGr.append(repoGroupStudents.getByIndex(index).id);
+
 
     dialogLinkGroupSubject->delOnGrofLinkGroupSubject(repoGroupStudents.getByIndex(index).id);
 
@@ -291,22 +304,26 @@ void MainWindow::slotGroupRemoveRecord()
 
 
 void MainWindow::receiveDataGroup(GroupStudents group){
-     repoGroupStudents.add(group);
-     list_gr->append(group.name);
+   if (checkidenticalDataRepo(group.name)!=1){
+        repoGroupStudents.add(group);
+        list_gr->append(group.name);
 
-     int index =groupModel->rowCount();
-     groupModel->insertRow(index);
-     gr_subModel->insertRow(index);
+        int index =groupModel->rowCount();
+        groupModel->insertRow(index);
+        gr_subModel->insertRow(index);
 
-     const QModelIndex indexNext=groupModel->index(index,0);
-     groupModel->setData(indexNext,QVariant(group.name));
-     gr_subModel->setData(indexNext,QVariant(group.name));
+        const QModelIndex indexNext=groupModel->index(index,0);
+        groupModel->setData(indexNext,QVariant(group.name));
+        gr_subModel->setData(indexNext,QVariant(group.name));
 
-     visualRows(ui->group_table,groupModel);
-     visualRows(ui->gr_sub_table,gr_subModel);
+        visualRows(ui->group_table,groupModel);
+        visualRows(ui->gr_sub_table,gr_subModel);
 
-     ui->group_table->setCurrentIndex(indexNext);
-     ui->gr_sub_table->setCurrentIndex(indexNext);
+        ui->group_table->setCurrentIndex(indexNext);
+        ui->gr_sub_table->setCurrentIndex(indexNext);
+
+        dialogGroup->close();
+   }
  }
 void MainWindow::receiveEditDataGroup(GroupStudents group){
 
@@ -318,6 +335,8 @@ void MainWindow::receiveEditDataGroup(GroupStudents group){
     const QModelIndex curSelectIndex=groupModel->index(index,0);
     groupModel->setData(curSelectIndex,QVariant(group.name));
     gr_subModel->setData(curSelectIndex,QVariant(group.name));
+
+    dialogGroup->close();
 }
 
 void MainWindow::customGroupMenuRequested(const QPoint &pos){
@@ -332,10 +351,15 @@ void MainWindow::customGroupMenuRequested(const QPoint &pos){
    connect(editGroup, SIGNAL(triggered()),this,SLOT(slotGroupEditRecord()));
    connect(deleteGroup, SIGNAL(triggered()),this,SLOT(slotGroupRemoveRecord()));
 
-   menu->addAction(addGroup);
-   menu->addAction(editGroup);
-   menu->addAction(deleteGroup);
-
+   if (list_gr->isEmpty()){
+        menu->addAction(addGroup);
+   }
+   else
+   {
+       menu->addAction(addGroup);
+       menu->addAction(editGroup);
+       menu->addAction(deleteGroup);
+   }
    menu->popup(ui->group_table->viewport()->mapToGlobal(pos));
 
 
@@ -362,16 +386,20 @@ void MainWindow::slotCabinetRemoveRecord()
 }
 void MainWindow::receiveDataCabinet(Cabinet cabinet){
 
-     QString s = QString("%1%2%3").arg(cabinet.building).arg(cabinet.floor).arg(cabinet.number);
-     repoCabinets.add(cabinet);
-     list_cb->append(s);
-     int index =cabinetModel->rowCount();
+    if (checkidenticalDataCabinets(cabinet)!=1){
+        QString s = QString("%1%2%3").arg(cabinet.building).arg(cabinet.floor).arg(cabinet.number);
+        repoCabinets.add(cabinet);
+        list_cb->append(s);
+        int index =cabinetModel->rowCount();
 
-     cabinetModel->insertRow(index);
-     const QModelIndex indexNext=cabinetModel->index(index,0);
-     cabinetModel->setData(indexNext,QVariant(s));
-     visualRows(ui->cabinets_table,cabinetModel);
-     ui->cabinets_table->setCurrentIndex(indexNext);
+        cabinetModel->insertRow(index);
+        const QModelIndex indexNext=cabinetModel->index(index,0);
+        cabinetModel->setData(indexNext,QVariant(s));
+        visualRows(ui->cabinets_table,cabinetModel);
+        ui->cabinets_table->setCurrentIndex(indexNext);
+
+        dialogCabinet->close();
+    }
 }
 void MainWindow::receiveEditDataCabinet(Cabinet cabinet){
 
@@ -383,22 +411,8 @@ void MainWindow::receiveEditDataCabinet(Cabinet cabinet){
 
     const QModelIndex curSelectIndex=cabinetModel->index(ui->cabinets_table->selectionModel()->currentIndex().row(),0);
     cabinetModel->setData(curSelectIndex,QVariant(s));
-     /*QList<Cabinet> cab_l;
-    cab_l=repCabinet->getAll();
 
-    QString s = QString::number(cab_l.back().building)+QString::number(cab_l.back().floor)+QString::number(cab_l.back().number);
-    qDebug()<<"Вывод принятого репозитория";
-    QList<Cabinet> cabinets_l;
-        cabinets_l=repCabinet->getAll();
-         foreach (Cabinet cabinet, cabinets_l) {
-            qDebug()<<cabinet.floor<<"\t"<<cabinet.number<<"\t"<<cabinet.building<<"\n";
-        }
-     repoCabinets.update(selectIndex,repCabinet->getById(0));
-     list_cb->replace(selectIndex,s);*/
-     //const QModelIndex indexNext=cabinetModel->index(selectIndex,0);
-     //cabinetModel->setData(indexNext,QVariant(s));
-    //qDebug()<<repCabinet->getById(0).building<<repCabinet->getById(0).floor<<repCabinet->getById(0).number;
-    //repoCabinets.update(selectIndex,repCabinet->getById(0));
+    dialogCabinet->close();
 
 }
 
@@ -413,10 +427,16 @@ void MainWindow::customCabinetMenuRequested(const QPoint &pos){
    connect(addCabinet, SIGNAL(triggered()),this,SLOT(slotCabinetAddRecord()));
    connect(editCabinet, SIGNAL(triggered()),this,SLOT(slotCabinetEditRecord()));
    connect(deleteCabinet, SIGNAL(triggered()),this,SLOT(slotCabinetRemoveRecord()));
+   if (list_cb->isEmpty()){
+       menu->addAction(addCabinet);
+   }
+   else
+   {
+       menu->addAction(addCabinet);
+       menu->addAction(editCabinet);
+       menu->addAction(deleteCabinet);
+   }
 
-   menu->addAction(addCabinet);
-   menu->addAction(editCabinet);
-   menu->addAction(deleteCabinet);
 
    menu->popup(ui->cabinets_table->viewport()->mapToGlobal(pos));
 }
@@ -452,17 +472,21 @@ void MainWindow::customTimeMenuRequested(const QPoint &pos){
     connect(addTime, SIGNAL(triggered()),this,SLOT(slotTimeAddRecord()));
     connect(editTime, SIGNAL(triggered()),this,SLOT(slotTimeEditRecord()));
     connect(deleteTime, SIGNAL(triggered()),this,SLOT(slotTimeRemoveRecord()));
-
-    menu->addAction(addTime);
-    menu->addAction(editTime);
-    menu->addAction(deleteTime);
-
+    if (list_tm->isEmpty()){
+        menu->addAction(addTime);
+    }
+    else
+    {
+        menu->addAction(addTime);
+        menu->addAction(editTime);
+        menu->addAction(deleteTime);
+    }
     menu->popup(ui->time_table->viewport()->mapToGlobal(pos));
 }
 
 void MainWindow::receiveDataLessonTime(LessonTime lessonTime){
 
-
+if (checkidenticalDataTime(lessonTime)!=1){
      QString s = QString("Четность:%1 %2 Время:%3").arg(lessonTime.parity).arg(receiveDay[lessonTime.dayOfWeek]).arg(lessonTime.time.toString());
 
      repoLessonTime.add(lessonTime);
@@ -474,7 +498,9 @@ void MainWindow::receiveDataLessonTime(LessonTime lessonTime){
      timeModel->setData(indexNext,QVariant(s));
      visualRows(ui->time_table,timeModel);
      ui->time_table->setCurrentIndex(indexNext);
-     qDebug()<<repoLessonTime.getById(0).dayOfWeek<<repoLessonTime.getById(0).time<<repoLessonTime.getById(0).parity;
+
+     dialogLessonTime->close();
+ }
 
 }
 void MainWindow::receiveEditDataLessonTime(LessonTime lessonTime){
@@ -487,6 +513,8 @@ void MainWindow::receiveEditDataLessonTime(LessonTime lessonTime){
 
     const QModelIndex curSelectIndex=timeModel->index(ui->time_table->selectionModel()->currentIndex().row(),0);
     timeModel->setData(curSelectIndex,QVariant(s));
+
+    dialogLessonTime->close();
 }
 
 
@@ -507,13 +535,12 @@ void MainWindow::slotAddSG(){
     dialogLinkGroupSubject->receiveGroup(ui->gr_sub_table->selectionModel()->currentIndex().row(),*list_s,repoGroupStudents,repoSubjects);
     dialogLinkGroupSubject->show();
     qDebug()<<"Репозиторий групп_предметов";
-    for (int i=0; i<dialogLinkGroupSubject->repoLinkGroupSubjects.getAmount();i++){
-        qDebug()<<dialogLinkGroupSubject->repoLinkGroupSubjects.getById(dialogLinkGroupSubject->repoLinkGroupSubjects.getByIndex(i).id).groupId<<
-                  dialogLinkGroupSubject->repoLinkGroupSubjects.getById(dialogLinkGroupSubject->repoLinkGroupSubjects.getByIndex(i).id).subjectId
-               <<dialogLinkGroupSubject->repoLinkGroupSubjects.getById(dialogLinkGroupSubject->repoLinkGroupSubjects.getByIndex(i).id).academicHours;
+    for (int i=0; i<repoLinkGroupSubject.getAmount();i++){
+        qDebug()<<repoLinkGroupSubject.getById(repoLinkGroupSubject.getByIndex(i).id).groupId<<
+                  repoLinkGroupSubject.getById(repoLinkGroupSubject.getByIndex(i).id).subjectId
+               <<repoLinkGroupSubject.getById(repoLinkGroupSubject.getByIndex(i).id).academicHours;
     }
-    dlindexSb.clear();
-    dlindexGr.clear();
+
 }
 //тестовое заполнение данными
 void MainWindow::testSubject(){
@@ -613,7 +640,7 @@ void MainWindow::on_saveFile_triggered()
     QJsonDocument json;
     QJsonObject object = json.object();
 
-    repoLinkGroupSubject = dialogLinkGroupSubject->repoLinkGroupSubjects;
+    //repoLinkGroupSubject = dialogLinkGroupSubject->repoLinkGroupSubjects;
 
     object[this->repoCabinets.getTname()] = this->repoCabinets.toJson();
     object[this->repoSubjects.getTname()] = this->repoSubjects.toJson();
@@ -806,7 +833,6 @@ void MainWindow::loadOnSelectedFile(QString pathFile, QString nameFile){
     }
 }
 void MainWindow::receiveFileName(QString pathFile, QString nameFile, bool createFlag){
-    qDebug()<<"pathFile"<<nameFile;
 
    if (nameFile==""){
        QMessageBox::information(this,"Ошибка","Вы не ввели имя файла!");
@@ -836,7 +862,7 @@ void MainWindow::receiveFileName(QString pathFile, QString nameFile, bool create
     QJsonDocument json;
     QJsonObject object = json.object();
 
-    repoLinkGroupSubject = dialogLinkGroupSubject->repoLinkGroupSubjects;
+    //repoLinkGroupSubject = dialogLinkGroupSubject->repoLinkGroupSubjects;
 
     object[this->repoCabinets.getTname()] = this->repoCabinets.toJson();
     object[this->repoSubjects.getTname()] = this->repoSubjects.toJson();
@@ -891,7 +917,7 @@ void MainWindow::receiveFileName(QString pathFile, QString nameFile, bool create
 
             loadReps(jsonName);
 
-            this->setWindowTitle(nameFile);
+            this->setWindowTitle(nameFile+".json");
             dSaveAs->close();
 
             ui->saveFile->setEnabled(true);
@@ -1144,4 +1170,55 @@ void MainWindow::clearRepository(){
     //обнуление буфера группы_предметы
     dialogLinkGroupSubject->repoLinkGroupSubjects = lrepoLinkGroupSubject;
 }
+//изменение основного репозитория RepoLinkGroupSubject в соответствии c изменениями буфера
+void MainWindow::receiveEditRepoLinkGrSb(RepositoryTemplate<LinkGroupSubject> recEditRepoGrSb){
+    repoLinkGroupSubject = recEditRepoGrSb;
+}
+//проверка на одинаковые данные в репозиториях repoSubjects, repoGroupStudents
+int MainWindow::checkidenticalDataRepo(QString name){
+    if (name!=nullptr&&repoSubjects.getAmount()!=0){
+        for (int i =0; i<repoSubjects.getAmount();i++){
+            if (name==repoSubjects.getByIndex(i).name){
+                QMessageBox::information(this,"Ошибка","Данный предмет существует!");
+                return 1;
 
+            }
+        }
+    }
+    if (name!=nullptr&&repoGroupStudents.getAmount()!=0){
+        for (int i =0; i<repoGroupStudents.getAmount();i++){
+            if (name==repoGroupStudents.getByIndex(i).name){
+                QMessageBox::information(this,"Ошибка","Данная группа существует!");
+                return 1;
+
+            }
+        }
+    }
+
+}
+
+int MainWindow::checkidenticalDataCabinets(Cabinet cab){
+    if (repoCabinets.getAmount()!=0){
+        for (int i =0; i<repoCabinets.getAmount();i++){
+            if (repoCabinets.getByIndex(i).floor==cab.floor&&repoCabinets.getByIndex(i).number==cab.number&&
+                    repoCabinets.getByIndex(i).building==cab.building){
+                QMessageBox::information(this,"Ошибка","Данный кабинет существует!");
+                return 1;
+
+            }
+        }
+    }
+}
+
+int MainWindow::checkidenticalDataTime(LessonTime lt){
+    if (repoLessonTime.getAmount()!=0){
+        for (int i =0; i<repoLessonTime.getAmount();i++){
+            if (repoLessonTime.getByIndex(i).time==lt.time&&repoLessonTime.getByIndex(i).parity==lt.parity&&
+                    repoLessonTime.getByIndex(i).dayOfWeek==lt.dayOfWeek){
+                QMessageBox::information(this,"Ошибка","Данное время уже задано!");
+                return 1;
+
+            }
+        }
+    }
+}
