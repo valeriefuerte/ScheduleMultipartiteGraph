@@ -25,7 +25,7 @@ struct Lesson{
            double data2 = 0.0):
         m_name(name), m_data1(data1), m_data2(data2){
     }
-    QVector<QString> coll = {"Name", "data1","data2"};
+    QVector<QString> coll = {"Group", "Subject","Data"};
     QString m_name;
     double m_data1;
     double m_data2;

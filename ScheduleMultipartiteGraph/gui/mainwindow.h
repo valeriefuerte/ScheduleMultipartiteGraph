@@ -142,7 +142,7 @@ private slots:
     void receiveEditRepoLinkGrSb(RepositoryTemplate<LinkGroupSubject>);
 
 
-    void on_tabWidget_tabBarClicked(int index);
+    //void on_tabWidget_tabBarClicked(int index);
 
 public slots:
 private:
