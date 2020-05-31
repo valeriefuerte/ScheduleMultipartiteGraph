@@ -3,6 +3,7 @@
 Subject::Subject(QString name)
 {
     this->name = name;
+    this->subjectType = 0;
 }
 
 Subject::Subject(QString name, int subjectType)
@@ -30,7 +31,8 @@ void Subject::fromJson(QJsonObject items) {
 }
 
 QString Subject::toString() {
-    return QString("id: %1, name: %2, subjectType: %3").arg(this->id).arg(this->name).arg(this->subjectType);
+    return QString("%1(%2)").arg(this->name).arg(this->subjectType);
+//    return QString("id: %1, name: %2, subjectType: %3").arg(this->id).arg(this->name).arg(this->subjectType);
 }
 
 bool Subject::operator== (const Subject &object)

@@ -30,14 +30,15 @@ void LinkGroupSubject::fromJson(QJsonObject items) {
 }
 
 QString LinkGroupSubject::toString() {
-    return QString("id: %1, groupId: %2, subjectId: %3, academicHours: %4").arg(this->id).arg(this->groupId).arg(this->subjectId).arg(this->academicHours);
+    return QString("Для группы с идентификатором %1 на предмет с идентификатором%2 выделено %3 часа(ов)").arg(this->groupId).arg(this->subjectId).arg(this->academicHours);
+//    return QString("id: %1, groupId: %2, subjectId: %3, academicHours: %4").arg(this->id).arg(this->groupId).arg(this->subjectId).arg(this->academicHours);
 }
 
 bool LinkGroupSubject::operator== (const LinkGroupSubject &object)
 {
     return (
-               (this->groupId == object.groupId || object.groupId == 0)
-            && (this->subjectId == object.subjectId || object.subjectId == 0)
-            && (this->academicHours == object.academicHours ||  object.academicHours == 0)
+               (this->groupId == object.groupId || object.groupId == -1)
+            && (this->subjectId == object.subjectId || object.subjectId == -1)
+            && (this->academicHours == object.academicHours ||  object.academicHours == -1)
     );
 }

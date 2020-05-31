@@ -11,7 +11,7 @@ public:
     int subjectType;
 
     Subject(QString name = "");
-    Subject(QString name = "", int subjectType = 0);
+    Subject(QString name, int subjectType);
     virtual QString getClassName();
     virtual void fromJson(QJsonObject);
     virtual QJsonObject toJson();
