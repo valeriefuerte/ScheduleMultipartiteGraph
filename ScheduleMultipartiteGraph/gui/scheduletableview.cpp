@@ -10,6 +10,8 @@ ScheduleTableView::ScheduleTableView(QAbstractItemModel * model, QWidget *parent
     setModel(model);
     frozenTableView = new QTableView(this);
     this->setSortingEnabled(true);
+    this->sortByColumn(0, Qt::AscendingOrder);
+
     init();
 
     //connect the headers and scrollbars
@@ -43,6 +45,7 @@ void ScheduleTableView::init()
 {
     frozenTableView->setModel(model());
     frozenTableView->setSortingEnabled(true);
+    frozenTableView->sortByColumn(0, Qt::AscendingOrder);
     frozenTableView->setFocusPolicy(Qt::NoFocus);
     frozenTableView->verticalHeader()->hide();
     frozenTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);

@@ -18,6 +18,7 @@ public:
 signals:
 
 public slots:
+    void updateModel(QAbstractTableModel *model);
 private:
     QAbstractTableModel *sceduleModel;
     SchedueFilterProxyModel *proxyModel;

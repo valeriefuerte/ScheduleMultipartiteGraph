@@ -9,7 +9,7 @@ GraphWidget::GraphWidget(QWidget *parent): QGraphicsView(parent),scene(new QGrap
 
 
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
-    scene->setSceneRect(-200, -200, 400, 400);
+    scene->setSceneRect(0, 0, 400, 400);
 
     setScene(scene);
     setCacheMode(CacheBackground);
@@ -17,50 +17,51 @@ GraphWidget::GraphWidget(QWidget *parent): QGraphicsView(parent),scene(new QGrap
     setRenderHint(QPainter::Antialiasing);
     setTransformationAnchor(AnchorUnderMouse);
     scale(qreal(1), qreal(1));
+    this->resize(400,400);
     //setMinimumSize(400, 400);
 
     //@brief
     Node *node1 = new Node (this,15,Qt::cyan);
-    Node *node2 = new Node (this,15,Qt::gray);
-    Node *node3 = new Node (this,15,Qt::red);
-    Node *node4 = new Node (this,15,Qt::blue);
-    Node *node5 = new Node (this,15,Qt::green);
+    //    Node *node2 = new Node (this,15,Qt::gray);
+    //    Node *node3 = new Node (this,15,Qt::red);
+    //    Node *node4 = new Node (this,15,Qt::blue);
+    //    Node *node5 = new Node (this,15,Qt::green);
 
 
     scene->addItem(node1);
-    scene->addItem(node2);
-    scene->addItem(node3);
-    scene->addItem(node4);
-    scene->addItem(node5);
+    //    scene->addItem(node2);
+    //    scene->addItem(node3);
+    //    scene->addItem(node4);
+    //    scene->addItem(node5);
 
-    scene->addItem(new Edge(node1, node2));
-    scene->addItem(new Edge(node2, node3));
-    scene->addItem(new Edge(node2, node4));
-    scene->addItem(new Edge(node2, node5));
-    scene->addItem(new Edge(node5, node4));
+    //    scene->addItem(new Edge(node1, node2));
+    //    scene->addItem(new Edge(node2, node3));
+    //    scene->addItem(new Edge(node2, node4));
+    //    scene->addItem(new Edge(node2, node5));
+    //    scene->addItem(new Edge(node5, node4));
 
-    node1->setPos(0,0);
-    node2->setPos(0,60);
-    node3->setPos(20,10);
-    node4->setPos(40,25);
-    node5->setPos(10,-30);
+    node1->setPos(200,200);
+    //    node2->setPos(0,60);
+    //    node3->setPos(20,10);
+    //    node4->setPos(40,25);
+    //    node5->setPos(10,-30);
 
     nodes.push_back(node1);
-    nodes.push_back(node2);
-    nodes.push_back(node3);
-    nodes.push_back(node4);
-    nodes.push_back(node5);
+    //    nodes.push_back(node2);
+    //    nodes.push_back(node3);
+    //    nodes.push_back(node4);
+    //    nodes.push_back(node5);
 
-    readGraph(QPointF(-30,-20));
+    readGraph(QPointF(200,200));
 
-
+    qDebug()<<"Scene width"<<scene->width()<<" Scene height"<<scene->height();
 }
 
 void GraphWidget::readGraph(QPointF center)
 {
 
 
-    QVector<QPointF> test = createClusterPoints(center,105,7);
+    QVector<QPointF> test = createClusterPoints(center,105,3);
     foreach (QPointF p, test) {
 
         QVector<QPointF> test2 = createClusterPoints(p,20,5);
@@ -71,6 +72,12 @@ void GraphWidget::readGraph(QPointF center)
             nodes.push_back(node);
         }
     }
+}
+
+void GraphWidget::updateGraph(QList<Lesson> &lessons)
+{
+    this->lessons = lessons;
+
 }
 void  GraphWidget::drawBackground(QPainter *painter, const QRectF &rect) {
     Q_UNUSED(rect);
@@ -146,6 +153,25 @@ void GraphWidget::scaleView(qreal scaleFactor)
         return;
 
     scale(scaleFactor, scaleFactor);
+}
+
+QVector<QPointF> GraphWidget::createLinePoint(int lenght, int side, int radius)
+{
+    QVector<QPointF> p;
+}
+
+void GraphWidget::leftFilterSlise(int slide)
+{
+    if (slide > 0) {
+
+    }
+}
+
+void GraphWidget::rightFilterSlise(int slide)
+{
+    if (slide<8) {
+
+    }
 }
 
 void GraphWidget::wheelEvent(QWheelEvent *event)

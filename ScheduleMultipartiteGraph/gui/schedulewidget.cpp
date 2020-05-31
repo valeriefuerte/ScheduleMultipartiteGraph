@@ -13,6 +13,13 @@ ScheduleWidget::ScheduleWidget(QAbstractTableModel *model, QWidget *parent) : QW
     setLayout(grid);
 }
 
+void ScheduleWidget::updateModel(QAbstractTableModel *model)
+{
+    this->sceduleModel = model;
+    proxyModel->setSourceModel(sceduleModel);
+    scheduleTable->changeModel(proxyModel);
+}
+
 QGroupBox * ScheduleWidget::createSchedueFilters()
 {
     QGroupBox *box = new QGroupBox("Filters");

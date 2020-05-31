@@ -80,6 +80,7 @@ HEADERS += \
     gui/schedulewidget.h \
     gui/visualizationwidget.h \
     gui/mainwindow.h \
+    models/Lesson.h \
     models/TestLesson.h \
     models/abstractnoderepository.h \
     models/cabinet.h \
