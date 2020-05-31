@@ -25,6 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    exceptions/graphexception.cpp \
     gui/dialogAddlinkGroupSubject.cpp \
     gui/dialogCabinetWindow.cpp \
     gui/dialogGroupWindow.cpp \
@@ -38,6 +39,8 @@ SOURCES += \
     gui/filterwidget.cpp \
     gui/graphwidget.cpp \
     gui/node.cpp \
+    gui/scheduletableview.cpp \
+    gui/schedulewidget.cpp \
     gui/visualizationwidget.cpp \
     gui/mainwindow.cpp \
     main.cpp \
@@ -50,11 +53,15 @@ SOURCES += \
     models/repository/repository.cpp \
     models/repository/repositorytemplate.cpp \
     models/router.cpp \
+    models/scheduefilterproxymodel.cpp \
+    models/scheduletableabstractmodule.cpp \
     models/subject.cpp \
-    models/tablelistmodel.cpp
+    models/tablelistmodel.cpp \
+    someTestData/planettablemodel.cpp
 
 
 HEADERS += \
+    exceptions/graphexception.h \
     gui/dialogAddlinkGroupSubject.h \
     gui/dialogCabinetWindow.h \
     gui/dialogGroupWindow.h \
@@ -68,8 +75,11 @@ HEADERS += \
     gui/filterwidget.h \
     gui/graphwidget.h \
     gui/node.h \
+    gui/scheduletableview.h \
+    gui/schedulewidget.h \
     gui/visualizationwidget.h \
     gui/mainwindow.h \
+    models/TestLesson.h \
     models/abstractnoderepository.h \
     models/cabinet.h \
     models/filterdata.h \
@@ -80,8 +90,12 @@ HEADERS += \
     models/repository/repository.h \
     models/router.h \
     models/router.h \
+    models/scheduefilterproxymodel.h \
+    models/scheduletableabstractmodule.h \
     models/subject.h \
-    models/tablelistmodel.h
+    models/tablelistmodel.h \
+    someTestData/planet.h \
+    someTestData/planettablemodel.h
 
 
 

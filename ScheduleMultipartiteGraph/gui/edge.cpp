@@ -64,6 +64,7 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     // Draw the line itself
     painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter->drawLine(line);
+    painter->drawText(QPointF((sourcePoint.x() + destPoint.x())/2,(sourcePoint.y() + destPoint.y())/2 +1),"EdgeText");
 
 
 }

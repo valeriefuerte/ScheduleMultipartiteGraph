@@ -94,6 +94,10 @@ private:
     double size;
     QColor color;
     void changeEdgeVisibility(Edge *edge);
+    QString text;
+
+
+
 
 
 };

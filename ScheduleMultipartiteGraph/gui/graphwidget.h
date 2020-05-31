@@ -18,10 +18,12 @@ public:
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void drawBackground(QPainter *painter, const QRectF &rect) override;
+    void wheelEvent(QWheelEvent *event) override;
 private:
     QGraphicsScene *scene;
     QVector<QPointF> createClusterPoints(QPointF &center,int radius,int size) const;
     QVector<Node*> nodes;
+    void scaleView(qreal scaleFactor);
 signals:
 
 public slots:
@@ -29,6 +31,7 @@ public slots:
     void zoomOut();
     void resetFilter();
     void useFilter(FilterData &data);
+
 
 };
 
