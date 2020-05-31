@@ -81,8 +81,7 @@ HEADERS += \
     models/router.h \
     models/router.h \
     models/subject.h \
-    models/tablelistmodel.h \
-    exceptions/myexception.h
+    models/tablelistmodel.h
 
 
 
