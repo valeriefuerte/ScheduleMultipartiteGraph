@@ -47,9 +47,12 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 {
 
     // Эллипс
+
     painter->setPen(QPen(Qt::black, 0));
     painter->setBrush(QBrush(color));
     painter->drawEllipse(-size/2, -size/2, size, size);
+
+    painter->drawText(QPoint(-size/2, 0),"NodeText");
 
 }
 
