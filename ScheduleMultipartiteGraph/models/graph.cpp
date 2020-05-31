@@ -178,12 +178,16 @@ QList<QList<int>> Graph::fit()
     QList<int>way;
 
     for (LinkGroupSubject link : this->repoLinkGroupSubject) {
-       k=0;
        for (int i = 0; i < link.academicHours; ++i) {
+            way.clear();
+
+            pair = ways[link.groupId].front();
+            ways[link.groupId].pop_front();
+
             way.append(link.groupId);
             way.append(link.subjectId);
-            way.append(ways[link.groupId][k].first);
-            way.append(ways[link.groupId][k].second);
+            way.append(pair.first);
+            way.append(pair.second);
             result.append(way);
             ++k;
         }

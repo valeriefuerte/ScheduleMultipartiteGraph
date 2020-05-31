@@ -1255,3 +1255,18 @@ int MainWindow::checkidenticalDataTime(LessonTime lt){
         }
     }
 }
+
+void MainWindow::on_tabWidget_tabBarClicked(int index)
+{
+    if (index == 2 || index == 3) {
+        Graph graph = Graph(
+            this->repoCabinets,
+            this->repoGroupStudents,
+            this->repoLessonTime,
+            this->repoSubjects,
+            this->repoLinkGroupSubject
+        );
+
+        this->graph = graph.fit();
+    }
+}
