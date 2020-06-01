@@ -12,6 +12,8 @@ Node::Node(GraphWidget *graphWidget, double size, QColor color)
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);
     setZValue(-1);
+
+
 }
 
 void Node::addEdge(Edge *edge)
@@ -52,7 +54,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->setBrush(QBrush(color));
     painter->drawEllipse(-size/2, -size/2, size, size);
 
-    painter->drawText(QPoint(-size/2, 0),"NodeText");
+    painter->drawText(this->boundingRect(),"Node");
 
 }
 
@@ -81,7 +83,7 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     // Для демонстрации. При нажатии мышкой на вершину она "прячется" вместе с ребрами
     this->hide();
-    qDebug()<<this->pos();
+    qDebug()<<this->pos()<<"isHided"<<this->isVisible();
     QGraphicsItem::mousePressEvent(event);
 }
 

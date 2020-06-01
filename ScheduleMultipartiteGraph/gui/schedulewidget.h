@@ -21,7 +21,10 @@ signals:
 void gen_schedule();
 
 public slots:
+    //нажатие кнопки генерация модели
     void apply_clicked();
+
+    void updateModel(QAbstractTableModel *model);
 private:
     QAbstractTableModel *sceduleModel;
     SchedueFilterProxyModel *proxyModel;

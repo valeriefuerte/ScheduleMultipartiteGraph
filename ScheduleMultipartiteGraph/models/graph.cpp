@@ -18,7 +18,7 @@ Graph::Graph(
     this->repoLessonTime = repoLessonTime;
     this->repoSubjects = repoSubjects;
     this->repoLinkGroupSubject = repoLinkGroupSubject;
-//    this->initGraph();
+    //this->initGraph();
 }
 
 void Graph::initGraph()
@@ -303,4 +303,5 @@ void Graph::show()
         qDebug() << linkGroupSubject.toString() << endl;
     }
     qDebug() << this->repoLinkGroupSubject.getAmount() << endl;
+    qDebug() << "groups-subjects" <<this->groups_subjects;
 }

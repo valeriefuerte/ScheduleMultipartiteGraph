@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QGraphicsView>
-
+#include "models/Lesson.h"
 #include "edge.h"
 #include "node.h"
 
@@ -14,7 +14,7 @@ class GraphWidget: public QGraphicsView
     Q_OBJECT
 public:
     GraphWidget(QWidget *parent = nullptr);
-    void readGraph(QPointF center); // WORK IN PROGRESS
+
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void drawBackground(QPainter *painter, const QRectF &rect) override;
@@ -24,6 +24,13 @@ private:
     QVector<QPointF> createClusterPoints(QPointF &center,int radius,int size) const;
     QVector<Node*> nodes;
     void scaleView(qreal scaleFactor);
+    QVector<QColor> colorVector = {Qt::red,Qt::green,Qt::yellow,Qt::white};
+    QVector<QPointF> createLinePoint(int lenght,int side,int radius);
+    void leftFilterSlise(int slide);
+    void rightFilterSlise(int slide);
+
+    QList<Lesson> lessons;
+
 signals:
 
 public slots:
@@ -31,6 +38,8 @@ public slots:
     void zoomOut();
     void resetFilter();
     void useFilter(FilterData &data);
+    void readGraph(QPointF center); // WORK IN PROGRESS
+    void updateGraph(QList<Lesson> &lessons);
 
 
 };

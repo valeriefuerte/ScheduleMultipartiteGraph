@@ -27,8 +27,11 @@
 
 #include "visualizationwidget.h"
 
-
+#include "models/Lesson.h"
 #include <QTableView>
+
+#include "gui/schedulewidget.h"
+#include "gui/visualizationwidget.h"
 
 namespace Ui {
 class MainWindow;
@@ -144,6 +147,10 @@ private slots:
     //генерация расписания
     void on_gen_schedule();
 
+    void updatatingVisualization(int index);
+
+     QList<Lesson> transformGrapthToLessons();
+
 public slots:
 private:
     //имя файла с которым работаем
@@ -183,9 +190,12 @@ private:
     RepositoryTemplate<Subject> repoSubjects;
     RepositoryTemplate<LinkGroupSubject> repoLinkGroupSubject;
 
+   //Виджеты
+    ScheduleWidget *schedueWidget;
+    VisualizationWidget *graphWidget;
+
     // Графа, двумерный Лист, строки это путь {groupId -> subjectId -> cabinetId -> lessonTimeId}
     QList<QList<int>> graph;
-
     //метод загрузки модели по файлу
     void loadModelonRepo();
     //диалоговое окно работы с файлами

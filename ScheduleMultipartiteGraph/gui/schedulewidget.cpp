@@ -21,11 +21,18 @@ ScheduleWidget::ScheduleWidget(QAbstractTableModel *model, QWidget *parent) : QW
     form->addWidget(gen_btn,0,3);
     grid->addWidget(scheduleTable,0,0);
     grid->addWidget(createSchedueFilters(),1,0);
-
+    //расположение кнопки генерация расписания
     grid->addLayout(form,2,0,Qt::AlignCenter);
     setLayout(grid);
 
     connect(gen_btn,SIGNAL(clicked()),this,SLOT(apply_clicked()));
+}
+
+void ScheduleWidget::updateModel(QAbstractTableModel *model)
+{
+    this->sceduleModel = model;
+    proxyModel->setSourceModel(sceduleModel);
+    scheduleTable->changeModel(proxyModel);
 }
 
 QGroupBox * ScheduleWidget::createSchedueFilters()

@@ -53,6 +53,8 @@
 
 #include <QGraphicsItem>
 #include <QList>
+#include <QGraphicsTextItem>
+#include <QTextItem>
 
 class Edge;
 class GraphWidget;
@@ -95,7 +97,8 @@ private:
     QColor color;
     void changeEdgeVisibility(Edge *edge);
     QString text;
-
+    QGraphicsTextItem *textGitem;
+    QTextItem *textItem;
 
 
 

@@ -20,8 +20,8 @@
 //ui->tabWidget->addTab(v,"Расписание");
 
 
-struct Lesson{
-    Lesson(const QString& name = QString(), double data1 = 0.0,
+struct TestLesson{
+    TestLesson(const QString& name = QString(), double data1 = 0.0,
            double data2 = 0.0):
         m_name(name), m_data1(data1), m_data2(data2){
     }
