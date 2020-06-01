@@ -21,36 +21,36 @@ GraphWidget::GraphWidget(QWidget *parent): QGraphicsView(parent),scene(new QGrap
     //setMinimumSize(400, 400);
 
     //@brief
-    Node *node1 = new Node (this,15,Qt::cyan);
-    //    Node *node2 = new Node (this,15,Qt::gray);
-    //    Node *node3 = new Node (this,15,Qt::red);
-    //    Node *node4 = new Node (this,15,Qt::blue);
-    //    Node *node5 = new Node (this,15,Qt::green);
+    Node *node1 = new Node (this,10,0,"Center",Qt::cyan);
+    Node *node2 = new Node (this,10,0,"Center",Qt::gray);
+    Node *node3 = new Node (this,10,0,"Center",Qt::red);
+    Node *node4 = new Node (this,10,0,"Center",Qt::blue);
+    Node *node5 = new Node (this,10,0,"Center",Qt::green);
 
 
     scene->addItem(node1);
-    //    scene->addItem(node2);
-    //    scene->addItem(node3);
-    //    scene->addItem(node4);
-    //    scene->addItem(node5);
+    scene->addItem(node2);
+    scene->addItem(node3);
+    scene->addItem(node4);
+    scene->addItem(node5);
 
-    //    scene->addItem(new Edge(node1, node2));
-    //    scene->addItem(new Edge(node2, node3));
-    //    scene->addItem(new Edge(node2, node4));
-    //    scene->addItem(new Edge(node2, node5));
-    //    scene->addItem(new Edge(node5, node4));
+    scene->addItem(new Edge(node1, node2));
+    scene->addItem(new Edge(node2, node3));
+    scene->addItem(new Edge(node2, node4));
+    scene->addItem(new Edge(node2, node5));
+    scene->addItem(new Edge(node5, node4));
 
     node1->setPos(200,200);
-    //    node2->setPos(0,60);
-    //    node3->setPos(20,10);
-    //    node4->setPos(40,25);
-    //    node5->setPos(10,-30);
+    node2->setPos(0+200,60+200);
+    node3->setPos(20+200,10+200);
+    node4->setPos(40+200,25+200);
+    node5->setPos(10+200,-30+200);
 
     nodes.push_back(node1);
-    //    nodes.push_back(node2);
-    //    nodes.push_back(node3);
-    //    nodes.push_back(node4);
-    //    nodes.push_back(node5);
+    nodes.push_back(node2);
+    nodes.push_back(node3);
+    nodes.push_back(node4);
+    nodes.push_back(node5);
 
     readGraph(QPointF(200,200));
 
@@ -155,9 +155,25 @@ void GraphWidget::scaleView(qreal scaleFactor)
     scale(scaleFactor, scaleFactor);
 }
 
-QVector<QPointF> GraphWidget::createLinePoint(int lenght, int side, int radius)
+QVector<QPointF> GraphWidget::createLinePoint(int lenght, int size, int slice)
 {
     QVector<QPointF> p;
+    QPointF start(size+2+slice*20,size+2);
+
+    for (int i = 0; i<lenght;i++) {
+        p.append(start);
+        start.setY(start.y()+size*2);
+    }
+    return p;
+}
+
+QVector<Node *> GraphWidget::createLineNode(QVector<QPointF> &points,int slice,int size,QString data)
+{
+    QVector<Node *> lineNodes;
+    foreach (QPointF p, points) {
+        lineNodes.append(new Node(this));
+    }
+    return lineNodes;
 }
 
 void GraphWidget::leftFilterSlise(int slide)

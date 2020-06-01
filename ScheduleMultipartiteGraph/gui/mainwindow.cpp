@@ -1316,6 +1316,8 @@ QList<Lesson> MainWindow::transformGrapthToLessons()
         Cabinet cabinet = this->repoCabinets.getByIndex(graph[i][2]);
         LessonTime lessonTime = this->repoLessonTime.getById(graph[i][3]);
         lessons.append(Lesson(group,subject,cabinet,lessonTime,receiveDay));
+
     }
     return lessons;
+
 }

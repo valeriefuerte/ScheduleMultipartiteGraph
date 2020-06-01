@@ -24,12 +24,14 @@ private:
     QVector<QPointF> createClusterPoints(QPointF &center,int radius,int size) const;
     QVector<Node*> nodes;
     void scaleView(qreal scaleFactor);
-    QVector<QColor> colorVector = {Qt::red,Qt::green,Qt::yellow,Qt::white};
-    QVector<QPointF> createLinePoint(int lenght,int side,int radius);
+    QVector<QColor> colorVector = {Qt::red,Qt::green,Qt::yellow,Qt::white,Qt::cyan,Qt::magenta,Qt::lightGray,Qt::blue};
+    QVector<QPointF> createLinePoint(int lenght, int size, int slice);
+    QVector<Node*> createLineNode(QVector<QPointF> &points, int slice, int size, QString data);
     void leftFilterSlise(int slide);
     void rightFilterSlise(int slide);
 
     QList<Lesson> lessons;
+    QVector<QHash<QString,Node*>> nodeMatrix;
 
 signals:
 

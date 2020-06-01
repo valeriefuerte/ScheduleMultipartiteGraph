@@ -9,7 +9,7 @@
 #include <QBoxLayout>
 #include "filterwidget.h"
 #include "gui/graphwidget.h"
-
+#include "models/repository/repositorytemplate.h"
 class GraphWidget;
 
 //
@@ -35,9 +35,20 @@ private:
     //меню
     QGroupBox *menu;
     QBoxLayout *visualGraphLayout;
+    QGridLayout *grid;
     //функция по созданию меню
     QGroupBox *createMenu();
-    FilterWidget *filter;
+    QGroupBox * createSchedueFilters();
+
+    void  updateRepo(RepositoryTemplate<Cabinet> repoCabinets,
+    RepositoryTemplate<GroupStudents> repoGroupStudents,
+    RepositoryTemplate<LessonTime> repoLessonTime,
+    RepositoryTemplate<Subject> repoSubjects);
+
+    RepositoryTemplate<Cabinet> repoCabinets;
+    RepositoryTemplate<GroupStudents> repoGroupStudents;
+    RepositoryTemplate<LessonTime> repoLessonTime;
+    RepositoryTemplate<Subject> repoSubjects;
 };
 
 #endif // VISUALIZATIONWIDGET_H

@@ -4,16 +4,19 @@
 #include <QGraphicsAnchorLayout>
 #include <QGraphicsProxyWidget>
 #include <QDebug>
-VisualizationWidget::VisualizationWidget(QWidget *parent) : QWidget(parent),
-    graphWidget(new GraphWidget(this)),
-    menu(createMenu()),
-    filter(new FilterWidget(this))//,
-  // visualGraphLayout(new QBoxLayout(QBoxLayout::LeftToRight,this))
+#include <QLabel>
+VisualizationWidget::VisualizationWidget(QWidget *parent) : QWidget(parent)//,
 
 
 {
-    qDebug()<<"VisualWidget"<<this->width()<<" "<<this->height()<<" "<<this->geometry().center();
-    qDebug()<<"GraphWidget"<<this->graphWidget->width()<<" "<<this->graphWidget->height()<<" "<<this->graphWidget->geometry().center();
+    grid = new QGridLayout;
+    graphWidget = new GraphWidget(this);
+    grid->addWidget(graphWidget,0,0);
+    grid->addWidget(createMenu(),1,0);
+    grid->addWidget(createSchedueFilters(),2,0);
+    setLayout(grid);
+    //qDebug()<<"VisualWidget"<<this->width()<<" "<<this->height()<<" "<<this->geometry().center();
+    //qDebug()<<"GraphWidget"<<this->graphWidget->width()<<" "<<this->graphWidget->height()<<" "<<this->graphWidget->geometry().center();
 
 }
 
@@ -28,7 +31,7 @@ void VisualizationWidget::paintEvent(QPaintEvent *event)
     painter.drawLine(QPoint(this->width()/2,0),QPoint(this->width()/2,this->height()));
 
     graphWidget->move(this->width()/2 - this->graphWidget->width()/2,this->height()/2 - this->graphWidget->height()/2);
-    filter->move(0,this->height()/2 - this->filter->height()/2);
+
     //qDebug()<<"VisualWidget"<<this->width()<<" "<<this->height()<<" "<<this->geometry().center();
     //qDebug()<<"GraphWidget"<<this->graphWidget->width()<<" "<<this->graphWidget->height()<<" "<<this->graphWidget->geometry().center();
 }
@@ -43,19 +46,37 @@ void VisualizationWidget::resetGraphWidget()
 QGroupBox* VisualizationWidget::createMenu()
 {
     QGroupBox *nmenu = new QGroupBox(this);
-    QPushButton *resetButton = new QPushButton("RESET");
+    QPushButton *resetButton = new QPushButton("Reset");
     QPushButton *filterButton = new QPushButton("Filter");
 
 
     connect(resetButton,&QPushButton::clicked,graphWidget,&GraphWidget::resetFilter);
-    connect(filterButton,&QPushButton::clicked, [this] () {
-        FilterData data =filter->getFilterData();
-        graphWidget->useFilter(data);
-    });
+//    connect(filterButton,&QPushButton::clicked, [this] () {
+//        FilterData data =filter->getFilterData();
+//        graphWidget->useFilter(data);
+//    });
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->addWidget(resetButton);
     layout->addWidget(filterButton);
     nmenu->setLayout(layout);
     return nmenu;
 
+}
+
+void VisualizationWidget::updateRepo(RepositoryTemplate<Cabinet> repoCabinets, RepositoryTemplate<GroupStudents> repoGroupStudents, RepositoryTemplate<LessonTime> repoLessonTime, RepositoryTemplate<Subject> repoSubjects)
+{
+    this->repoCabinets = repoCabinets;
+    this->repoGroupStudents = repoGroupStudents;
+    this->repoLessonTime = repoLessonTime;
+    this->repoSubjects = repoSubjects;
+}
+
+QGroupBox * VisualizationWidget::createSchedueFilters()
+{
+    QGroupBox *box = new QGroupBox("Filters");
+    QLabel *label = new QLabel("FilterPlaceHolders");
+    QVBoxLayout *vbox = new QVBoxLayout;
+    vbox->addWidget(label);
+    box->setLayout(vbox);
+    return box;
 }

@@ -6,8 +6,8 @@
 #include <QPainter>
 #include <QStyleOption>
 #include <QDebug>
-Node::Node(GraphWidget *graphWidget, double size, QColor color)
-    :graph(graphWidget),size(size),color(color)
+Node::Node(GraphWidget *graphWidget, double size,int sliceId, QString data, QColor color)
+    :graph(graphWidget),size(size),color(color),slice_id(sliceId),data(data)
 {
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);
@@ -54,12 +54,13 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->setBrush(QBrush(color));
     painter->drawEllipse(-size/2, -size/2, size, size);
 
-    painter->drawText(this->boundingRect(),"Node");
-
+    //painter->drawText(QPointF(this->newPos.x()-size/2,newPos.y()),data);
+    painter->drawText(this->boundingRect(),Qt::AlignCenter,data);
+    //painter->drawText(QRectF(0,0,600,600),Qt::AlignCenter,data);
 }
 
 QVariant  Node::itemChange(GraphicsItemChange change, const QVariant &value){
-   // qDebug()<<change;
+    // qDebug()<<change;
     switch (change) {
     case ItemPositionHasChanged: //если изменилась позиция , то все ребра перемещаются
         foreach (Edge *edge, edgeList) {
