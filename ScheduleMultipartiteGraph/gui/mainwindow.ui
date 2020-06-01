@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="data_tab">
        <property name="cursor">
@@ -111,11 +111,6 @@
          </widget>
         </item>
        </layout>
-      </widget>
-      <widget class="QWidget" name="scheduleTab">
-       <attribute name="title">
-        <string>Расписание</string>
-       </attribute>
       </widget>
      </widget>
     </item>
