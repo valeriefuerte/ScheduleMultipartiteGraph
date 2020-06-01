@@ -43,13 +43,6 @@ MainWindow::MainWindow(QWidget *parent) :
     receiveDay[6]="Суббота";
 
 
-    receiveDay[1]="Понедельник";
-    receiveDay[2]="Вторник";
-    receiveDay[3]="Среда";
-    receiveDay[4]="Четверг";
-    receiveDay[5]="Пятница";
-    receiveDay[6]="Суббота";
-
     //Инициализация моделей QTableView
     list_s = new QStringList();
     list_gr = new QStringList();
@@ -142,92 +135,15 @@ MainWindow::MainWindow(QWidget *parent) :
     // получение изменений репозитория repoLinkGroupSubject
     connect(dialogLinkGroupSubject,SIGNAL(editMainRepoLinkGroupSubject(RepositoryTemplate<LinkGroupSubject>)),this,SLOT(receiveEditRepoLinkGrSb(RepositoryTemplate<LinkGroupSubject>)));
 
-    //    qDebug() << "Кабинеты: " << endl;
-    //    for (auto it = this->repoCabinets.begin(), end = this->repoCabinets.end(); it < end; ++it) {
-    //        auto element = *it;
-    //        qDebug() << element.toString() << endl;
-    //    }
 
-    //    qDebug() << endl << "Время: " << endl;
-    //    for (auto it = this->repoLessonsTimes.begin(), end = this->repoLessonsTimes.end(); it < end; ++it) {
-    //        auto element = *it;
-    //        qDebug() << element.toString() << endl;
-    //    }
-
-    //    qDebug() << endl << "Группы: " << endl;
-    //    for (auto it = this->repoGroupStudents.begin(), end = this->repoGroupStudents.end(); it < end; ++it) {
-    //        auto element = *it;
-    //        qDebug() << element.toString() << endl;
-    //    }
-
-    //    qDebug() << endl << "Дисциплины: " << endl;
-    //    for (auto it = this->repoSubjects.begin(), end = this->repoSubjects.end(); it < end; ++it) {
-    //        auto element = *it;
-    //        qDebug() << element.toString() << endl;
-    //    }
-
-    //    auto s = this->repoSubjects.getById(2);
-    //    qDebug() << "Получение по id" << endl;
-    //    qDebug() << s.toString() << endl;
-
-    //    qDebug() << "Получение по параметрам" << endl;
-    //    for (auto e : this->repoSubjects.getByParameters(Subject("йцуйцу"))) {
-    //        qDebug() << e.toString() << endl;
-    //    }
-
-    //    qDebug() << "Добавление элемента 'Новый элемент'" << endl;
-    //    this->repoSubjects.add(Subject("Новый элемент"));
-    //    qDebug() << endl << "Дисциплины: " << endl;
-    //    for (auto e : this->repoSubjects.getAll()) {
-    //        qDebug() << e.toString() << endl;
-    //    }
-
-    //    qDebug() << "Изменение элемента 'Новый элемент' на 'Измененный элемент'" << endl;
-    //    this->repoSubjects.update(4, Subject("Измененный элемент"));
-    //    qDebug() << endl << "Дисциплины: " << endl;
-    //    for (auto e : this->repoSubjects.getAll()) {
-    //        qDebug() << e.toString() << endl;
-    //    }
-
-    //    qDebug() << "Удаление элемента 'Измененный элемент'" << endl;
-    //    this->repoSubjects.remove(4);
-    //    qDebug() << endl << "Дисциплины: " << endl;
-    //    for (auto e : this->repoSubjects.getAll()) {
-    //        qDebug() << e.toString() << endl;
-    //    }
-
-    //MY VERSION
-
-    // Расписние
-    //    QList<TestLesson> planetList;
-    //    planetList.append(TestLesson("Jupiter", 23.1, 1.326));
-    //    planetList.append(TestLesson("Saturn", 9.0, 0.687));
-    //    planetList.append(TestLesson("Uranus", 	8.7, 1.271));
-    //    planetList.append(TestLesson("Neptune", 11.0, 1.638));
-    //    planetList.append(TestLesson("Earth", 9.8, 5.514));
-    //    planetList.append(TestLesson("Venus", 8.9, 5.243));
-    //    planetList.append(TestLesson("Mars", 3.7, 3.933));
-    //    planetList.append(TestLesson("Mercury", 3.7, 5.427));
-
-    //    QList<TestLesson> planetList2;
-    //    planetList2.append(TestLesson("J", 23.1, 1.326));
-    //    planetList2.append(TestLesson("S", 9.0, 0.687));
-    //    planetList2.append(TestLesson("U", 	8.7, 1.271));
-    //    planetList2.append(TestLesson("N", 11.0, 1.638));
-    //    planetList2.append(TestLesson("E", 9.8, 5.514));
-    //    planetList2.append(TestLesson("V", 8.9, 5.243));
-    //    planetList2.append(TestLesson("M", 3.7, 3.933));
-    //    planetList2.append(TestLesson("Me", 3.7, 5.427));
-
-    //    ScheduleTableAbstractModule *model = new ScheduleTableAbstractModule(planetList);
-    //    ScheduleTableAbstractModule *model2 = new ScheduleTableAbstractModule(planetList2);
     schedueWidget = new ScheduleWidget (nullptr,this);
     ui->tabWidget->addTab(schedueWidget,"Расписание");
+
+    //отлов нажатия кнопки на генерацию расписания
+    connect(schedueWidget,SIGNAL(gen_schedule()),this,SLOT(on_gen_schedule()));
     //ui->tabWidget->currentIndex();
 
     //connect(tabWidget,SIGNAL(currentChanged(int)),this,SLOT())
-
-
 
     // Виджет визуализации графа
     graphWidget = new VisualizationWidget();
@@ -346,6 +262,10 @@ void MainWindow::slotGroupRemoveRecord()
     dialogLinkGroupSubject->delOnGrofLinkGroupSubject(repoGroupStudents.getByIndex(index).id);
 
     this->repoGroupStudents.remove(repoGroupStudents.getByIndex(index).id);
+    qDebug()<<"RepoLinkGrSub";
+    for (int i =0; i<repoLinkGroupSubject.getAmount(); i++){
+        qDebug()<<repoLinkGroupSubject.getByIndex(i).groupId<<repoLinkGroupSubject.getByIndex(i).subjectId<<repoLinkGroupSubject.getByIndex(i).academicHours;
+    }
 
     list_gr->removeAt(index);
     ui->group_table->model()->removeRow(index);
@@ -574,8 +494,9 @@ void MainWindow::customGroupSubjectMenuRequested(const QPoint &pos){
     QAction *addSG= new QAction(("Соотнести"),this);
 
     connect(addSG, SIGNAL(triggered()),this,SLOT(slotAddSG()));
-
+if (repoSubjects.getAmount()!=0){
     menu->addAction(addSG);
+}
     menu->popup( ui->gr_sub_table->viewport()->mapToGlobal(pos));
 
 }
@@ -819,6 +740,9 @@ void MainWindow::on_newFile_triggered(){
 
 //загрузка файла по выбору
 void MainWindow::loadOnSelectedFile(QString pathFile, QString nameFile){
+
+    bool fl = false;
+
     QFile jsonFile(pathFile);
 
     //проверка на ввод имени файла
@@ -828,57 +752,73 @@ void MainWindow::loadOnSelectedFile(QString pathFile, QString nameFile){
 
     }
 
-
-    if (jsonFile.open(QFile::ReadOnly)){
-        curPathFile = pathFile;
-        QJsonDocument json = QJsonDocument().fromJson(jsonFile.readAll());
-        QJsonObject object = json.object();
+    QDir dir(this->dirStorage);
+    dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+    dir.setSorting(QDir::Name);
 
 
-        RepositoryTemplate<Cabinet> lrepoCabinet;
-        RepositoryTemplate<Subject> lrepoSubject;
-        RepositoryTemplate<LessonTime> lrepoLessonTime;
-        RepositoryTemplate<GroupStudents> lrepoGroupStudent;
-        RepositoryTemplate<LinkGroupSubject> lrepoLinkGroupSubject;
-
-        QJsonObject objectCabinets = object[lrepoCabinet.getTname()].toObject();
-        QJsonObject objectSubjects = object[lrepoSubject.getTname()].toObject();
-        QJsonObject objectLessonTime = object[lrepoLessonTime.getTname()].toObject();
-        QJsonObject objectGroupStudents = object[lrepoGroupStudent.getTname()].toObject();
-        QJsonObject objectLinkGroupSubject = object[lrepoLinkGroupSubject.getTname()].toObject();
-
-        lrepoCabinet.fromJson(objectCabinets);
-        lrepoSubject.fromJson(objectSubjects);
-        lrepoLessonTime.fromJson(objectLessonTime);
-        lrepoGroupStudent.fromJson(objectGroupStudents);
-        lrepoLinkGroupSubject.fromJson(objectLinkGroupSubject);
-        jsonFile.close();
-
-        this->setWindowTitle(nameFile+".json");
-        //присвоение данных буферу группы_предметы
-        dialogLinkGroupSubject->repoLinkGroupSubjects = lrepoLinkGroupSubject;
-
-        this->repoCabinets=lrepoCabinet;
-        this->repoSubjects=lrepoSubject;
-        this->repoLessonTime=lrepoLessonTime;
-        this->repoGroupStudents=lrepoGroupStudent;
-        this->repoLinkGroupSubject=lrepoLinkGroupSubject;
-
-        ui->saveFile->setEnabled(true);
-        ui->saveAs->setEnabled(true);
-        ui->deleteFile->setEnabled(true);
-
-        clearModel();
-        loadModelonRepo();
-        dSaveAs->close();
-        ui->status_label->setText("Файл успешно загружен!");
-
-
-
+    QFileInfoList list = dir.entryInfoList();
+    if (!list.empty()){
+         for (int i = 0; i<list.size(); i++){
+             if (pathFile==QDir::currentPath()+"/"+list.at(i).filePath()){
+                 fl = true;
+                 break;
+             }
+         }
     }
-    else{
-        QMessageBox::information(this,"Файл","Ошибка чтения файла!");
+    if (fl){
+        if (jsonFile.open(QFile::ReadOnly)){
+            curPathFile = pathFile;
+            QJsonDocument json = QJsonDocument().fromJson(jsonFile.readAll());
+            QJsonObject object = json.object();
 
+
+            RepositoryTemplate<Cabinet> lrepoCabinet;
+            RepositoryTemplate<Subject> lrepoSubject;
+            RepositoryTemplate<LessonTime> lrepoLessonTime;
+            RepositoryTemplate<GroupStudents> lrepoGroupStudent;
+            RepositoryTemplate<LinkGroupSubject> lrepoLinkGroupSubject;
+
+            QJsonObject objectCabinets = object[lrepoCabinet.getTname()].toObject();
+            QJsonObject objectSubjects = object[lrepoSubject.getTname()].toObject();
+            QJsonObject objectLessonTime = object[lrepoLessonTime.getTname()].toObject();
+            QJsonObject objectGroupStudents = object[lrepoGroupStudent.getTname()].toObject();
+            QJsonObject objectLinkGroupSubject = object[lrepoLinkGroupSubject.getTname()].toObject();
+
+            lrepoCabinet.fromJson(objectCabinets);
+            lrepoSubject.fromJson(objectSubjects);
+            lrepoLessonTime.fromJson(objectLessonTime);
+            lrepoGroupStudent.fromJson(objectGroupStudents);
+            lrepoLinkGroupSubject.fromJson(objectLinkGroupSubject);
+            jsonFile.close();
+
+            this->setWindowTitle(nameFile+".json");
+            //присвоение данных буферу группы_предметы
+            dialogLinkGroupSubject->repoLinkGroupSubjects = lrepoLinkGroupSubject;
+
+            this->repoCabinets=lrepoCabinet;
+            this->repoSubjects=lrepoSubject;
+            this->repoLessonTime=lrepoLessonTime;
+            this->repoGroupStudents=lrepoGroupStudent;
+            this->repoLinkGroupSubject=lrepoLinkGroupSubject;
+
+            ui->saveFile->setEnabled(true);
+            ui->saveAs->setEnabled(true);
+            ui->deleteFile->setEnabled(true);
+
+            clearModel();
+            loadModelonRepo();
+            dSaveAs->close();
+            ui->status_label->setText("Файл успешно загружен!");
+        }
+        else{
+                QMessageBox::information(this,"Файл","Ошибка чтения файла!");
+
+         }
+    }
+    else
+    {
+               QMessageBox::information(this,"Ошибка","Файл с таким именем не существует!");
     }
 }
 void MainWindow::receiveFileName(QString pathFile, QString nameFile, bool createFlag){
@@ -973,7 +913,7 @@ void MainWindow::receiveFileName(QString pathFile, QString nameFile, bool create
             ui->saveAs->setEnabled(true);
             ui->deleteFile->setEnabled(true);
             ui->openFile->setEnabled(true);
-            ui->status_label->setText("Файл успешно загружен!");
+            ui->status_label->setText("Новый файл успешно сохранен!");
 
         }
         else{
@@ -1271,11 +1211,10 @@ int MainWindow::checkidenticalDataTime(LessonTime lt){
         }
     }
 }
-
-void MainWindow::on_tabWidget_tabBarClicked(int index)
+//запуск генерации расписания
+void MainWindow::on_gen_schedule()
 {
-    qDebug()<<"StartSchedule";
-    if (index == 2 || index == 3) {
+
         Graph graph = Graph(
                     this->repoCabinets,
                     this->repoGroupStudents,
@@ -1289,7 +1228,6 @@ void MainWindow::on_tabWidget_tabBarClicked(int index)
         //qDebug()<<this->graph;
         ScheduleTableAbstractModule *model = new ScheduleTableAbstractModule(lessons);
         this->schedueWidget->updateModel(model);
-    }
 
 }
 
@@ -1318,4 +1256,6 @@ QList<Lesson> MainWindow::transformGrapthToLessons()
         lessons.append(Lesson(group,subject,cabinet,lessonTime,receiveDay));
     }
     return lessons;
+
 }
+

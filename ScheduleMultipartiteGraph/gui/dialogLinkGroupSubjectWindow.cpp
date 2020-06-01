@@ -109,11 +109,11 @@ void DialogLinkGroupSubjectWindow::receiveGroup(int currentIndex,QStringList lis
    }
    if (repoLinkGroupSubjects.getAmount()!=0){
        for (int i =0; i<repoLinkGroupSubjects.getAmount(); i++){
-           if (repoRecGroupStudent.getByIndex(currentIndex).id==repoLinkGroupSubjects.getByIndex(i).groupId){
+           if (repoRecGroupStudent.getById(repoRecGroupStudent.getByIndex(currentIndex).id).id==repoLinkGroupSubjects.getByIndex(i).groupId){
                         {
                             insertTableView(repoSubjects.getById(repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).subjectId).name,table_link_subject,link_sub_model,
                                 repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).academicHours);
-                             list_grsb.append(LinkGroupSubject(indexGroup, repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).subjectId,
+                             list_grsb.append(LinkGroupSubject(repoLinkGroupSubjects.getByIndex(i).groupId, repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).subjectId,
                                                  repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).academicHours));
                         }
           }
@@ -196,6 +196,7 @@ void DialogLinkGroupSubjectWindow::slotLinkSubject_GroupDeleteRecord(){
         if (list_grsb[index]==repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id)){
              repoLinkGroupSubjects.remove(repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).id);
 
+
              //отправление изменений в основной репозиторий RepoLinkGroupSubject
              emit editMainRepoLinkGroupSubject(repoLinkGroupSubjects);
 
@@ -203,10 +204,14 @@ void DialogLinkGroupSubjectWindow::slotLinkSubject_GroupDeleteRecord(){
              break;
         }
     }
+    qDebug()<<"Buffer after delete RepoLinkGrSub";
+    for (int i =0; i<repoLinkGroupSubjects.getAmount(); i++){
+        qDebug()<<repoLinkGroupSubjects.getByIndex(i).groupId<<repoLinkGroupSubjects.getByIndex(i).subjectId<<repoLinkGroupSubjects.getByIndex(i).academicHours;
+    }
 
     table_link_subject->model()->removeRow(index);
 
-    qDebug()<<"List после удаления";
+    /*qDebug()<<"List после удаления";
 
     for (int i =0; i<list_grsb.size();i++){
         qDebug()<<list_grsb[i].groupId<<list_grsb[i].subjectId<<list_grsb[i].academicHours;
@@ -216,7 +221,7 @@ void DialogLinkGroupSubjectWindow::slotLinkSubject_GroupDeleteRecord(){
     for (int i =0; i<repoLinkGroupSubjects.getAmount(); i++){
     qDebug()<<repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).groupId
     <<repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).subjectId<<repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).academicHours;
-    }
+    }*/
 }
 
 void DialogLinkGroupSubjectWindow::slotLinkSubject_GroupChangeRecord(){
@@ -273,7 +278,7 @@ void DialogLinkGroupSubjectWindow::receiveRepoGroupSubject(LinkGroupSubject gr_s
 
     dialogLinkGS->close();
 
-    qDebug()<<"list после добавления";
+    /*qDebug()<<"list после добавления";
     for (int i =0; i<list_grsb.size();i++){
         qDebug()<<list_grsb[i].groupId<<list_grsb[i].subjectId<<list_grsb[i].academicHours;
     }
@@ -282,7 +287,7 @@ void DialogLinkGroupSubjectWindow::receiveRepoGroupSubject(LinkGroupSubject gr_s
     for (int i =0; i<repoLinkGroupSubjects.getAmount(); i++){
     qDebug()<<repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).groupId
     <<repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).subjectId<<repoLinkGroupSubjects.getById(repoLinkGroupSubjects.getByIndex(i).id).academicHours;
-    }
+    }*/
 
 
 }
@@ -324,12 +329,18 @@ void DialogLinkGroupSubjectWindow::delOnGrofLinkGroupSubject(int dlindexGr){
    if (dinGr.size()!=0){
       for (int i=0; i<dinGr.size();i++){
             repoLinkGroupSubjects.remove(dinGr.at(i));
-            //отправление изменений в основной репозиторий RepoLinkGroupSubject
-            emit editMainRepoLinkGroupSubject(repoLinkGroupSubjects);
+
       }
+
+      //отправление изменений в основной репозиторий RepoLinkGroupSubject
+      emit editMainRepoLinkGroupSubject(repoLinkGroupSubjects);
       dinGr.clear();
    }
 
+    qDebug()<<"Buffer RepoLinkGrSub";
+    for (int i =0; i<repoLinkGroupSubjects.getAmount(); i++){
+        qDebug()<<repoLinkGroupSubjects.getByIndex(i).groupId<<repoLinkGroupSubjects.getByIndex(i).subjectId<<repoLinkGroupSubjects.getByIndex(i).academicHours;
+    }
 }
 void DialogLinkGroupSubjectWindow::delOnSubofLinkGroupSubject(int dlindexSb){
     if (repoLinkGroupSubjects.getAmount()!=0){
@@ -343,9 +354,10 @@ void DialogLinkGroupSubjectWindow::delOnSubofLinkGroupSubject(int dlindexSb){
    if (dinSb.size()!=0){
       for (int i=0; i<dinSb.size();i++){
             repoLinkGroupSubjects.remove(dinSb.at(i));
-            //отправление изменений в основной репозиторий RepoLinkGroupSubject
-            emit editMainRepoLinkGroupSubject(repoLinkGroupSubjects);
       }
+
+      //отправление изменений в основной репозиторий RepoLinkGroupSubject
+      emit editMainRepoLinkGroupSubject(repoLinkGroupSubjects);
       dinSb.clear();
    }
 }
