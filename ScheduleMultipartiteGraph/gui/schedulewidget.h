@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QGroupBox>
 #include <QGridLayout>
+#include <QPushButton>
 #include "models/scheduefilterproxymodel.h"
 class ScheduleWidget : public QWidget
 {
@@ -16,13 +17,20 @@ public:
     QGridLayout *grid;
 
 signals:
+//генерация расписания
+void gen_schedule();
 
 public slots:
+    void apply_clicked();
 private:
     QAbstractTableModel *sceduleModel;
     SchedueFilterProxyModel *proxyModel;
     QGroupBox *createSchedueFilters();
     ScheduleTableView *scheduleTable;
+    //размещение кнопки
+    QGridLayout *form;
+    //кнопка собрать расписание
+    QPushButton *gen_btn;
 };
 
 #endif // SCHEDULEWIDGET_H

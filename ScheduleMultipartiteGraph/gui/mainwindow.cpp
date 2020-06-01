@@ -43,14 +43,6 @@ MainWindow::MainWindow(QWidget *parent) :
       receiveDay[5]="Пятница";
       receiveDay[6]="Суббота";
 
-
-      receiveDay[1]="Понедельник";
-      receiveDay[2]="Вторник";
-      receiveDay[3]="Среда";
-      receiveDay[4]="Четверг";
-      receiveDay[5]="Пятница";
-      receiveDay[6]="Суббота";
-
     //Инициализация моделей QTableView
     list_s = new QStringList();
     list_gr = new QStringList();
@@ -143,6 +135,7 @@ MainWindow::MainWindow(QWidget *parent) :
      // получение изменений репозитория repoLinkGroupSubject
      connect(dialogLinkGroupSubject,SIGNAL(editMainRepoLinkGroupSubject(RepositoryTemplate<LinkGroupSubject>)),this,SLOT(receiveEditRepoLinkGrSb(RepositoryTemplate<LinkGroupSubject>)));
 
+
     //    qDebug() << "Кабинеты: " << endl;
     //    for (auto it = this->repoCabinets.begin(), end = this->repoCabinets.end(); it < end; ++it) {
     //        auto element = *it;
@@ -212,7 +205,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ScheduleTableAbstractModule *model = new ScheduleTableAbstractModule(planetList);
     ScheduleWidget *v = new ScheduleWidget (model,this);
+
     ui->tabWidget->addTab(v,"Расписание");
+    connect(v,SIGNAL(gen_schedule()),this,SLOT(on_gen_schedule()));
+
     // Виджет визуализации графа
     VisualizationWidget *w = new VisualizationWidget();
     ui->tabWidget->addTab(w,"Визуализация графа");
@@ -1280,9 +1276,9 @@ int MainWindow::checkidenticalDataTime(LessonTime lt){
     }
 }
 
-/*void MainWindow::on_tabWidget_tabBarClicked(int index)
+void MainWindow::on_gen_schedule()
 {
-    if (index == 2 || index == 3) {
+
         Graph graph = Graph(
             this->repoCabinets,
             this->repoGroupStudents,
@@ -1291,6 +1287,7 @@ int MainWindow::checkidenticalDataTime(LessonTime lt){
             this->repoLinkGroupSubject
         );
 
-        //this->graph = graph.fit();
-    }
-}*/
+        this->graph = graph.fit();
+        graph.show();
+}
+

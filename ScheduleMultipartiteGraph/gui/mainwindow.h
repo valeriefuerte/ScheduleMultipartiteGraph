@@ -141,8 +141,8 @@ private slots:
     //получение изменений из буфера репозитория Группы_предметы
     void receiveEditRepoLinkGrSb(RepositoryTemplate<LinkGroupSubject>);
 
-
-    //void on_tabWidget_tabBarClicked(int index);
+    //генерация расписания
+    void on_gen_schedule();
 
 public slots:
 private:
@@ -204,7 +204,6 @@ private:
     int  checkidenticalDataCabinets(Cabinet);
     //проверка на сопадения время
     int  checkidenticalDataTime(LessonTime);
-
 
 };
 
