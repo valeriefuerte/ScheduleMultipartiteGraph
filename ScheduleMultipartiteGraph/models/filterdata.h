@@ -2,6 +2,9 @@
 #define FILTERDATA_H
 
 #include <QString>
+#include <QSet>
+#include <QVector>
+#include <QHash>
 class FilterData
 {
 public:
@@ -9,6 +12,17 @@ public:
     QString someData1;
 
     FilterData();
+
+};
+
+class DataForFilter {
+
+public:
+    DataForFilter();
+    QVector<QSet<QString>> data;
+    QHash<int,QString> receiveDay;
+
+
 
 };
 

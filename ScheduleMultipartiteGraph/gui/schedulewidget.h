@@ -9,16 +9,32 @@
 #include <QGridLayout>
 #include <QPushButton>
 #include "models/scheduefilterproxymodel.h"
+#include <QComboBox>
 class ScheduleWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit ScheduleWidget(QAbstractTableModel *model = nullptr,QWidget *parent = nullptr);
     QGridLayout *grid;
+
+    //filter data
+    QComboBox *groupComboBox;
+
+    QComboBox *subjectComboBox;
+
+    QComboBox *floorComboBox;
+    QComboBox *buildingComboBox;
+    QComboBox *numberComboBox;
+
+    QComboBox *timeComboBox;
+    QComboBox *dayComboBox;
+    QComboBox *parityComboBox;
+
+
     //grilay
 signals:
-//генерация расписания
-void gen_schedule();
+    //генерация расписания
+    void gen_schedule();
 
 public slots:
     //нажатие кнопки генерация модели
@@ -34,6 +50,8 @@ private:
     QGridLayout *form;
     //кнопка собрать расписание
     QPushButton *gen_btn;
+
+    //QHash<int,QString> receiveDay; //
 };
 
 #endif // SCHEDULEWIDGET_H

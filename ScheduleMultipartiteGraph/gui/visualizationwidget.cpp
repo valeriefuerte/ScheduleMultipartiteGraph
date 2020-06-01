@@ -11,10 +11,17 @@ VisualizationWidget::VisualizationWidget(QWidget *parent) : QWidget(parent)//,
 {
     grid = new QGridLayout;
     graphWidget = new GraphWidget(this);
+    gen_btn = new QPushButton("Создать граф",this);
+    connect(gen_btn,SIGNAL(clicked()),this,SLOT(apply_clicked()));
     grid->addWidget(graphWidget,0,0);
     grid->addWidget(createMenu(),1,0);
     grid->addWidget(createSchedueFilters(),2,0);
+    grid->addWidget(gen_btn,3,0);
     setLayout(grid);
+
+
+
+
     //qDebug()<<"VisualWidget"<<this->width()<<" "<<this->height()<<" "<<this->geometry().center();
     //qDebug()<<"GraphWidget"<<this->graphWidget->width()<<" "<<this->graphWidget->height()<<" "<<this->graphWidget->geometry().center();
 
@@ -36,11 +43,21 @@ void VisualizationWidget::paintEvent(QPaintEvent *event)
     //qDebug()<<"GraphWidget"<<this->graphWidget->width()<<" "<<this->graphWidget->height()<<" "<<this->graphWidget->geometry().center();
 }
 
+void VisualizationWidget::apply_clicked()
+{
+    emit gen_graph();
+}
+
 
 
 void VisualizationWidget::resetGraphWidget()
 {
 
+}
+
+void VisualizationWidget::setupGraph(DataForFilter &data,QList<Lesson> lessons)
+{
+    qDebug()<<"Set up graph";
 }
 
 QGroupBox* VisualizationWidget::createMenu()
@@ -51,10 +68,10 @@ QGroupBox* VisualizationWidget::createMenu()
 
 
     connect(resetButton,&QPushButton::clicked,graphWidget,&GraphWidget::resetFilter);
-//    connect(filterButton,&QPushButton::clicked, [this] () {
-//        FilterData data =filter->getFilterData();
-//        graphWidget->useFilter(data);
-//    });
+    //    connect(filterButton,&QPushButton::clicked, [this] () {
+    //        FilterData data =filter->getFilterData();
+    //        graphWidget->useFilter(data);
+    //    });
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->addWidget(resetButton);
     layout->addWidget(filterButton);
@@ -63,13 +80,13 @@ QGroupBox* VisualizationWidget::createMenu()
 
 }
 
-void VisualizationWidget::updateRepo(RepositoryTemplate<Cabinet> repoCabinets, RepositoryTemplate<GroupStudents> repoGroupStudents, RepositoryTemplate<LessonTime> repoLessonTime, RepositoryTemplate<Subject> repoSubjects)
-{
-    this->repoCabinets = repoCabinets;
-    this->repoGroupStudents = repoGroupStudents;
-    this->repoLessonTime = repoLessonTime;
-    this->repoSubjects = repoSubjects;
-}
+//void VisualizationWidget::updateRepo(RepositoryTemplate<Cabinet> repoCabinets, RepositoryTemplate<GroupStudents> repoGroupStudents, RepositoryTemplate<LessonTime> repoLessonTime, RepositoryTemplate<Subject> repoSubjects)
+//{
+//    this->repoCabinets = repoCabinets;
+//    this->repoGroupStudents = repoGroupStudents;
+//    this->repoLessonTime = repoLessonTime;
+//    this->repoSubjects = repoSubjects;
+//}
 
 QGroupBox * VisualizationWidget::createSchedueFilters()
 {

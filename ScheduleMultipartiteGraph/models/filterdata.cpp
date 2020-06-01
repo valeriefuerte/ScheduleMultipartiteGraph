@@ -4,3 +4,8 @@ FilterData::FilterData()
 {
 
 }
+
+DataForFilter::DataForFilter()
+{
+
+}

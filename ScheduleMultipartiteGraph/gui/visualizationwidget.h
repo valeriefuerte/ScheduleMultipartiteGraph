@@ -27,8 +27,12 @@ public:
 
 signals:
 
+    void gen_graph();
+
 public slots:
+    void apply_clicked();
     void resetGraphWidget();
+    void setupGraph(DataForFilter &data, QList<Lesson> lessons);
 private:
     //виджет визуализации графа
     GraphWidget *graphWidget;
@@ -40,15 +44,17 @@ private:
     QGroupBox *createMenu();
     QGroupBox * createSchedueFilters();
 
-    void  updateRepo(RepositoryTemplate<Cabinet> repoCabinets,
-    RepositoryTemplate<GroupStudents> repoGroupStudents,
-    RepositoryTemplate<LessonTime> repoLessonTime,
-    RepositoryTemplate<Subject> repoSubjects);
+    QPushButton *gen_btn;
 
-    RepositoryTemplate<Cabinet> repoCabinets;
-    RepositoryTemplate<GroupStudents> repoGroupStudents;
-    RepositoryTemplate<LessonTime> repoLessonTime;
-    RepositoryTemplate<Subject> repoSubjects;
+//    void  updateRepo(RepositoryTemplate<Cabinet> repoCabinets,
+//                     RepositoryTemplate<GroupStudents> repoGroupStudents,
+//                     RepositoryTemplate<LessonTime> repoLessonTime,
+//                     RepositoryTemplate<Subject> repoSubjects);
+
+//    RepositoryTemplate<Cabinet> repoCabinets;
+//    RepositoryTemplate<GroupStudents> repoGroupStudents;
+//    RepositoryTemplate<LessonTime> repoLessonTime;
+//    RepositoryTemplate<Subject> repoSubjects;
 };
 
 #endif // VISUALIZATIONWIDGET_H
