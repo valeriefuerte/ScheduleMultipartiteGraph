@@ -15,7 +15,7 @@ class ScheduleWidget : public QWidget
 public:
     explicit ScheduleWidget(QAbstractTableModel *model = nullptr,QWidget *parent = nullptr);
     QGridLayout *grid;
-
+    //grilay
 signals:
 //генерация расписания
 void gen_schedule();

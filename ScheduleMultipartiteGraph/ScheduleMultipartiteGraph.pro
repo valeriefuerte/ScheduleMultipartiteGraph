@@ -111,5 +111,5 @@ FORMS += \
         gui/filterwidget.ui \
         gui/mainwindow.ui
 
-# Default rules for deployment.
+# Default rules for deployment.#
  INSTALLS += target
