@@ -5,7 +5,9 @@ FilterData::FilterData()
 
 }
 
-DataForFilter::DataForFilter()
+FilterData::FilterData(QVector<QString> data):data(data)
 {
 
 }
+
+

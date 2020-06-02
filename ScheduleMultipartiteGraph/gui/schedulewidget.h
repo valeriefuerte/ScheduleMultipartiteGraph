@@ -10,6 +10,8 @@
 #include <QPushButton>
 #include "models/scheduefilterproxymodel.h"
 #include <QComboBox>
+#include "models/filterdata.h"
+
 class ScheduleWidget : public QWidget
 {
     Q_OBJECT
@@ -41,6 +43,9 @@ public slots:
     void apply_clicked();
 
     void updateModel(QAbstractTableModel *model);
+
+    void insertFilterDataVariants(QVector<QSet<QString>> dataForFilters);
+    FilterData takeDataFromFilters();
 private:
     QAbstractTableModel *sceduleModel;
     SchedueFilterProxyModel *proxyModel;

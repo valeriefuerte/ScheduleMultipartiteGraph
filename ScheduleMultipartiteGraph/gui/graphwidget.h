@@ -14,7 +14,7 @@ class GraphWidget: public QGraphicsView
     Q_OBJECT
 public:
     GraphWidget(QWidget *parent = nullptr);
-
+    void buildNewGraph(QVector<QSet<QString> > data, QList<Lesson> lessons);
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void drawBackground(QPainter *painter, const QRectF &rect) override;
@@ -22,16 +22,18 @@ protected:
 private:
     QGraphicsScene *scene;
     QVector<QPointF> createClusterPoints(QPointF &center,int radius,int size) const;
-    QVector<Node*> nodes;
+
     void scaleView(qreal scaleFactor);
     QVector<QColor> colorVector = {Qt::red,Qt::green,Qt::yellow,Qt::white,Qt::cyan,Qt::magenta,Qt::lightGray,Qt::blue};
-    QVector<QPointF> createLinePoint(int lenght, int size, int slice);
-    QVector<Node*> createLineNode(QVector<QPointF> &points, int slice, int size, QString data);
+    QVector<QPointF> createLinePoint(int lenght, double size, int slice);
+
+    void filterBySlide(int slide,QString data);
     void leftFilterSlise(int slide);
     void rightFilterSlise(int slide);
-
+    void linkLessonsParts(Lesson lesson);
     QList<Lesson> lessons;
     QVector<QHash<QString,Node*>> nodeMatrix;
+    double nodeSize = 60;
 
 signals:
 
@@ -39,9 +41,9 @@ public slots:
     void zoomIn();
     void zoomOut();
     void resetFilter();
-    void useFilter(FilterData &data);
-    void readGraph(QPointF center); // WORK IN PROGRESS
+    void useFilter(FilterData &fdata);
     void updateGraph(QList<Lesson> &lessons);
+
 
 
 };

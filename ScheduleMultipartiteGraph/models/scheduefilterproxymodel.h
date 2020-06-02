@@ -9,8 +9,8 @@ class SchedueFilterProxyModel : public QSortFilterProxyModel
     Q_OBJECT
 public:
     SchedueFilterProxyModel(QObject* parent = 0);
-//    bool filterAcceptsRow(int source_row,
-//                          const QModelIndex &source_parent) const;
+    bool filterAcceptsRow(int source_row,
+                          const QModelIndex &source_parent) const;
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role) const;
 

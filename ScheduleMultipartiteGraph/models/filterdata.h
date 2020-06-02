@@ -8,22 +8,14 @@
 class FilterData
 {
 public:
-    QString groupNumber;
-    QString someData1;
-
     FilterData();
-
-};
-
-class DataForFilter {
-
-public:
-    DataForFilter();
-    QVector<QSet<QString>> data;
-    QHash<int,QString> receiveDay;
-
+    FilterData( QVector<QString> data);
+    QVector<QString> data;
+    QVector<QString> coll = {"Группа", "Предмет","Кабинет","Этаж","Корпус","Четность","День недели","Время"};
 
 
 };
+
+
 
 #endif // FILTERDATA_H

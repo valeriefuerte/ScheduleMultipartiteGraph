@@ -16,6 +16,12 @@ Node::Node(GraphWidget *graphWidget, double size,int sliceId, QString data, QCol
 
 }
 
+Node::~Node()
+{
+    qDebug()<<"NodeDest";
+    edgeList.clear();
+}
+
 void Node::addEdge(Edge *edge)
 {
     edgeList << edge;
@@ -83,15 +89,15 @@ QVariant  Node::itemChange(GraphicsItemChange change, const QVariant &value){
 void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     // Для демонстрации. При нажатии мышкой на вершину она "прячется" вместе с ребрами
-    this->hide();
-    qDebug()<<this->pos()<<"isHided"<<this->isVisible();
-    QGraphicsItem::mousePressEvent(event);
+//    this->hide();
+//    qDebug()<<this->pos()<<"isHided"<<this->isVisible();
+//    QGraphicsItem::mousePressEvent(event);
 }
 
 void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    update();
-    QGraphicsItem::mouseReleaseEvent(event);
+//    update();
+//    QGraphicsItem::mouseReleaseEvent(event);
 }
 // Если хотя бы 1 вершина стпрятана , то  необходимо спрятать ребро
 void Node::changeEdgeVisibility(Edge *edge)

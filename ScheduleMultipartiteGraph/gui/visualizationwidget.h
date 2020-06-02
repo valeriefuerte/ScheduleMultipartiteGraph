@@ -10,6 +10,7 @@
 #include "filterwidget.h"
 #include "gui/graphwidget.h"
 #include "models/repository/repositorytemplate.h"
+#include <QComboBox>
 class GraphWidget;
 
 //
@@ -25,6 +26,20 @@ public:
 
     void paintEvent(QPaintEvent *event) override;
 
+    //filter data
+    QComboBox *groupComboBox;
+
+    QComboBox *subjectComboBox;
+
+    QComboBox *floorComboBox;
+    QComboBox *buildingComboBox;
+    QComboBox *numberComboBox;
+
+    QComboBox *timeComboBox;
+    QComboBox *dayComboBox;
+    QComboBox *parityComboBox;
+
+
 signals:
 
     void gen_graph();
@@ -32,7 +47,9 @@ signals:
 public slots:
     void apply_clicked();
     void resetGraphWidget();
-    void setupGraph(DataForFilter &data, QList<Lesson> lessons);
+    void setupGraph(QVector<QSet<QString> > data, QList<Lesson> lessons);
+    void insertFilterDataVariants(QVector<QSet<QString>> dataForFilters);
+    FilterData takeDataFromFilters();
 private:
     //виджет визуализации графа
     GraphWidget *graphWidget;

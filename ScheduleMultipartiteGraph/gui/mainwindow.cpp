@@ -1232,17 +1232,19 @@ void MainWindow::on_gen_schedule()
 
 
     QVector<QSet<QString>> dataForFilters = takeUniqueData();
-    DataForFilter data;
-    data.data = dataForFilters;
-    data.receiveDay = this->receiveDay;
+
 
 
     ScheduleTableAbstractModule *model = new ScheduleTableAbstractModule(lessons);
+    schedueWidget->insertFilterDataVariants(dataForFilters);
+    graphWidget->insertFilterDataVariants(dataForFilters);
     this->schedueWidget->updateModel(model);
+    this->graphWidget->setupGraph(dataForFilters,lessons);
+
 
 
 }
-
+// не нужен (для тестов максимум)
 void MainWindow::on_gen_graph()
 {
     Graph graph = Graph(
@@ -1258,11 +1260,9 @@ void MainWindow::on_gen_graph()
 
 
     QVector<QSet<QString>> dataForFilters = takeUniqueData();
-    DataForFilter data;
-    data.data = dataForFilters;
-    data.receiveDay = this->receiveDay;
 
-    this->graphWidget->setupGraph(data,lessons);
+
+    this->graphWidget->setupGraph(dataForFilters,lessons);
 
 }
 
@@ -1309,12 +1309,12 @@ QVector<QSet<QString>> MainWindow::takeUniqueData()
 
     foreach( GroupStudents value, l_group )
     {
-        group_id.insert(QString::number(value.id));
+        group_id.insert(value.name);
     }
 
     foreach( Subject value,  l_subject )
     {
-        subject_id.insert(QString::number(value.id));
+        subject_id.insert((value.name));
     }
     foreach( Cabinet value,  l_cabinet )
     {
@@ -1326,7 +1326,7 @@ QVector<QSet<QString>> MainWindow::takeUniqueData()
     foreach( LessonTime value,  l_lessonTime )
     {
         parity_id.insert(QString::number(value.parity));
-        day_id.insert(QString::number(value.dayOfWeek));
+        day_id.insert(this->receiveDay.find(value.dayOfWeek).value());
         time_id.insert(value.time.toString());
     }
 
@@ -1342,7 +1342,7 @@ QVector<QSet<QString>> MainWindow::takeUniqueData()
     p.append(day_id);
     p.append(time_id);
 
-    qDebug()<<time_id;
+    qDebug()<<day_id;
     return p;
 }
 
