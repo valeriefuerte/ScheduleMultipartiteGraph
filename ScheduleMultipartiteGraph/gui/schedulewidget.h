@@ -45,6 +45,8 @@ public slots:
     void updateModel(QAbstractTableModel *model);
 
     void insertFilterDataVariants(QVector<QSet<QString>> dataForFilters);
+
+    void filtersChanged();
     FilterData takeDataFromFilters();
 private:
     QAbstractTableModel *sceduleModel;

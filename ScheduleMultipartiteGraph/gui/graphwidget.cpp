@@ -103,6 +103,16 @@ void GraphWidget::updateGraph(QList<Lesson> &lessons)
 
 }
 
+void GraphWidget::hideAll()
+{
+    for (int slide= 0; slide < nodeMatrix.size(); ++slide) {
+        for (QHash<QString,Node*>::iterator i =nodeMatrix[slide].begin(); i != nodeMatrix[slide].end(); ++i) {
+            i.value()->hide();
+        }
+
+    }
+}
+
 
 void  GraphWidget::drawBackground(QPainter *painter, const QRectF &rect) {
     Q_UNUSED(rect);
@@ -177,7 +187,10 @@ void GraphWidget::useFilter(FilterData &fdata)
 
     for (int curSlide = 0 ;curSlide < fdata.data.size();curSlide++) {
         if (fdata.data[curSlide] != "None") {
-            this->filterBySlide(curSlide,fdata.data[curSlide]);
+            if (!filterBySlide(curSlide,fdata.data[curSlide])) {
+                hideAll();
+                break;
+            }
         } else {
             qDebug()<<"None"<<curSlide;
         }
@@ -212,9 +225,10 @@ QVector<QPointF> GraphWidget::createLinePoint(int lenght, double size, int slice
 
 
 
-void GraphWidget::filterBySlide(int slide, QString data)
+bool GraphWidget::filterBySlide(int slide, QString data)
 {
     qDebug()<<"Filters"<<data;
+    Node * node = nullptr;
     for (QHash<QString,Node*>::iterator i =nodeMatrix[slide].begin(); i != nodeMatrix[slide].end(); ++i) {
         //qDebug()<<"COMPARE"<<QString::compare(i.value()->getData(),data,Qt::CaseInsensitive);
         //bool wtf = i.value()->getData();
@@ -226,6 +240,7 @@ void GraphWidget::filterBySlide(int slide, QString data)
             i.value()->hide();
         } else  {
             qDebug()<<"Work"<<slide;
+            node = i.value();
         }
     }
     int backID = slide;
@@ -237,10 +252,21 @@ void GraphWidget::filterBySlide(int slide, QString data)
     }
 
     while (forwardID != nodeMatrix.size()) {
-        if (forwardID !=0)
+        if (forwardID != 0)
             rightFilterSlise(forwardID);
         forwardID++;
     }
+    QList<Edge *> l = node->edges();
+    bool canLife = false;
+    for (Edge * e : l) {
+        if (e->isVisible()) {
+            canLife = true;
+        }
+    }
+    if (canLife)
+        return true;
+    else
+        return false;
 
 }
 

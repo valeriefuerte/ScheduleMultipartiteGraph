@@ -27,6 +27,18 @@ ScheduleWidget::ScheduleWidget(QAbstractTableModel *model, QWidget *parent) : QW
     setLayout(grid);
 
     connect(gen_btn,SIGNAL(clicked()),this,SLOT(apply_clicked()));
+
+    // connect for filters
+    //    connect(groupComboBox,SIGNAL(currenIndexChanged()),this,SLOT(filtersChanged()));
+    //    connect(subjectComboBox,SIGNAL(currenIndexChanged()),this,SLOT(filtersChanged()));
+
+    //    connect(floorComboBox,SIGNAL(currenIndexChanged()),this,SLOT(filtersChanged()));
+    //    connect(groupComboBox,SIGNAL(currenIndexChanged()),this,SLOT(filtersChanged()));
+    //    connect(groupComboBox,SIGNAL(currenIndexChanged()),this,SLOT(filtersChanged()));
+
+    //    connect(groupComboBox,SIGNAL(currenIndexChanged()),this,SLOT(filtersChanged()));
+    //    connect(groupComboBox,SIGNAL(currenIndexChanged()),this,SLOT(filtersChanged()));
+    //    connect(groupComboBox,SIGNAL(currenIndexChanged()),this,SLOT(filtersChanged()));
 }
 
 void ScheduleWidget::updateModel(QAbstractTableModel *model)
@@ -46,12 +58,18 @@ void ScheduleWidget::insertFilterDataVariants(QVector<QSet<QString> > dataForFil
     }
     groupComboBox->addItems(stringLists[0]);
     subjectComboBox->addItems(stringLists[1]);
-    floorComboBox->addItems(stringLists[2]);
-    buildingComboBox->addItems(stringLists[3]);
-    numberComboBox->addItems(stringLists[4]);
-    timeComboBox->addItems(stringLists[5]);
+    numberComboBox->addItems(stringLists[2]);
+    floorComboBox->addItems(stringLists[3]);
+    buildingComboBox->addItems(stringLists[4]);
+    parityComboBox->addItems(stringLists[5]);
     dayComboBox->addItems(stringLists[6]);
-    parityComboBox->addItems(stringLists[7]);
+    timeComboBox->addItems(stringLists[7]);
+}
+
+void ScheduleWidget::filtersChanged()
+{
+    FilterData data = this->takeDataFromFilters();
+    qDebug()<<"SchedueFilters";
 }
 
 FilterData ScheduleWidget::takeDataFromFilters()
@@ -61,12 +79,13 @@ FilterData ScheduleWidget::takeDataFromFilters()
     QVector<QString> data;
     data.append(groupComboBox->currentText());
     data.append(subjectComboBox->currentText());
+    data.append(numberComboBox->currentText());
     data.append(floorComboBox->currentText());
     data.append(buildingComboBox->currentText());
-    data.append(numberComboBox->currentText());
-    data.append(timeComboBox->currentText());
-    data.append(dayComboBox->currentText());
     data.append(parityComboBox->currentText());
+    data.append(dayComboBox->currentText());
+    data.append(timeComboBox->currentText());
+
     qDebug()<<data;
     filterData.data = data;
     return filterData;
@@ -92,12 +111,13 @@ QGroupBox * ScheduleWidget::createSchedueFilters()
 
     vbox->addWidget(groupComboBox);
     vbox->addWidget(subjectComboBox);
+    vbox->addWidget(numberComboBox);
     vbox->addWidget(floorComboBox);
     vbox->addWidget(buildingComboBox);
-    vbox->addWidget(numberComboBox);
-    vbox->addWidget(timeComboBox);
-    vbox->addWidget(dayComboBox);
     vbox->addWidget(parityComboBox);
+    vbox->addWidget(dayComboBox);
+    vbox->addWidget(timeComboBox);
+
 
     box->setLayout(vbox);
     return box;

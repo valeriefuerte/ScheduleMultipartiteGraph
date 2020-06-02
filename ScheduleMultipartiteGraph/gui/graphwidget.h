@@ -27,7 +27,7 @@ private:
     QVector<QColor> colorVector = {Qt::red,Qt::green,Qt::yellow,Qt::white,Qt::cyan,Qt::magenta,Qt::lightGray,Qt::blue};
     QVector<QPointF> createLinePoint(int lenght, double size, int slice);
 
-    void filterBySlide(int slide,QString data);
+    bool filterBySlide(int slide,QString data);
     void leftFilterSlise(int slide);
     void rightFilterSlise(int slide);
     void linkLessonsParts(Lesson lesson);
@@ -43,6 +43,7 @@ public slots:
     void resetFilter();
     void useFilter(FilterData &fdata);
     void updateGraph(QList<Lesson> &lessons);
+    void hideAll();
 
 
 

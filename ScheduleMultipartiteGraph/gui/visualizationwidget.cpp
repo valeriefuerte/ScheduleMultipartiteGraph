@@ -54,12 +54,14 @@ void VisualizationWidget::insertFilterDataVariants(QVector<QSet<QString> > dataF
     }
     groupComboBox->addItems(stringLists[0]);
     subjectComboBox->addItems(stringLists[1]);
-    floorComboBox->addItems(stringLists[2]);
-    buildingComboBox->addItems(stringLists[3]);
-    numberComboBox->addItems(stringLists[4]);
-    timeComboBox->addItems(stringLists[5]);
+    numberComboBox->addItems(stringLists[2]);
+    floorComboBox->addItems(stringLists[3]);
+    buildingComboBox->addItems(stringLists[4]);
+    parityComboBox->addItems(stringLists[5]);
     dayComboBox->addItems(stringLists[6]);
-    parityComboBox->addItems(stringLists[7]);
+    timeComboBox->addItems(stringLists[7]);
+
+
 
 }
 
@@ -70,12 +72,14 @@ FilterData VisualizationWidget::takeDataFromFilters()
     QVector<QString> data;
     data.append(groupComboBox->currentText());
     data.append(subjectComboBox->currentText());
+    data.append(numberComboBox->currentText());
     data.append(floorComboBox->currentText());
     data.append(buildingComboBox->currentText());
-    data.append(numberComboBox->currentText());
-    data.append(timeComboBox->currentText());
-    data.append(dayComboBox->currentText());
     data.append(parityComboBox->currentText());
+    data.append(dayComboBox->currentText());
+    data.append(timeComboBox->currentText());
+
+
     qDebug()<<data;
     filterData.data = data;
     return filterData;
@@ -148,12 +152,14 @@ QGroupBox * VisualizationWidget::createSchedueFilters()
 
     vbox->addWidget(groupComboBox);
     vbox->addWidget(subjectComboBox);
+    vbox->addWidget(numberComboBox);
     vbox->addWidget(floorComboBox);
     vbox->addWidget(buildingComboBox);
-    vbox->addWidget(numberComboBox);
-    vbox->addWidget(timeComboBox);
-    vbox->addWidget(dayComboBox);
     vbox->addWidget(parityComboBox);
+    vbox->addWidget(dayComboBox);
+    vbox->addWidget(timeComboBox);
+
+
 
     box->setLayout(vbox);
     return box;
