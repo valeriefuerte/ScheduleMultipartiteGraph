@@ -12,7 +12,7 @@ public:
       ScheduleTableView(QAbstractItemModel * model,QWidget *parent = nullptr);
       ~ScheduleTableView();
       void changeModel(QAbstractItemModel *model);
-
+      //
 
 protected:
       void resizeEvent(QResizeEvent *event) override;

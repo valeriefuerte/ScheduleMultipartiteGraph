@@ -19,8 +19,8 @@ SchedueFilterProxyModel::SchedueFilterProxyModel(QObject *parent): QSortFilterPr
 //    invalidateFilter();
 //}
 
-//bool SchedueFilterProxyModel::filterAcceptsRow(int source_row,
-//                                  const QModelIndex &source_parent) const{
+bool SchedueFilterProxyModel::filterAcceptsRow(int source_row,
+                                  const QModelIndex &source_parent) const{
 
 //    QModelIndex indG = sourceModel()->index(source_row,
 //                                               1, source_parent);
@@ -30,7 +30,8 @@ SchedueFilterProxyModel::SchedueFilterProxyModel(QObject *parent): QSortFilterPr
 //            sourceModel()->data(indD).toDouble() < m_minDensity)
 //        return false;
 //    return true;
-//}
+
+}
 
 QVariant SchedueFilterProxyModel::headerData(int section, Qt::Orientation orientation,
                                              int role) const {

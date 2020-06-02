@@ -65,8 +65,8 @@ QT_END_NAMESPACE
 class Node : public QGraphicsItem
 {
 public:
-    Node(GraphWidget *graphWidget, double size = 20 ,QColor color = Qt::yellow);
-
+    Node(GraphWidget *graphWidget, double size = 20,int sliceId = 0,QString data = "Node",QColor color = Qt::yellow);
+    ~Node();
     void addEdge(Edge *edge);
     QList<Edge *> edges() const;
     //id элемента - см документацию
@@ -81,8 +81,9 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
     qreal getSize() const {return size;}
-
-
+    int getSliceId() const {return slice_id;}
+    QString getData() const {return data;}
+    QPointF getPos() const {return newPos;}
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
@@ -96,9 +97,12 @@ private:
     double size;
     QColor color;
     void changeEdgeVisibility(Edge *edge);
-    QString text;
-    QGraphicsTextItem *textGitem;
-    QTextItem *textItem;
+    int slice_id;
+    QString data;
+
+    //QString text;
+    //QGraphicsTextItem *textGitem;
+    //QTextItem *textItem;
 
 
 

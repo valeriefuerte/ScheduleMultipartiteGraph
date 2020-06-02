@@ -28,6 +28,7 @@
 #include "models/scheduletableabstractmodule.h"
 #include "models/scheduefilterproxymodel.h"
 
+#include "models/filterdata.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -141,12 +142,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //отлов нажатия кнопки на генерацию расписания
     connect(schedueWidget,SIGNAL(gen_schedule()),this,SLOT(on_gen_schedule()));
+    //отлов нажатия кнопки на генерацию графа
+
     //ui->tabWidget->currentIndex();
 
     //connect(tabWidget,SIGNAL(currentChanged(int)),this,SLOT())
 
     // Виджет визуализации графа
     graphWidget = new VisualizationWidget();
+    connect(graphWidget,SIGNAL(gen_graph()),this,SLOT(on_gen_graph()));
     ui->tabWidget->addTab(graphWidget,"Визуализация графа");
 
 }
@@ -494,9 +498,9 @@ void MainWindow::customGroupSubjectMenuRequested(const QPoint &pos){
     QAction *addSG= new QAction(("Соотнести"),this);
 
     connect(addSG, SIGNAL(triggered()),this,SLOT(slotAddSG()));
-if (repoSubjects.getAmount()!=0){
-    menu->addAction(addSG);
-}
+    if (repoSubjects.getAmount()!=0){
+        menu->addAction(addSG);
+    }
     menu->popup( ui->gr_sub_table->viewport()->mapToGlobal(pos));
 
 }
@@ -759,12 +763,12 @@ void MainWindow::loadOnSelectedFile(QString pathFile, QString nameFile){
 
     QFileInfoList list = dir.entryInfoList();
     if (!list.empty()){
-         for (int i = 0; i<list.size(); i++){
-             if (pathFile==QDir::currentPath()+"/"+list.at(i).filePath()){
-                 fl = true;
-                 break;
-             }
-         }
+        for (int i = 0; i<list.size(); i++){
+            if (pathFile==QDir::currentPath()+"/"+list.at(i).filePath()){
+                fl = true;
+                break;
+            }
+        }
     }
     if (fl){
         if (jsonFile.open(QFile::ReadOnly)){
@@ -812,13 +816,13 @@ void MainWindow::loadOnSelectedFile(QString pathFile, QString nameFile){
             ui->status_label->setText("Файл успешно загружен!");
         }
         else{
-                QMessageBox::information(this,"Файл","Ошибка чтения файла!");
+            QMessageBox::information(this,"Файл","Ошибка чтения файла!");
 
-         }
+        }
     }
     else
     {
-               QMessageBox::information(this,"Ошибка","Файл с таким именем не существует!");
+        QMessageBox::information(this,"Ошибка","Файл с таким именем не существует!");
     }
 }
 void MainWindow::receiveFileName(QString pathFile, QString nameFile, bool createFlag){
@@ -1215,28 +1219,47 @@ int MainWindow::checkidenticalDataTime(LessonTime lt){
 void MainWindow::on_gen_schedule()
 {
 
-        Graph graph = Graph(
-                    this->repoCabinets,
-                    this->repoGroupStudents,
-                    this->repoLessonTime,
-                    this->repoSubjects,
-                    this->repoLinkGroupSubject
-                    );
+    Graph graph = Graph(
+                this->repoCabinets,
+                this->repoGroupStudents,
+                this->repoLessonTime,
+                this->repoSubjects,
+                this->repoLinkGroupSubject
+                );
+    this->graph = graph.fit();
+    QList<Lesson> lessons = transformGrapthToLessons();
+    QVector<QSet<QString>> dataForFilters = takeUniqueData();
 
-        this->graph = graph.fit();
-        QList<Lesson> lessons = transformGrapthToLessons();
 
-        //qDebug()<<this->graph;
-        ScheduleTableAbstractModule *model = new ScheduleTableAbstractModule(lessons);
-        this->schedueWidget->updateModel(model);
+    ScheduleTableAbstractModule *model = new ScheduleTableAbstractModule(lessons);
+    schedueWidget->insertFilterDataVariants(dataForFilters);
+    graphWidget->insertFilterDataVariants(dataForFilters);
+    this->schedueWidget->updateModel(model);
+    this->graphWidget->setupGraph(dataForFilters,lessons);
+
+
 
 }
-
-void MainWindow::updatatingVisualization(int index)
+// не нужен (для тестов максимум)
+void MainWindow::on_gen_graph()
 {
-    //    if( index == 3) {
+    Graph graph = Graph(
+                this->repoCabinets,
+                this->repoGroupStudents,
+                this->repoLessonTime,
+                this->repoSubjects,
+                this->repoLinkGroupSubject
+                );
 
-    //    }
+    this->graph = graph.fit();
+    QList<Lesson> lessons = transformGrapthToLessons();
+
+
+    QVector<QSet<QString>> dataForFilters = takeUniqueData();
+
+
+    this->graphWidget->setupGraph(dataForFilters,lessons);
+
 }
 
 QList<Lesson> MainWindow::transformGrapthToLessons()
@@ -1255,8 +1278,67 @@ QList<Lesson> MainWindow::transformGrapthToLessons()
         Cabinet cabinet = this->repoCabinets.getByIndex(graph[i][2]);
         LessonTime lessonTime = this->repoLessonTime.getById(graph[i][3]);
         lessons.append(Lesson(group,subject,cabinet,lessonTime,receiveDay));
+
     }
     return lessons;
 
+}
+
+QVector<QSet<QString>> MainWindow::takeUniqueData()
+{
+    QVector<QSet<QString>> p;
+
+    QList <GroupStudents> l_group = repoGroupStudents.getAll();
+    QList <Subject> l_subject = repoSubjects.getAll();
+    QList <Cabinet> l_cabinet = repoCabinets.getAll();
+    QList <LessonTime> l_lessonTime = repoLessonTime.getAll();
+
+
+    QSet<QString> group_id;
+    QSet<QString> subject_id;
+    QSet<QString> building_id;
+    QSet<QString> floor_id;
+    QSet<QString> number_id;
+    QSet<QString> parity_id;
+    QSet<QString> day_id;
+    QSet<QString> time_id;
+
+    foreach( GroupStudents value, l_group )
+    {
+        group_id.insert(value.name);
+    }
+
+    foreach( Subject value,  l_subject )
+    {
+        subject_id.insert((value.name));
+    }
+    foreach( Cabinet value,  l_cabinet )
+    {
+
+        building_id.insert(QString::number(value.building));
+        floor_id.insert(QString::number(value.floor));
+        number_id.insert(QString::number(value.number));
+    }
+    foreach( LessonTime value,  l_lessonTime )
+    {
+        parity_id.insert(QString::number(value.parity));
+        day_id.insert(this->receiveDay.find(value.dayOfWeek).value());
+        time_id.insert(value.time.toString());
+    }
+
+
+    p.append(group_id);
+    p.append(subject_id);
+
+    p.append(number_id);
+    p.append(floor_id);
+    p.append(building_id);
+
+    p.append(parity_id);
+    p.append(day_id);
+    p.append(time_id);
+
+    qDebug()<<day_id;
+    return p;
 }
 

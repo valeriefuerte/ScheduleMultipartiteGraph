@@ -147,7 +147,7 @@ private slots:
     //генерация расписания
     void on_gen_schedule();
 
-    void updatatingVisualization(int index);
+    void on_gen_graph();
 
      QList<Lesson> transformGrapthToLessons();
 
@@ -159,6 +159,7 @@ private:
     bool idenFlag = false;
 
     QHash<int,QString> receiveDay;
+    QVector<QSet<QString> > takeUniqueData();
 
     //Модели QTableView
     QStringList *list_s;
