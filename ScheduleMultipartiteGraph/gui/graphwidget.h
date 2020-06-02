@@ -34,7 +34,8 @@ private:
     QList<Lesson> lessons;
     QVector<QHash<QString,Node*>> nodeMatrix;
     double nodeSize = 60;
-
+    QVector<Node*> textNodes;
+    void createTextNodes();
 signals:
 
 public slots:

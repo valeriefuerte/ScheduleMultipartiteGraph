@@ -29,16 +29,17 @@ ScheduleWidget::ScheduleWidget(QAbstractTableModel *model, QWidget *parent) : QW
     connect(gen_btn,SIGNAL(clicked()),this,SLOT(apply_clicked()));
 
     // connect for filters
-    //    connect(groupComboBox,SIGNAL(currenIndexChanged()),this,SLOT(filtersChanged()));
-    //    connect(subjectComboBox,SIGNAL(currenIndexChanged()),this,SLOT(filtersChanged()));
+    connect(groupComboBox,&QComboBox::currentTextChanged,this,&ScheduleWidget::filtersChanged);
+    connect(subjectComboBox,&QComboBox::currentTextChanged,this,&ScheduleWidget::filtersChanged);
 
-    //    connect(floorComboBox,SIGNAL(currenIndexChanged()),this,SLOT(filtersChanged()));
-    //    connect(groupComboBox,SIGNAL(currenIndexChanged()),this,SLOT(filtersChanged()));
-    //    connect(groupComboBox,SIGNAL(currenIndexChanged()),this,SLOT(filtersChanged()));
+    connect(numberComboBox,&QComboBox::currentTextChanged,this,&ScheduleWidget::filtersChanged);
+    connect(floorComboBox,&QComboBox::currentTextChanged,this,&ScheduleWidget::filtersChanged);
+    connect(buildingComboBox,&QComboBox::currentTextChanged,this,&ScheduleWidget::filtersChanged);
 
-    //    connect(groupComboBox,SIGNAL(currenIndexChanged()),this,SLOT(filtersChanged()));
-    //    connect(groupComboBox,SIGNAL(currenIndexChanged()),this,SLOT(filtersChanged()));
-    //    connect(groupComboBox,SIGNAL(currenIndexChanged()),this,SLOT(filtersChanged()));
+    connect(parityComboBox,&QComboBox::currentTextChanged,this,&ScheduleWidget::filtersChanged);
+    connect(dayComboBox,&QComboBox::currentTextChanged,this,&ScheduleWidget::filtersChanged);
+    connect(timeComboBox,&QComboBox::currentTextChanged,this,&ScheduleWidget::filtersChanged);
+
 }
 
 void ScheduleWidget::updateModel(QAbstractTableModel *model)
@@ -69,6 +70,7 @@ void ScheduleWidget::insertFilterDataVariants(QVector<QSet<QString> > dataForFil
 void ScheduleWidget::filtersChanged()
 {
     FilterData data = this->takeDataFromFilters();
+    this->proxyModel->useFilters(data);
     qDebug()<<"SchedueFilters";
 }
 
@@ -93,8 +95,8 @@ FilterData ScheduleWidget::takeDataFromFilters()
 
 QGroupBox * ScheduleWidget::createSchedueFilters()
 {
-    QGroupBox *box = new QGroupBox("Filters");
-    QLabel *label = new QLabel("FilterPlaceHolders");
+    QGroupBox *box = new QGroupBox("Фильры");
+    QLabel *label = new QLabel("Выбери параметры");
     QHBoxLayout *vbox = new QHBoxLayout;
 
 

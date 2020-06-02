@@ -65,7 +65,7 @@ QT_END_NAMESPACE
 class Node : public QGraphicsItem
 {
 public:
-    Node(GraphWidget *graphWidget, double size = 20,int sliceId = 0,QString data = "Node",QColor color = Qt::yellow);
+    Node(GraphWidget *graphWidget, double size = 20,int sliceId = 0,QString data = "Node",QColor color = Qt::yellow,QColor line_color = Qt::black);
     ~Node();
     void addEdge(Edge *edge);
     QList<Edge *> edges() const;
@@ -99,7 +99,7 @@ private:
     void changeEdgeVisibility(Edge *edge);
     int slice_id;
     QString data;
-
+    QColor lineColor;
     //QString text;
     //QGraphicsTextItem *textGitem;
     //QTextItem *textItem;

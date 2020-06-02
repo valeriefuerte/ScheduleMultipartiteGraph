@@ -64,15 +64,15 @@ void GraphWidget::buildNewGraph(QVector<QSet<QString> > data, QList<Lesson> less
     //nodeMatrix.clear();
 
     nodeMatrix.clear();
+    //textNodes.clear();
     scene->clear();
-
+    createTextNodes();
     qDebug()<<"data vector size"<<data.size();
 
     for (int i = 0; i<data.size();i++) {
         qDebug()<<data[i]<<data[i].size();
         qDebug()<<data[i].toList().at(0);
-        QVector<QPointF> p;
-        p = this->createLinePoint(data[i].size(),nodeSize,i);
+        QVector<QPointF> p = this->createLinePoint(data[i].size(),nodeSize,i);
         QHash <QString, Node*> hash_nodes;
 
         for (int q = 0 ;q<p.size();q++) {
@@ -214,7 +214,7 @@ void GraphWidget::scaleView(qreal scaleFactor)
 QVector<QPointF> GraphWidget::createLinePoint(int lenght, double size, int slice)
 {
     QVector<QPointF> p;
-    QPointF start(size/2+slice*size*2,size+size/2);
+    QPointF start(size/2+slice*size*2,size+size);
 
     for (int i = 0; i<lenght;i++) {
         p.append(start);
@@ -330,6 +330,21 @@ void GraphWidget::linkLessonsParts(Lesson lesson)
         scene->addItem(new Edge(nodeMatrix[curSlide].find(lessonDataString[curSlide]).value(), nodeMatrix[curSlide+1].find(lessonDataString[curSlide+1]).value()));
     }
     //scene->addItem(new Edge(node1, node2));
+}
+
+void GraphWidget::createTextNodes()
+{
+    qDebug()<<"Text";
+    QVector<QString> coll = {"Группа", "Предмет","Кабинет","Этаж","Корпус","Четность","День","Время"};
+    for (int i = 0; i<coll.size();i++) {
+        double mult = i*nodeSize*2;
+        //QPointF p(nodeSize/2+mult,2*nodeSize);
+        QPointF p(nodeSize/2+mult,nodeSize/2);
+        Node * node= new Node(this,nodeSize,0,coll[i],Qt::transparent,Qt::transparent);
+        node->setPos(p);
+        scene->addItem(node);
+        //textNodes.append(node);
+    }
 }
 
 void GraphWidget::wheelEvent(QWheelEvent *event)

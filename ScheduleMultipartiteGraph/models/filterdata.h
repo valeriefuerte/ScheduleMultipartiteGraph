@@ -9,7 +9,7 @@ class FilterData
 {
 public:
     FilterData();
-    FilterData( QVector<QString> data);
+    FilterData(QVector<QString> data);
     QVector<QString> data;
     QVector<QString> coll = {"Группа", "Предмет","Кабинет","Этаж","Корпус","Четность","День недели","Время"};
 
