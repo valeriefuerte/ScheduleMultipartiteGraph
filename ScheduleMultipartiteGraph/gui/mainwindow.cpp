@@ -1225,6 +1225,7 @@ void MainWindow::on_gen_schedule()
 
         this->graph = graph.fit();
         QList<Lesson> lessons = transformGrapthToLessons();
+
         //qDebug()<<this->graph;
         ScheduleTableAbstractModule *model = new ScheduleTableAbstractModule(lessons);
         this->schedueWidget->updateModel(model);

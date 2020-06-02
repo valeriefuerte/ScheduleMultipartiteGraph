@@ -21,4 +21,5 @@ struct Lesson{
     QHash<int,QString> _receiveDay;
 
 };
+
 #endif // LESSON_H
