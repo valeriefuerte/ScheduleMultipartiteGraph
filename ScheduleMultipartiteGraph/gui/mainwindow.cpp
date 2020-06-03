@@ -1273,7 +1273,6 @@ void MainWindow::on_gen_schedule()
     this->schedueWidget->scheduleTable->show();
     ScheduleTableAbstractModule *model = new ScheduleTableAbstractModule(lessons);
 
-
     schedueWidget->insertFilterDataVariants(dataForFilters);
     graphWidget->insertFilterDataVariants(dataForFilters);
     this->schedueWidget->updateModel(model);

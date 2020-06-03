@@ -14,11 +14,21 @@ VisualizationWidget::VisualizationWidget(QWidget *parent) : QWidget(parent)//,
     //gen_btn = new QPushButton("Создать граф",this);
     //connect(gen_btn,SIGNAL(clicked()),this,SLOT(apply_clicked()));
     grid->addWidget(graphWidget,1,0);
-    grid->addWidget(createMenu(),0,0);
+    //grid->addWidget(createMenu(),0,0);
     grid->addWidget(createSchedueFilters(),2,0);
     //grid->addWidget(gen_btn,3,0);
     setLayout(grid);
 
+    connect(groupComboBox,&QComboBox::currentTextChanged,this,&VisualizationWidget::filtersChanged);
+    connect(subjectComboBox,&QComboBox::currentTextChanged,this,&VisualizationWidget::filtersChanged);
+
+    connect(numberComboBox,&QComboBox::currentTextChanged,this,&VisualizationWidget::filtersChanged);
+    connect(floorComboBox,&QComboBox::currentTextChanged,this,&VisualizationWidget::filtersChanged);
+    connect(buildingComboBox,&QComboBox::currentTextChanged,this,&VisualizationWidget::filtersChanged);
+
+    connect(parityComboBox,&QComboBox::currentTextChanged,this,&VisualizationWidget::filtersChanged);
+    connect(dayComboBox,&QComboBox::currentTextChanged,this,&VisualizationWidget::filtersChanged);
+    connect(timeComboBox,&QComboBox::currentTextChanged,this,&VisualizationWidget::filtersChanged);
 
 
 
@@ -49,17 +59,19 @@ void VisualizationWidget::insertFilterDataVariants(QVector<QSet<QString> > dataF
     QVector<QStringList> stringLists;
     for (int i = 0; i < dataForFilters.size(); ++i) {
         QList<QString> list = dataForFilters[i].toList();
-        list.push_front("None");
+        //list.push_front("None");
         stringLists.append(QStringList(list));
     }
     groupComboBox->addItems(stringLists[0]);
     subjectComboBox->addItems(stringLists[1]);
-    floorComboBox->addItems(stringLists[2]);
-    buildingComboBox->addItems(stringLists[3]);
-    numberComboBox->addItems(stringLists[4]);
-    timeComboBox->addItems(stringLists[5]);
+    numberComboBox->addItems(stringLists[2]);
+    floorComboBox->addItems(stringLists[3]);
+    buildingComboBox->addItems(stringLists[4]);
+    parityComboBox->addItems(stringLists[5]);
     dayComboBox->addItems(stringLists[6]);
-    parityComboBox->addItems(stringLists[7]);
+    timeComboBox->addItems(stringLists[7]);
+
+
 
 }
 
@@ -70,16 +82,25 @@ FilterData VisualizationWidget::takeDataFromFilters()
     QVector<QString> data;
     data.append(groupComboBox->currentText());
     data.append(subjectComboBox->currentText());
+    data.append(numberComboBox->currentText());
     data.append(floorComboBox->currentText());
     data.append(buildingComboBox->currentText());
-    data.append(numberComboBox->currentText());
-    data.append(timeComboBox->currentText());
-    data.append(dayComboBox->currentText());
     data.append(parityComboBox->currentText());
+    data.append(dayComboBox->currentText());
+    data.append(timeComboBox->currentText());
+
+
     qDebug()<<data;
     filterData.data = data;
     return filterData;
 
+}
+
+void VisualizationWidget::filtersChanged()
+{
+    qDebug()<<"SchedueFilters_graph";
+    FilterData data = this->takeDataFromFilters();
+    graphWidget->useFilter(data);
 }
 
 void VisualizationWidget::apply_clicked()
@@ -144,16 +165,27 @@ QGroupBox * VisualizationWidget::createSchedueFilters()
     dayComboBox = new QComboBox();
     parityComboBox = new QComboBox();
 
+    groupComboBox->addItem("None");
+    subjectComboBox->addItem("None");
+    floorComboBox ->addItem("None");
+    buildingComboBox ->addItem("None");
+    numberComboBox ->addItem("None");
+    timeComboBox ->addItem("None");
+    dayComboBox ->addItem("None");
+    parityComboBox ->addItem("None");
+
     vbox->addWidget(label);
 
     vbox->addWidget(groupComboBox);
     vbox->addWidget(subjectComboBox);
+    vbox->addWidget(numberComboBox);
     vbox->addWidget(floorComboBox);
     vbox->addWidget(buildingComboBox);
-    vbox->addWidget(numberComboBox);
-    vbox->addWidget(timeComboBox);
-    vbox->addWidget(dayComboBox);
     vbox->addWidget(parityComboBox);
+    vbox->addWidget(dayComboBox);
+    vbox->addWidget(timeComboBox);
+
+
 
     box->setLayout(vbox);
     return box;

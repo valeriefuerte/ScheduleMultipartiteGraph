@@ -50,6 +50,7 @@ public slots:
     void setupGraph(QVector<QSet<QString> > data, QList<Lesson> lessons);
     void insertFilterDataVariants(QVector<QSet<QString>> dataForFilters);
     FilterData takeDataFromFilters();
+    void filtersChanged();
 private:
     //виджет визуализации графа
     GraphWidget *graphWidget;

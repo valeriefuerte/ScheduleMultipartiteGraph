@@ -1,10 +1,12 @@
 #include "scheduefilterproxymodel.h"
-
+#include <QDebug>
 
 SchedueFilterProxyModel::SchedueFilterProxyModel(QObject *parent): QSortFilterProxyModel(parent)
 
 {
-
+    QVector<QString> nonePlace;
+    nonePlace.fill("None",data.coll.size());
+    data.data = nonePlace;
 }
 
 //void SchedueFilterProxyModel::setMinGravity(double minGravity){
@@ -20,16 +22,23 @@ SchedueFilterProxyModel::SchedueFilterProxyModel(QObject *parent): QSortFilterPr
 //}
 
 bool SchedueFilterProxyModel::filterAcceptsRow(int source_row,
-                                  const QModelIndex &source_parent) const{
+                                               const QModelIndex &source_parent) const{
 
-//    QModelIndex indG = sourceModel()->index(source_row,
-//                                               1, source_parent);
-//    QModelIndex indD = sourceModel()->index(source_row,
-//                                               2, source_parent);
-//    if(sourceModel()->data(indG).toDouble() < m_minGravity ||
-//            sourceModel()->data(indD).toDouble() < m_minDensity)
-//        return false;
-//    return true;
+    //QVector<QModelIndex> vectorIndex;
+    for (int i = 0;i<data.data.size();i++) {
+       // vectorIndex.append(sourceModel()->index(source_row,
+       //                                         i, source_parent));
+        QModelIndex model_index =sourceModel()->index(source_row,i, source_parent);
+        QString opp = data.data[i];
+       if ((opp != sourceModel()->data(model_index).toString()) && (opp !="None")) {
+            return false;
+        }
+    }
+    return true;
+    //    if(sourceModel()->data(indG).toDouble() < m_minGravity ||
+    //            sourceModel()->data(indD).toDouble() < m_minDensity)
+    //        return false;
+    //    return true;
 
 }
 
@@ -37,4 +46,10 @@ QVariant SchedueFilterProxyModel::headerData(int section, Qt::Orientation orient
                                              int role) const {
     return sourceModel()->headerData(section, orientation,
                                      role);
+}
+
+void SchedueFilterProxyModel::useFilters(FilterData &data)
+{
+    this->data =data;
+    invalidateFilter();
 }

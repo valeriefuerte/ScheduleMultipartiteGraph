@@ -64,15 +64,15 @@ void GraphWidget::buildNewGraph(QVector<QSet<QString> > data, QList<Lesson> less
     //nodeMatrix.clear();
 
     nodeMatrix.clear();
+    //textNodes.clear();
     scene->clear();
-
+    createTextNodes();
     qDebug()<<"data vector size"<<data.size();
 
     for (int i = 0; i<data.size();i++) {
         qDebug()<<data[i]<<data[i].size();
         qDebug()<<data[i].toList().at(0);
-        QVector<QPointF> p;
-        p = this->createLinePoint(data[i].size(),nodeSize,i);
+        QVector<QPointF> p = this->createLinePoint(data[i].size(),nodeSize,i);
         QHash <QString, Node*> hash_nodes;
 
         for (int q = 0 ;q<p.size();q++) {
@@ -101,6 +101,16 @@ void GraphWidget::updateGraph(QList<Lesson> &lessons)
 {
     this->lessons = lessons;
 
+}
+
+void GraphWidget::hideAll()
+{
+    for (int slide= 0; slide < nodeMatrix.size(); ++slide) {
+        for (QHash<QString,Node*>::iterator i =nodeMatrix[slide].begin(); i != nodeMatrix[slide].end(); ++i) {
+            i.value()->hide();
+        }
+
+    }
 }
 
 
@@ -177,7 +187,10 @@ void GraphWidget::useFilter(FilterData &fdata)
 
     for (int curSlide = 0 ;curSlide < fdata.data.size();curSlide++) {
         if (fdata.data[curSlide] != "None") {
-            this->filterBySlide(curSlide,fdata.data[curSlide]);
+            if (!filterBySlide(curSlide,fdata.data[curSlide])) {
+                hideAll();
+                break;
+            }
         } else {
             qDebug()<<"None"<<curSlide;
         }
@@ -201,7 +214,7 @@ void GraphWidget::scaleView(qreal scaleFactor)
 QVector<QPointF> GraphWidget::createLinePoint(int lenght, double size, int slice)
 {
     QVector<QPointF> p;
-    QPointF start(size/2+slice*size*2,size+size/2);
+    QPointF start(size/2+slice*size*2,size+size);
 
     for (int i = 0; i<lenght;i++) {
         p.append(start);
@@ -212,9 +225,10 @@ QVector<QPointF> GraphWidget::createLinePoint(int lenght, double size, int slice
 
 
 
-void GraphWidget::filterBySlide(int slide, QString data)
+bool GraphWidget::filterBySlide(int slide, QString data)
 {
     qDebug()<<"Filters"<<data;
+    Node * node = nullptr;
     for (QHash<QString,Node*>::iterator i =nodeMatrix[slide].begin(); i != nodeMatrix[slide].end(); ++i) {
         //qDebug()<<"COMPARE"<<QString::compare(i.value()->getData(),data,Qt::CaseInsensitive);
         //bool wtf = i.value()->getData();
@@ -226,6 +240,7 @@ void GraphWidget::filterBySlide(int slide, QString data)
             i.value()->hide();
         } else  {
             qDebug()<<"Work"<<slide;
+            node = i.value();
         }
     }
     int backID = slide;
@@ -237,10 +252,21 @@ void GraphWidget::filterBySlide(int slide, QString data)
     }
 
     while (forwardID != nodeMatrix.size()) {
-        if (forwardID !=0)
+        if (forwardID != 0)
             rightFilterSlise(forwardID);
         forwardID++;
     }
+    QList<Edge *> l = node->edges();
+    bool canLife = false;
+    for (Edge * e : l) {
+        if (e->isVisible()) {
+            canLife = true;
+        }
+    }
+    if (canLife)
+        return true;
+    else
+        return false;
 
 }
 
@@ -253,7 +279,7 @@ void GraphWidget::leftFilterSlise(int slide)
         for (Edge * e : l) {
 
             if ((e->sourceNode()->getSliceId() == i.value()->getSliceId())
-                    && (e->sourceNode()->getPos() ==  i.value()->getPos())) {
+                    && (e->sourceNode()->getPos() ==  i.value()->getPos()) && (e->isVisible())) {
                 canLife = true;
             }
         }
@@ -272,7 +298,7 @@ void GraphWidget::rightFilterSlise(int slide)
         for (Edge * e : l) {
 
             if ((e->destNode()->getSliceId() == i.value()->getSliceId())
-                    && (e->destNode()->getPos() ==  i.value()->getPos())) {
+                    && (e->destNode()->getPos() ==  i.value()->getPos())&& (e->isVisible())) {
                 canLife = true;
             }
         }
@@ -304,6 +330,21 @@ void GraphWidget::linkLessonsParts(Lesson lesson)
         scene->addItem(new Edge(nodeMatrix[curSlide].find(lessonDataString[curSlide]).value(), nodeMatrix[curSlide+1].find(lessonDataString[curSlide+1]).value()));
     }
     //scene->addItem(new Edge(node1, node2));
+}
+
+void GraphWidget::createTextNodes()
+{
+    qDebug()<<"Text";
+    QVector<QString> coll = {"Группа", "Предмет","Кабинет","Этаж","Корпус","Четность","День","Время"};
+    for (int i = 0; i<coll.size();i++) {
+        double mult = i*nodeSize*2;
+        //QPointF p(nodeSize/2+mult,2*nodeSize);
+        QPointF p(nodeSize/2+mult,nodeSize/2);
+        Node * node= new Node(this,nodeSize,0,coll[i],Qt::transparent,Qt::transparent);
+        node->setPos(p);
+        scene->addItem(node);
+        //textNodes.append(node);
+    }
 }
 
 void GraphWidget::wheelEvent(QWheelEvent *event)

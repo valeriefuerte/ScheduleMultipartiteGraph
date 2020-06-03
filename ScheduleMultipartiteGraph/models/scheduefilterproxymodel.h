@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QSortFilterProxyModel>
-
+#include "models/filterdata.h"
 class SchedueFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
@@ -13,9 +13,9 @@ public:
                           const QModelIndex &source_parent) const;
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role) const;
-
+    FilterData data;
 public slots:
-
+    void useFilters(FilterData &data);
 private:
 
 };
