@@ -26,7 +26,7 @@ CONFIG += c++11
 
 SOURCES += \
     allocator/allocator.cpp \
-    exceptions/graphexception.cpp \
+    exceptions/exception.cpp \
     gui/dialogAddlinkGroupSubject.cpp \
     gui/dialogCabinetWindow.cpp \
     gui/dialogGroupWindow.cpp \
@@ -65,7 +65,13 @@ SOURCES += \
 
 HEADERS += \
     allocator/allocator.h \
-    exceptions/graphexception.h \
+    exceptions/emptytreeexception.h \
+    exceptions/exception.h \
+    exceptions/nonextelementiteratorexception.h \
+    exceptions/noparentnodefoundbyidexception.h \
+    exceptions/noparentnodefoundbyvalueexception.h \
+    exceptions/noparentnodefoundexception.h \
+    exceptions/nosuchelementexception.h \
     gui/dialogAddlinkGroupSubject.h \
     gui/dialogCabinetWindow.h \
     gui/dialogGroupWindow.h \
