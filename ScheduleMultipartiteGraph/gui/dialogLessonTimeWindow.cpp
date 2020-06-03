@@ -7,6 +7,7 @@
 #include <QTime>
 #include <QDebug>
 #include <QDialog>
+#include <QMessageBox>
 #include "dialogLessonTimeWindow.h"
 
 
@@ -63,13 +64,24 @@ DialogLessonTimeWindow::~DialogLessonTimeWindow(){
 }
 
 void DialogLessonTimeWindow::apply_clicked(){
-   if (!flag){
+if (parityEdit->text().isEmpty()&&timeEdit->text()=="  :00"){
+    QMessageBox::information(this,"Ошибка","Заполнены не все поля ввода!");
+}
+ else if (!parityEdit->text().isEmpty()&&timeEdit->text()=="  :00"){
+
+    QMessageBox::information(this,"Ошибка","Заполнены не все поля ввода!");
+}
+else if (parityEdit->text().isEmpty()&&timeEdit->text()!="  :00"){
+
+   QMessageBox::information(this,"Ошибка","Заполнены не все поля ввода!");
+}
+else if (!flag){
 
         emit sendDataLessonTime(LessonTime(parityEdit->text().toInt(),hashAddDay[dayList->currentText()],timeEdit->time()));
-        this->close();
+
    } else if (flag){
         emit sendEditDataLessonTime(LessonTime(parityEdit->text().toInt(),hashAddDay[dayList->currentText()],timeEdit->time()));
-        this->close();
+
    }
      flag = false;
 }

@@ -9,7 +9,8 @@
 #include <QBoxLayout>
 #include "filterwidget.h"
 #include "gui/graphwidget.h"
-
+#include "models/repository/repositorytemplate.h"
+#include <QComboBox>
 class GraphWidget;
 
 //
@@ -25,19 +26,55 @@ public:
 
     void paintEvent(QPaintEvent *event) override;
 
+    //filter data
+    QComboBox *groupComboBox;
+
+    QComboBox *subjectComboBox;
+
+    QComboBox *floorComboBox;
+    QComboBox *buildingComboBox;
+    QComboBox *numberComboBox;
+
+    QComboBox *timeComboBox;
+    QComboBox *dayComboBox;
+    QComboBox *parityComboBox;
+
+    GraphWidget *graphWidget;
+
+
 signals:
 
+    void gen_graph();
+
 public slots:
+    void apply_clicked();
     void resetGraphWidget();
+    void setupGraph(QVector<QSet<QString> > data, QList<Lesson> lessons);
+    void insertFilterDataVariants(QVector<QSet<QString>> dataForFilters);
+    FilterData takeDataFromFilters();
+    void filtersChanged();
 private:
     //виджет визуализации графа
-    GraphWidget *graphWidget;
+    //GraphWidget *graphWidget;
     //меню
     QGroupBox *menu;
     QBoxLayout *visualGraphLayout;
+    QGridLayout *grid;
     //функция по созданию меню
     QGroupBox *createMenu();
-    FilterWidget *filter;
+    QGroupBox * createSchedueFilters();
+
+    QPushButton *gen_btn;
+
+//    void  updateRepo(RepositoryTemplate<Cabinet> repoCabinets,
+//                     RepositoryTemplate<GroupStudents> repoGroupStudents,
+//                     RepositoryTemplate<LessonTime> repoLessonTime,
+//                     RepositoryTemplate<Subject> repoSubjects);
+
+//    RepositoryTemplate<Cabinet> repoCabinets;
+//    RepositoryTemplate<GroupStudents> repoGroupStudents;
+//    RepositoryTemplate<LessonTime> repoLessonTime;
+//    RepositoryTemplate<Subject> repoSubjects;
 };
 
 #endif // VISUALIZATIONWIDGET_H

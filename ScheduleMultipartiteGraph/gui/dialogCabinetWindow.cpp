@@ -6,6 +6,7 @@
 #include <qcheckbox.h>
 #include <QDebug>
 #include<QFormLayout>
+#include <QMessageBox>
 #include<models/repository/repositorytemplate.h>
 #include<models/cabinet.h>
 #include <gui/mainwindow.h>
@@ -54,19 +55,43 @@ DialogCabinetWindow::~DialogCabinetWindow(){
 
 void DialogCabinetWindow::apply_clicked(){
 
-    int number = numberLineEdit->text().toInt();
-    int floor = floorLineEdit->text().toInt();
-    int building = buildingLineEdit->text().toInt();
+  int number = numberLineEdit->text().toInt();
+  int floor = floorLineEdit->text().toInt();
+  int building = buildingLineEdit->text().toInt();
+  if ((numberLineEdit->text().isEmpty()&&floorLineEdit->text().isEmpty()&&buildingLineEdit->text().isEmpty())){
+          QMessageBox::information(this,"Ошибка","Заполнены не все поля ввода!");
+   }
+    else if ((numberLineEdit->text().isEmpty()&&!floorLineEdit->text().isEmpty()&&!buildingLineEdit->text().isEmpty())) {
+      QMessageBox::information(this,"Ошибка","Заполнены не все поля ввода!");
 
-if (!flag){
-    Cabinet cabinet(number,floor,building);
-    emit sendDataCabinet(cabinet);
-    this->close();
- } else if (flag){
-     emit sendEditDataCabinet(Cabinet(numberLineEdit->text().toInt(),floorLineEdit->text().toInt(),buildingLineEdit->text().toInt()));
-    this->close();
- }
-    flag = false;
+    }
+  else if ((numberLineEdit->text().isEmpty()&&floorLineEdit->text().isEmpty()&&!buildingLineEdit->text().isEmpty())) {
+      QMessageBox::information(this,"Ошибка","Заполнены не все поля ввода!");
+
+    }
+  else if ((numberLineEdit->text().isEmpty()&&!floorLineEdit->text().isEmpty()&&buildingLineEdit->text().isEmpty())) {
+      QMessageBox::information(this,"Ошибка","Заполнены не все поля ввода!");
+    }
+  else if ((!numberLineEdit->text().isEmpty()&&floorLineEdit->text().isEmpty()&&!buildingLineEdit->text().isEmpty())) {
+      QMessageBox::information(this,"Ошибка","Заполнены не все поля ввода!");
+    }
+  else if ((!numberLineEdit->text().isEmpty()&&floorLineEdit->text().isEmpty()&&buildingLineEdit->text().isEmpty())) {
+      QMessageBox::information(this,"Ошибка","Заполнены не все поля ввода!");
+    }
+  else if ((!numberLineEdit->text().isEmpty()&&!floorLineEdit->text().isEmpty()&&buildingLineEdit->text().isEmpty())) {
+      QMessageBox::information(this,"Ошибка","Заполнены не все поля ввода!");
+    }
+else {
+        if (!flag){
+            Cabinet cabinet(number,floor,building);
+            emit sendDataCabinet(cabinet);
+        } else if (flag){
+            emit sendEditDataCabinet(Cabinet(numberLineEdit->text().toInt(),floorLineEdit->text().toInt(),buildingLineEdit->text().toInt()));
+
+        }
+        flag = false;
+    }
+
 }
 
 void DialogCabinetWindow::editTitle(){

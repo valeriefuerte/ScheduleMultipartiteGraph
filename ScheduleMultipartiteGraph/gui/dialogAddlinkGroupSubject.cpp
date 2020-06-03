@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <qvalidator.h>
 #include<QFormLayout>
+#include <QMessageBox>
 #include <models/repository/repositorytemplate.h>
 #include <models/groupstudents.h>
 #include <models/subject.h>
@@ -47,27 +48,6 @@ void DialogAddLinkGroupSubject::addLinkGroupSubject(int indexGroup,int indexSubj
     editDataRepoGroup(repoGroupStud);
     editDataRepoSubject(repoSubject);
 
-        /*qDebug()<<"RepoGroupStudents: ";
-        for (int i = 0; i<repoGroupStud.getAmount(); i++){
-            qDebug()<<repoGroupStud.getByIndex(i).name;
-        }
-        qDebug()<<"RepoRecGroupStudents: ";
-        for (int i = 0; i<receiveRepGroup.getAmount(); i++){
-            qDebug()<<receiveRepGroup.getByIndex(i).name;
-        }
-        qDebug()<<"RepoSubjects: ";
-       for (int i = 0; i<repoSubject.getAmount(); i++){
-           qDebug()<<repoSubject.getByIndex(i).name;
-       }
-       qDebug()<<"RepoRecSubjects: ";
-       for (int i = 0; i<receiveRepSubject.getAmount(); i++){
-           qDebug()<<receiveRepSubject.getByIndex(i).name;
-       }*/
-
-           /*qDebug()<<"RepoSubject: "<<repoSubjects.getAmount()<<"RepoSubject: "<<repoRecSubject.getAmount();
-           for (int i =0; i<repoRecSubject.getAmount(); i++){
-                qDebug()<<repoRecSubject.getById(i).name;
-          }*/
 
     nameGroup->setText(repoGroupStud.getById(repoGroupStud.getByIndex(indexGroup).id).name);
     nameSubject->setText(repoSubject.getById(repoSubject.getByIndex(indexRSub).id).name);
@@ -77,7 +57,10 @@ void DialogAddLinkGroupSubject::addLinkGroupSubject(int indexGroup,int indexSubj
 void DialogAddLinkGroupSubject::apply_clicked(){
 
   int academic= academHours->text().toInt();
-
+  if (academHours->text()==""||academic==0){
+      QMessageBox::information(this,"Ошибка","Поле ввода пусто или равно 0!");
+      return;
+  }
   if (!changeAcH){
      emit sendRepoGroupSubject(LinkGroupSubject(receiveRepGroup.getByIndex(indexRGroup).id,
      receiveRepSubject.getById(receiveRepSubject.getByIndex(indexRSub).id).id, academic),receiveRepSubject.getById(receiveRepSubject.getByIndex(indexRSub).id).name);
@@ -89,7 +72,7 @@ void DialogAddLinkGroupSubject::apply_clicked(){
   }
 
    changeAcH=false;
-   this->close();
+
  }
 
 
