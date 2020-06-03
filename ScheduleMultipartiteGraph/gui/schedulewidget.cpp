@@ -134,6 +134,7 @@ QGroupBox * ScheduleWidget::createSchedueFilters()
 }
 
 void ScheduleWidget::apply_clicked(){
-    emit gen_schedule();
+    int i =1;
+    emit gen_schedule(1);
 }
 

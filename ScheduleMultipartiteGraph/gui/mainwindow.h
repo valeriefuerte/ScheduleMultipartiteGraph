@@ -147,7 +147,7 @@ private slots:
     void receiveEditRepoLinkGrSb(RepositoryTemplate<LinkGroupSubject>);
 
     //генерация расписания
-    void on_gen_schedule();
+    void on_gen_schedule(int);
 
     void on_gen_graph();
 
@@ -220,6 +220,8 @@ private:
     int  checkidenticalDataCabinets(Cabinet);
     //проверка на сопадения время
     int  checkidenticalDataTime(LessonTime);
+
+    void generateSchedule();
 
 
 };

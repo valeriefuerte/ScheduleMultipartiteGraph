@@ -87,7 +87,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tabWidget->addTab(schedueWidget,"Расписание");
 
     //отлов нажатия кнопки на генерацию расписания
-    connect(schedueWidget,SIGNAL(gen_schedule()),this,SLOT(on_gen_schedule()));
+    connect(schedueWidget,SIGNAL(gen_schedule(int)),this,SLOT(on_gen_schedule(int)));
     // Виджет визуализации графа
     graphWidget = new VisualizationWidget();
     connect(graphWidget,SIGNAL(gen_graph()),this,SLOT(on_gen_graph()));
@@ -718,7 +718,7 @@ void MainWindow::receiveDeleteFileName(QString pathFile,QString nameFile){
                 this->repoLinkGroupSubject=lrepoLinkGroupSubject;
                 lessons = reLesson;
 
-                on_gen_schedule();
+                on_gen_schedule(0);
 
                 //обнуление буфера группы_предметы
                 dialogLinkGroupSubject->repoLinkGroupSubjects = lrepoLinkGroupSubject;
@@ -801,6 +801,7 @@ void MainWindow::loadOnSelectedFile(QString pathFile, QString nameFile){
             RepositoryTemplate<LessonTime> lrepoLessonTime;
             RepositoryTemplate<GroupStudents> lrepoGroupStudent;
             RepositoryTemplate<LinkGroupSubject> lrepoLinkGroupSubject;
+            QList<Lesson> lreLesson;
 
 
             QJsonObject objectCabinets = object[lrepoCabinet.getTname()].toObject();
@@ -815,6 +816,7 @@ void MainWindow::loadOnSelectedFile(QString pathFile, QString nameFile){
             lrepoLessonTime.fromJson(objectLessonTime);
             lrepoGroupStudent.fromJson(objectGroupStudents);
             lrepoLinkGroupSubject.fromJson(objectLinkGroupSubject);
+            lreLesson = les.fromJson(objectLesson);
             jsonFile.close();
 
             this->setWindowTitle(nameFile+".json");
@@ -826,7 +828,7 @@ void MainWindow::loadOnSelectedFile(QString pathFile, QString nameFile){
             this->repoLessonTime=lrepoLessonTime;
             this->repoGroupStudents=lrepoGroupStudent;
             this->repoLinkGroupSubject=lrepoLinkGroupSubject;
-            lessons = les.fromJson(objectLesson);
+            this->lessons = lreLesson;
 
             ui->saveFile->setEnabled(true);
             ui->saveAs->setEnabled(true);
@@ -848,6 +850,8 @@ void MainWindow::loadOnSelectedFile(QString pathFile, QString nameFile){
     }
 }
 void MainWindow::receiveFileName(QString pathFile, QString nameFile, bool createFlag){
+    //преобразование
+    LessontoJson les;
 
     if (nameFile==""){
         QMessageBox::information(this,"Ошибка","Вы не ввели имя файла!");
@@ -873,6 +877,7 @@ void MainWindow::receiveFileName(QString pathFile, QString nameFile, bool create
         idenFlag = false;
         return;
     }
+    //сохранение файла и открытие его
     if (!createFlag){
         QJsonDocument json;
         QJsonObject object = json.object();
@@ -884,7 +889,7 @@ void MainWindow::receiveFileName(QString pathFile, QString nameFile, bool create
         object[this->repoLessonTime.getTname()] = this->repoLessonTime.toJson();
         object[this->repoGroupStudents.getTname()] = this->repoGroupStudents.toJson();
         object[this->repoLinkGroupSubject.getTname()] = this->repoLinkGroupSubject.toJson();
-
+        object["schedule"].toObject() = les.toJson(lessons);
         json.setObject(object);
 
         QString jsonName = QString(pathFile).arg(time(NULL));
@@ -895,6 +900,7 @@ void MainWindow::receiveFileName(QString pathFile, QString nameFile, bool create
 
             clearModel();
             clearRepository();
+
             loadReps(jsonName);
             this->setWindowTitle(nameFile+".json");
 
@@ -908,7 +914,7 @@ void MainWindow::receiveFileName(QString pathFile, QString nameFile, bool create
 
     }
     else{
-
+        //создание нового файла с нуля
         clearModel();
         clearRepository();
 
@@ -920,6 +926,7 @@ void MainWindow::receiveFileName(QString pathFile, QString nameFile, bool create
         object[this->repoLessonTime.getTname()] = this->repoLessonTime.toJson();
         object[this->repoGroupStudents.getTname()] = this->repoGroupStudents.toJson();
         object[this->repoLinkGroupSubject.getTname()] = this->repoLinkGroupSubject.toJson();
+        object["schedule"].toObject() = les.toJson(lessons);
 
         json.setObject(object);
 
@@ -1130,7 +1137,7 @@ void MainWindow::loadModelonRepo(){
 
     }
 
-    on_gen_schedule();
+    on_gen_schedule(0);
 
 
 }
@@ -1177,7 +1184,7 @@ void MainWindow::clearModel(){
     clearTableView(ui->cabinets_table,cabinetModel);
     clearTableView(ui->time_table,timeModel);
     clearTableView(ui->gr_sub_table,gr_subModel);
-    on_gen_schedule();
+    on_gen_schedule(0);
 }
 //очищение репозиториев
 void MainWindow::clearRepository(){
@@ -1186,12 +1193,14 @@ void MainWindow::clearRepository(){
     RepositoryTemplate<LessonTime> lrepoLessonTime;
     RepositoryTemplate<GroupStudents> lrepoGroupStudent;
     RepositoryTemplate<LinkGroupSubject> lrepoLinkGroupSubject;
+    QList<Lesson> lreLesson;
 
     repoCabinets= lrepoCabinet;
     repoSubjects = lrepoSubject;
     repoLessonTime = lrepoLessonTime;
     repoGroupStudents = lrepoGroupStudent;
     repoLinkGroupSubject = lrepoLinkGroupSubject;
+    lessons = lreLesson;
     //обнуление буфера группы_предметы
     dialogLinkGroupSubject->repoLinkGroupSubjects = lrepoLinkGroupSubject;
 }
@@ -1248,36 +1257,48 @@ int MainWindow::checkidenticalDataTime(LessonTime lt){
     }
 }
 //запуск генерации расписания
-void MainWindow::on_gen_schedule()
+void MainWindow::on_gen_schedule(int i)
 {
+    //int i - это проверка нажатия кнопки "сгенерировать расписание; 1 - кнопка нажата, 0 - метод вызвался системно"
+    //если расписание составлено и сохранено в файл, то строим граф на основе его
+   if (lessons.size()!=0&&i==0){
 
-    Graph graph = Graph(
-                this->repoCabinets,
-                this->repoGroupStudents,
-                this->repoLessonTime,
-                this->repoSubjects,
-                this->repoLinkGroupSubject
-                );
-    this->graph = graph.fit();
-    lessons = transformGrapthToLessons();
-    QVector<QSet<QString>> dataForFilters = takeUniqueData();
+       QVector<QSet<QString>> dataForFilters = takeUniqueData();
 
-    if (lessons.size()==0){
+       ScheduleTableAbstractModule *model = new ScheduleTableAbstractModule(lessons);
+
+       schedueWidget->insertFilterDataVariants(dataForFilters);
+       graphWidget->insertFilterDataVariants(dataForFilters);
+       this->schedueWidget->updateModel(model);
+       this->graphWidget->setupGraph(dataForFilters,lessons);
+
+        this->schedueWidget->scheduleTable->show();
+   }
+   // если расписание не составлено, а исходные данные не пустые: группы, предметы и т.д, нажимаем кнопку составить расписание
+   else if (lessons.size()==0 && repoCabinets.getAmount()!=0&&repoGroupStudents.getAmount()!=0
+     &&repoLessonTime.getAmount()!=0&&repoSubjects.getAmount()!=0&&repoLinkGroupSubject.getAmount()!=0&&i==1){
+
+    generateSchedule();
+
+  }
+   // если расписание составлено, а исходные данные не пустые: группы, предметы и т.д, нажимаем кнопку составить расписание
+   else if (lessons.size()!=0 && repoCabinets.getAmount()!=0&&repoGroupStudents.getAmount()!=0
+     &&repoLessonTime.getAmount()!=0&&repoSubjects.getAmount()!=0&&repoLinkGroupSubject.getAmount()!=0&&i==1){
+
+    generateSchedule();
+
+  }
+   else
+       //если удалился файл, то скрываем расписание с графом
+       if(lessons.size()==0 && repoCabinets.getAmount()==0&&repoGroupStudents.getAmount()==0
+                &&repoLessonTime.getAmount()==0&&repoSubjects.getAmount()==0&&repoLinkGroupSubject.getAmount()==0&&i==0){
 
         this->schedueWidget->scheduleTable->close();
+        graphWidget->graphWidget->hideAll();
 
 
     }
-    else{
 
-    this->schedueWidget->scheduleTable->show();
-    ScheduleTableAbstractModule *model = new ScheduleTableAbstractModule(lessons);
-
-    schedueWidget->insertFilterDataVariants(dataForFilters);
-    graphWidget->insertFilterDataVariants(dataForFilters);
-    this->schedueWidget->updateModel(model);
-    this->graphWidget->setupGraph(dataForFilters,lessons);
-    }
 
 }
 // не нужен (для тестов максимум)
@@ -1381,4 +1402,26 @@ QVector<QSet<QString>> MainWindow::takeUniqueData()
     qDebug()<<day_id;
     return p;
 }
+//генерация расписания
+void MainWindow::generateSchedule(){
+    Graph graph = Graph(
+                this->repoCabinets,
+                this->repoGroupStudents,
+                this->repoLessonTime,
+                this->repoSubjects,
+                this->repoLinkGroupSubject
+                );
+    this->graph = graph.fit();
 
+    lessons = transformGrapthToLessons();
+    QVector<QSet<QString>> dataForFilters = takeUniqueData();
+
+    ScheduleTableAbstractModule *model = new ScheduleTableAbstractModule(lessons);
+
+    schedueWidget->insertFilterDataVariants(dataForFilters);
+    graphWidget->insertFilterDataVariants(dataForFilters);
+    this->schedueWidget->updateModel(model);
+    this->graphWidget->setupGraph(dataForFilters,lessons);
+
+    this->schedueWidget->scheduleTable->show();
+}

@@ -38,7 +38,7 @@ public:
     //grilay
 signals:
     //генерация расписания
-    void gen_schedule();
+    void gen_schedule(int clicked);
 
 public slots:
     //нажатие кнопки генерация модели
