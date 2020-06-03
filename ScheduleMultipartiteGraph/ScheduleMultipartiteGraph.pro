@@ -90,6 +90,7 @@ HEADERS += \
     models/cabinet.h \
     models/filterdata.h \
     models/graph.h \
+    models/lessontoJSON.h \
     models/linkgroupsubject.h \
     models/repository/repositorytemplate.h \
     models/groupstudents.h \

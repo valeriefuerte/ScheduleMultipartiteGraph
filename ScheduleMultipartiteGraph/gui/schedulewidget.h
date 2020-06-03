@@ -32,6 +32,8 @@ public:
     QComboBox *dayComboBox;
     QComboBox *parityComboBox;
 
+    ScheduleTableView *scheduleTable;
+
 
     //grilay
 signals:
@@ -52,7 +54,7 @@ private:
     QAbstractTableModel *sceduleModel;
     SchedueFilterProxyModel *proxyModel;
     QGroupBox *createSchedueFilters();
-    ScheduleTableView *scheduleTable;
+    //ScheduleTableView *scheduleTable;
     //размещение кнопки
     QGridLayout *form;
     //кнопка собрать расписание
