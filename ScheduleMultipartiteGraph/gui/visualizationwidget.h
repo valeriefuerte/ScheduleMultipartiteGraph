@@ -39,6 +39,8 @@ public:
     QComboBox *dayComboBox;
     QComboBox *parityComboBox;
 
+    GraphWidget *graphWidget;
+
 
 signals:
 
@@ -53,7 +55,7 @@ public slots:
     void filtersChanged();
 private:
     //виджет визуализации графа
-    GraphWidget *graphWidget;
+    //GraphWidget *graphWidget;
     //меню
     QGroupBox *menu;
     QBoxLayout *visualGraphLayout;
