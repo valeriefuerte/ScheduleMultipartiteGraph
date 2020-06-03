@@ -12,6 +12,8 @@
 
 #include "models/repository/repositorytemplate.h"
 
+#include "models/graph.h"
+
 #include "models/tablelistmodel.h"
 
 #include "dialogSubjectWindow.h"
@@ -25,8 +27,13 @@
 
 #include "visualizationwidget.h"
 
-
+#include "models/Lesson.h"
 #include <QTableView>
+
+#include "gui/schedulewidget.h"
+#include "gui/visualizationwidget.h"
+
+
 
 namespace Ui {
 class MainWindow;
@@ -136,6 +143,15 @@ private slots:
     //получение имени удаляемого файла
     void receiveDeleteFileName(QString, QString);
 
+    //получение изменений из буфера репозитория Группы_предметы
+    void receiveEditRepoLinkGrSb(RepositoryTemplate<LinkGroupSubject>);
+
+    //генерация расписания
+    void on_gen_schedule(int);
+
+    void on_gen_graph();
+
+     QList<Lesson> transformGrapthToLessons();
 
 public slots:
 private:
@@ -144,10 +160,11 @@ private:
     //флаг для нахождения одинаковых файлов
     bool idenFlag = false;
 
-    QList<int> dlindexSb;
-    QList<int> dlindexGr;
-
     QHash<int,QString> receiveDay;
+    QVector<QSet<QString> > takeUniqueData();
+
+    //сгенерированное расписание
+    QList<Lesson> lessons;
 
     //Модели QTableView
     QStringList *list_s;
@@ -179,6 +196,12 @@ private:
     RepositoryTemplate<Subject> repoSubjects;
     RepositoryTemplate<LinkGroupSubject> repoLinkGroupSubject;
 
+   //Виджеты
+    ScheduleWidget *schedueWidget;
+    VisualizationWidget *graphWidget;
+
+    // Графа, двумерный Лист, строки это путь {groupId -> subjectId -> cabinetId -> lessonTimeId}
+    QList<QList<int>> graph;
     //метод загрузки модели по файлу
     void loadModelonRepo();
     //диалоговое окно работы с файлами
@@ -191,6 +214,14 @@ private:
     void clearModel();
     //очищение репозиториев
     void clearRepository();
+    //проверка на сопадения предметы, группы
+    int  checkidenticalDataRepo(QString =nullptr);
+    //проверка на сопадения кабинеты
+    int  checkidenticalDataCabinets(Cabinet);
+    //проверка на сопадения время
+    int  checkidenticalDataTime(LessonTime);
+
+    void generateSchedule();
 
 
 };

@@ -21,4 +21,6 @@ FilterData FilterWidget::getFilterData()
     FilterData data;
     qDebug()<<"usingFilter";
     return data;
+    //Example
+    //data.someData1 = ui->comboBox->currentText();
 }

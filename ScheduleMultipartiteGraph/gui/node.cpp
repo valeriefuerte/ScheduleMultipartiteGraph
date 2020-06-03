@@ -6,12 +6,20 @@
 #include <QPainter>
 #include <QStyleOption>
 #include <QDebug>
-Node::Node(GraphWidget *graphWidget, double size, QColor color)
-    :graph(graphWidget),size(size),color(color)
+Node::Node(GraphWidget *graphWidget, double size, int sliceId, QString data, QColor color, QColor line_color)
+    :graph(graphWidget),size(size),color(color),slice_id(sliceId),data(data),lineColor(line_color)
 {
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);
     setZValue(-1);
+
+
+}
+
+Node::~Node()
+{
+    qDebug()<<"NodeDest";
+    edgeList.clear();
 }
 
 void Node::addEdge(Edge *edge)
@@ -47,14 +55,19 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 {
 
     // Эллипс
-    painter->setPen(QPen(Qt::black, 0));
+    painter->setPen(QPen(lineColor, 0));
+
     painter->setBrush(QBrush(color));
     painter->drawEllipse(-size/2, -size/2, size, size);
 
+    //painter->drawText(QPointF(this->newPos.x()-size/2,newPos.y()),data);
+    painter->setPen(QPen(Qt::black, 0));
+    painter->drawText(this->boundingRect(),Qt::AlignCenter,data);
+    //painter->drawText(QRectF(0,0,600,600),Qt::AlignCenter,data);
 }
 
 QVariant  Node::itemChange(GraphicsItemChange change, const QVariant &value){
-   // qDebug()<<change;
+    // qDebug()<<change;
     switch (change) {
     case ItemPositionHasChanged: //если изменилась позиция , то все ребра перемещаются
         foreach (Edge *edge, edgeList) {
@@ -77,15 +90,15 @@ QVariant  Node::itemChange(GraphicsItemChange change, const QVariant &value){
 void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     // Для демонстрации. При нажатии мышкой на вершину она "прячется" вместе с ребрами
-    this->hide();
-    qDebug()<<this->pos();
-    QGraphicsItem::mousePressEvent(event);
+    //    this->hide();
+    //    qDebug()<<this->pos()<<"isHided"<<this->isVisible();
+    //    QGraphicsItem::mousePressEvent(event);
 }
 
 void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    update();
-    QGraphicsItem::mouseReleaseEvent(event);
+    //    update();
+    //    QGraphicsItem::mouseReleaseEvent(event);
 }
 // Если хотя бы 1 вершина стпрятана , то  необходимо спрятать ребро
 void Node::changeEdgeVisibility(Edge *edge)

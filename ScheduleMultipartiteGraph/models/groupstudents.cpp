@@ -24,12 +24,13 @@ void GroupStudents::fromJson(QJsonObject items) {
 }
 
 QString GroupStudents::toString() {
-    return QString("id: %1, name: %2").arg(this->id).arg(this->name);
+    return QString("%1").arg(this->name);
+//    return QString("id: %1, name: %2").arg(this->id).arg(this->name);
 }
 
 bool GroupStudents::operator== (const GroupStudents &object)
 {
     return (
-                (this->name == object.name || object.name != "")
+        (this->name == object.name || object.name == "")
     );
 }

@@ -78,7 +78,7 @@ private slots:
     void editDataRepoGroup(RepositoryTemplate<GroupStudents>);
     void editDataRepoSubject(RepositoryTemplate<Subject>);
 signals:
-
+    void editMainRepoLinkGroupSubject(RepositoryTemplate<LinkGroupSubject>);
 };
 
 #endif // DIALOGLINKGROUPSUBJECTWINDOW_H
