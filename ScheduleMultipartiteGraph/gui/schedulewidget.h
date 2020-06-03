@@ -11,7 +11,8 @@
 #include "models/scheduefilterproxymodel.h"
 #include <QComboBox>
 #include "models/filterdata.h"
-
+#include "exceptions/emptygraphexception.h"
+using namespace GraphContainer;
 class ScheduleWidget : public QWidget
 {
     Q_OBJECT

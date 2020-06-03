@@ -65,7 +65,7 @@ SOURCES += \
 
 HEADERS += \
     allocator/allocator.h \
-    exceptions/emptytreeexception.h \
+    exceptions/emptygraphexception.h \
     exceptions/exception.h \
     exceptions/nonextelementiteratorexception.h \
     exceptions/noparentnodefoundbyidexception.h \

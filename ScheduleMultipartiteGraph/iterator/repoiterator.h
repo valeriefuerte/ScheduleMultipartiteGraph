@@ -5,7 +5,8 @@
 #include <stdexcept>
 #include "exceptions/nonextelementiteratorexception.h"
 
-namespace GraphContainer {
+using namespace GraphContainer;
+
 template<class T>
 class RepoIterator
 {
@@ -52,6 +53,6 @@ T* RepoIterator<T>::next()
     nodes.pop();
     return res->getValue();
 }
-}
+
 
 #endif // RepoIterator_H
