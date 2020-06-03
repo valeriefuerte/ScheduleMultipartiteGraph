@@ -227,14 +227,14 @@ QVector<QPointF> GraphWidget::createLinePoint(int lenght, double size, int slice
 
 bool GraphWidget::filterBySlide(int slide, QString data)
 {
-    qDebug()<<"Filters"<<data;
+    //qDebug()<<"Filters"<<data;
     Node * node = nullptr;
     for (QHash<QString,Node*>::iterator i =nodeMatrix[slide].begin(); i != nodeMatrix[slide].end(); ++i) {
         //qDebug()<<"COMPARE"<<QString::compare(i.value()->getData(),data,Qt::CaseInsensitive);
         //bool wtf = i.value()->getData();
         //qDebug()<<wtf;
         if (slide == 7) {
-            qDebug()<<"Time"<<data;
+            qDebug()<<"Time"<<data<<"-"<<i.value()->getData()<<" "<<QString::compare(data,i.value()->getData());
         }
         if (i.value()->getData() != data) {
             i.value()->hide();
@@ -246,7 +246,7 @@ bool GraphWidget::filterBySlide(int slide, QString data)
     int backID = slide;
     int forwardID = slide;
     while (backID != 0) {
-        if(backID != nodeMatrix.size())
+        if(backID != nodeMatrix.size()-1)
             leftFilterSlise(backID);
         backID--;
     }

@@ -30,6 +30,11 @@ bool SchedueFilterProxyModel::filterAcceptsRow(int source_row,
        //                                         i, source_parent));
         QModelIndex model_index =sourceModel()->index(source_row,i, source_parent);
         QString opp = data.data[i];
+        if (i == 7) {
+            qDebug()<<"Sched"<<opp<<"-"<<sourceModel()->data(model_index).toString()<<"";
+            if (opp !="None")
+                opp+=".000";
+        }
        if ((opp != sourceModel()->data(model_index).toString()) && (opp !="None")) {
             return false;
         }
