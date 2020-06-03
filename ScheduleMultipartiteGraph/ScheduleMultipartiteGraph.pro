@@ -109,7 +109,8 @@ HEADERS += \
     models/subject.h \
     models/tablelistmodel.h \
     someTestData/planet.h \
-    someTestData/planettablemodel.h
+    someTestData/planettablemodel.h \
+    someTestData/repoData.h
 
 
 

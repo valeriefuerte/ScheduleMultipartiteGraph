@@ -1,11 +1,11 @@
-#ifndef RepoIterator_H
-#define RepoIterator_H
+#ifndef REPODATA_H
+#define REPODATA_H
 #include <stack>
 #include <exception>
 #include <stdexcept>
 #include "exceptions/nonextelementiteratorexception.h"
 
-namespace GraphContainer {
+
 template<class T>
 class RepoIterator
 {
@@ -43,8 +43,8 @@ T* RepoIterator<T>::next()
 {
     if (!hasNext())
     {
-        //throw stderr(this, new std::string("RepoIterator.h"), 46, new std::string("next()"));
-        throw NoNextElementIteratorException<RepoIterator<T>>(this, new std::string("repoiterator.h"), 46, new std::string("next()"));
+        throw stderr(this, new std::string("RepoIterator.h"), 46, new std::string("next()"));
+        //throw NoNextElementIteratorException<RepoIterator<T>>(this, new std::string("repoiterator.h"), 46, new std::string("next()"));
 
     }
 
@@ -52,6 +52,5 @@ T* RepoIterator<T>::next()
     nodes.pop();
     return res->getValue();
 }
-}
 
-#endif // RepoIterator_H
+#endif // REPODATA_H
