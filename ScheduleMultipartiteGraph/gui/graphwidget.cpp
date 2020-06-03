@@ -279,7 +279,7 @@ void GraphWidget::leftFilterSlise(int slide)
         for (Edge * e : l) {
 
             if ((e->sourceNode()->getSliceId() == i.value()->getSliceId())
-                    && (e->sourceNode()->getPos() ==  i.value()->getPos())) {
+                    && (e->sourceNode()->getPos() ==  i.value()->getPos()) && (e->isVisible())) {
                 canLife = true;
             }
         }
@@ -298,7 +298,7 @@ void GraphWidget::rightFilterSlise(int slide)
         for (Edge * e : l) {
 
             if ((e->destNode()->getSliceId() == i.value()->getSliceId())
-                    && (e->destNode()->getPos() ==  i.value()->getPos())) {
+                    && (e->destNode()->getPos() ==  i.value()->getPos())&& (e->isVisible())) {
                 canLife = true;
             }
         }

@@ -1236,10 +1236,12 @@ void MainWindow::on_gen_schedule()
 
 
     ScheduleTableAbstractModule *model = new ScheduleTableAbstractModule(lessons);
-    schedueWidget->insertFilterDataVariants(dataForFilters);
-    graphWidget->insertFilterDataVariants(dataForFilters);
+
     this->schedueWidget->updateModel(model);
     this->graphWidget->setupGraph(dataForFilters,lessons);
+
+    schedueWidget->insertFilterDataVariants(dataForFilters);
+    graphWidget->insertFilterDataVariants(dataForFilters);
 
 
 

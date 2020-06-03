@@ -54,7 +54,7 @@ void ScheduleWidget::insertFilterDataVariants(QVector<QSet<QString> > dataForFil
     QVector<QStringList> stringLists;
     for (int i = 0; i < dataForFilters.size(); ++i) {
         QList<QString> list = dataForFilters[i].toList();
-        list.push_front("None");
+        //list.push_front("None");
         stringLists.append(QStringList(list));
     }
     groupComboBox->addItems(stringLists[0]);
@@ -109,6 +109,14 @@ QGroupBox * ScheduleWidget::createSchedueFilters()
     dayComboBox = new QComboBox();
     parityComboBox = new QComboBox();
 
+    groupComboBox->addItem("None");
+    subjectComboBox->addItem("None");
+    floorComboBox ->addItem("None");
+    buildingComboBox ->addItem("None");
+    numberComboBox ->addItem("None");
+    timeComboBox ->addItem("None");
+    dayComboBox ->addItem("None");
+    parityComboBox ->addItem("None");
     vbox->addWidget(label);
 
     vbox->addWidget(groupComboBox);

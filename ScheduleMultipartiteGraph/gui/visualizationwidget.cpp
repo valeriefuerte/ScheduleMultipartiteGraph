@@ -14,11 +14,21 @@ VisualizationWidget::VisualizationWidget(QWidget *parent) : QWidget(parent)//,
     //gen_btn = new QPushButton("Создать граф",this);
     //connect(gen_btn,SIGNAL(clicked()),this,SLOT(apply_clicked()));
     grid->addWidget(graphWidget,1,0);
-    grid->addWidget(createMenu(),0,0);
+    //grid->addWidget(createMenu(),0,0);
     grid->addWidget(createSchedueFilters(),2,0);
     //grid->addWidget(gen_btn,3,0);
     setLayout(grid);
 
+    connect(groupComboBox,&QComboBox::currentTextChanged,this,&VisualizationWidget::filtersChanged);
+    connect(subjectComboBox,&QComboBox::currentTextChanged,this,&VisualizationWidget::filtersChanged);
+
+    connect(numberComboBox,&QComboBox::currentTextChanged,this,&VisualizationWidget::filtersChanged);
+    connect(floorComboBox,&QComboBox::currentTextChanged,this,&VisualizationWidget::filtersChanged);
+    connect(buildingComboBox,&QComboBox::currentTextChanged,this,&VisualizationWidget::filtersChanged);
+
+    connect(parityComboBox,&QComboBox::currentTextChanged,this,&VisualizationWidget::filtersChanged);
+    connect(dayComboBox,&QComboBox::currentTextChanged,this,&VisualizationWidget::filtersChanged);
+    connect(timeComboBox,&QComboBox::currentTextChanged,this,&VisualizationWidget::filtersChanged);
 
 
 
@@ -49,7 +59,7 @@ void VisualizationWidget::insertFilterDataVariants(QVector<QSet<QString> > dataF
     QVector<QStringList> stringLists;
     for (int i = 0; i < dataForFilters.size(); ++i) {
         QList<QString> list = dataForFilters[i].toList();
-        list.push_front("None");
+        //list.push_front("None");
         stringLists.append(QStringList(list));
     }
     groupComboBox->addItems(stringLists[0]);
@@ -84,6 +94,13 @@ FilterData VisualizationWidget::takeDataFromFilters()
     filterData.data = data;
     return filterData;
 
+}
+
+void VisualizationWidget::filtersChanged()
+{
+    qDebug()<<"SchedueFilters_graph";
+    FilterData data = this->takeDataFromFilters();
+    graphWidget->useFilter(data);
 }
 
 void VisualizationWidget::apply_clicked()
@@ -147,6 +164,15 @@ QGroupBox * VisualizationWidget::createSchedueFilters()
     timeComboBox = new QComboBox();
     dayComboBox = new QComboBox();
     parityComboBox = new QComboBox();
+
+    groupComboBox->addItem("None");
+    subjectComboBox->addItem("None");
+    floorComboBox ->addItem("None");
+    buildingComboBox ->addItem("None");
+    numberComboBox ->addItem("None");
+    timeComboBox ->addItem("None");
+    dayComboBox ->addItem("None");
+    parityComboBox ->addItem("None");
 
     vbox->addWidget(label);
 
