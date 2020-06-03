@@ -33,6 +33,8 @@
 #include "gui/schedulewidget.h"
 #include "gui/visualizationwidget.h"
 
+
+
 namespace Ui {
 class MainWindow;
 }
@@ -161,6 +163,9 @@ private:
     QHash<int,QString> receiveDay;
     QVector<QSet<QString> > takeUniqueData();
 
+    //сгенерированное расписание
+    QList<Lesson> lessons;
+
     //Модели QTableView
     QStringList *list_s;
     QStringList *list_gr;
@@ -215,6 +220,7 @@ private:
     int  checkidenticalDataCabinets(Cabinet);
     //проверка на сопадения время
     int  checkidenticalDataTime(LessonTime);
+
 
 };
 

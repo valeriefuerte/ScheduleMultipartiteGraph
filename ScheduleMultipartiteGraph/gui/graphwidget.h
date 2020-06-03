@@ -14,6 +14,7 @@ class GraphWidget: public QGraphicsView
     Q_OBJECT
 public:
     GraphWidget(QWidget *parent = nullptr);
+
     void buildNewGraph(QVector<QSet<QString> > data, QList<Lesson> lessons);
 protected:
     void keyPressEvent(QKeyEvent *event) override;
