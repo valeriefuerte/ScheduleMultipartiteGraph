@@ -2,7 +2,8 @@
 #define REPOSITORY_H
 
 #include <QObject>
-
+#include "exceptions/nonextelementiteratorexception.h"
+using namespace GraphContainer;
 class Router;
 
 class Repository : public QObject

@@ -55,37 +55,38 @@ void VisualizationWidget::paintEvent(QPaintEvent *event)
 
 void VisualizationWidget::insertFilterDataVariants(QVector<QSet<QString> > dataForFilters)
 {
-    /*for (int i=1; i<groupComboBox->count(); i++){
-        groupComboBox->removeItem(i);
-     }
 
-    for (int i=1; i<subjectComboBox->count(); i++){
-        subjectComboBox->removeItem(i);
-     }
+//    for (int i=1; i<groupComboBox->count(); i++){
+//        groupComboBox->removeItem(i);
+//     }
 
-    for (int i=1; i<numberComboBox->count(); i++){
-        numberComboBox->removeItem(i);
-     }
+//    for (int i=1; i<subjectComboBox->count(); i++){
+//        subjectComboBox->removeItem(i);
+//     }
 
-    for (int i=1; i<floorComboBox->count(); i++){
-        floorComboBox->removeItem(i);
-     }
+//    for (int i=1; i<numberComboBox->count(); i++){
+//        numberComboBox->removeItem(i);
+//     }
 
-    for (int i=1; i<buildingComboBox->count(); i++){
-        buildingComboBox->removeItem(i);
-     }
+//    for (int i=1; i<floorComboBox->count(); i++){
+//        floorComboBox->removeItem(i);
+//     }
 
-    for (int i=1; i<parityComboBox->count(); i++){
-        parityComboBox->removeItem(i);
-     }
+//    for (int i=1; i<buildingComboBox->count(); i++){
+//        buildingComboBox->removeItem(i);
+//     }
 
-    for (int i=1; i<dayComboBox->count(); i++){
-        dayComboBox->removeItem(i);
-     }
+//    for (int i=1; i<parityComboBox->count(); i++){
+//        parityComboBox->removeItem(i);
+//     }
 
-    for (int i=1; i<timeComboBox->count(); i++){
-        timeComboBox->removeItem(i);
-     }*/
+//    for (int i=1; i<dayComboBox->count(); i++){
+//        dayComboBox->removeItem(i);
+//     }
+
+//    for (int i=1; i<timeComboBox->count(); i++){
+//        timeComboBox->removeItem(i);
+//     }
 
 
     QVector<QStringList> stringLists;
